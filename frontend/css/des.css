@@ -1,0 +1,14 @@
+body{
+    background-color: rgb(245, 242, 242);
+}
+
+h1{
+    text-shadow: 2px 2px 5px black;
+    color: aliceblue;
+    text-align: center;
+    font-family: bah;
+}
+
+.navbgcol{
+    background-color: rgb(152, 217, 236);
+}
