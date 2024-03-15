@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Nav, Navbar, Link } from 'react-bootstrap'
-import './gg.css'
+import { Button, Nav, Navbar} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
+import './gg.css';
 
 export default function NaviBar(){
     return(
@@ -10,9 +11,8 @@ export default function NaviBar(){
         <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
         <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-                <Nav.Link>Список олимпиад</Nav.Link>
-                <Nav.Link>Записаться</Nav.Link>
-                <Nav.Link>Организаторы</Nav.Link>
+                <Nav.Link><Link to="/">Список олимпиад</Link></Nav.Link>
+                <Nav.Link><Link to="/Record">Записаться</Link></Nav.Link>
             </Nav>
             <Nav>
                 <Button variant='primary' className='me-2'>Войти</Button>
