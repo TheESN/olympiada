@@ -19,12 +19,11 @@ export default function NaviBar(){
     <>
     <Navbar collapseOnSelect  expand="lg" bg="fon">
         <Container>
-            <Navbar.Brand>Olymp</Navbar.Brand>
+            <Navbar.Brand className='mb-1'>Olymp</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto" variant="underline">
                     <Nav.Link href="/">Список олимпиад</Nav.Link>
-                    <Nav.Link href="/Record">Записаться</Nav.Link>
                 </Nav>
                 <Nav>
                     <Button variant='primary' className='me-2' onClick={handleShowLogin}>Войти</Button>

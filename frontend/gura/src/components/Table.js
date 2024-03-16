@@ -1,9 +1,10 @@
 import React from "react";
-import { Table } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import './gg.css';
 
 export default function ListTable(){
     return (
+        <Container>
         <Table striped>
             <thead>
                 <tr>
@@ -16,7 +17,7 @@ export default function ListTable(){
             <tbody>
                 <tr>
                     <th scope="row">1</th>
-                    <td>СВОШ по информатике</td>
+                    <td><a href="#">СВОШ по информатике</a></td>
                     <td>23/04/25</td>
                     <td>СОШ №5</td>
                 </tr>
@@ -28,5 +29,6 @@ export default function ListTable(){
                 </tr>
             </tbody>
         </Table>
+        </Container>
     )
 }
