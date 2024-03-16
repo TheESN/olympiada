@@ -4,7 +4,7 @@ import './components/gg.css';
 
 export const List = () =>(
     <>
-    <h1 className="table">Список олимпиад</h1>
+    <h1 className="olemplist">Список олимпиад</h1>
     <Table />
     </>
     

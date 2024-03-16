@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button, Form, Modal, Nav, Navbar} from 'react-bootstrap';
+import { Button, Container, Form, Modal, Nav, Navbar} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import './gg.css';
 
@@ -17,19 +17,21 @@ export default function NaviBar(){
 
     return(
     <>
-    <Navbar collapseOnSelect  expand="lg" bg="fon" variant="light">
-        <Navbar.Brand>Olymp</Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
-        <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-                <Nav.Link><Link to="/">Список олимпиад</Link></Nav.Link>
-                <Nav.Link><Link to="/Record">Записаться</Link></Nav.Link>
-            </Nav>
-            <Nav>
-                <Button variant='primary' className='me-2' onClick={handleShowLogin}>Войти</Button>
-                <Button variant='primary' onClick={handleShowSign}>Зарегистрироваться</Button>
-            </Nav>
-        </Navbar.Collapse>
+    <Navbar collapseOnSelect  expand="lg" bg="fon">
+        <Container>
+            <Navbar.Brand>Olymp</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto" variant="underline">
+                    <Nav.Link href="/">Список олимпиад</Nav.Link>
+                    <Nav.Link href="/Record">Записаться</Nav.Link>
+                </Nav>
+                <Nav>
+                    <Button variant='primary' className='me-2' onClick={handleShowLogin}>Войти</Button>
+                    <Button variant='primary' onClick={handleShowSign}>Зарегистрироваться</Button>
+                </Nav>
+            </Navbar.Collapse>
+        </Container>
     </Navbar>
     <Modal show={showLog} onHide={handleCloseLog}>
         <Modal.Header closeButton>
@@ -45,7 +47,6 @@ export default function NaviBar(){
                     <Form.Label>Пароль</Form.Label>
                     <Form.Control type='password' placeholder='Введите пароль' />
                 </Form.Group>
-
             </Form>
         </Modal.Body>
     </Modal>
@@ -71,10 +72,10 @@ export default function NaviBar(){
                     <Form.Label>Пароль</Form.Label>
                     <Form.Control type='password' placeholder='Введите пароль' />
                 </Form.Group>
-
             </Form>
         </Modal.Body>
     </Modal>
+    
     </>
     )
 }
