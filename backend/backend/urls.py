@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from olymp.views import EmployeeViewSet
+from olymp.views import OlympViewSet
 
 api = [
-    path('getemployee/<int:id>', EmployeeViewSet.as_view())
+    path('getemployee/<int:id>', EmployeeViewSet.as_view()),
+    path('getolympiada/<int:id>', OlympViewSet.as_view())
+
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
