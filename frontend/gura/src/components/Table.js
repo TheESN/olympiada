@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import './gg.css';
 
 export default function ListTable(){
@@ -12,6 +12,8 @@ export default function ListTable(){
                 <th scope="col">Олимпиада</th>
                 <th scope="col">Дата</th>
                 <th scope="col">Организаторы</th>
+                <th scope="col">Длительность</th>
+                <th scope="col">Запись</th>
             </tr>
             </thead>
             <tbody>
@@ -20,12 +22,21 @@ export default function ListTable(){
                     <td><a href="#">СВОШ по информатике</a></td>
                     <td>23/04/25</td>
                     <td>СОШ №5</td>
+                    <td>2 часа</td>
+                    <div>
+                        <Button variant="outline-primary" size="sm" className="TabList">Записаться</Button>
+                    </div>
+                    
                 </tr>
                 <tr>
                     <th scope="row">2</th>
                     <td>СВОШ по информатике</td>
                     <td>23/04/25</td>
                     <td>СОШ №5</td>
+                    <td>2 часа 55 минут</td>
+                    <div>
+                        <Button variant="outline-primary" size="sm" className="TabList">Записаться</Button>
+                    </div>
                 </tr>
             </tbody>
         </Table>
