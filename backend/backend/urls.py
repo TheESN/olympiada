@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from olymp.views import EmployeeViewSet
-from olymp.views import OlympViewSet
+from olymp.views import EmployeeViewSet, EmployeeViewList, OlympViewSet
 
 api = [
     path('getemployee/<int:id>', EmployeeViewSet.as_view()),
+    path('getemployees', EmployeeViewList.as_view({'get': 'list'})),
     path('getolympiada/<int:id>', OlympViewSet.as_view())
 
 ]
