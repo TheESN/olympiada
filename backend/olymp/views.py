@@ -25,3 +25,7 @@ class OlympViewSet(APIView):
         olympiada = get_object_or_404(Olympiada, pk=id)
         ser = OlympSerializer(olympiada)
         return Response(ser.data)
+
+class OlympViewList(ModelViewSet):
+    queryset = Olympiada.objects.all()
+    serializer_class = OlympSerializer
