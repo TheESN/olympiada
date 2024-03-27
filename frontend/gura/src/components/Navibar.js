@@ -26,8 +26,8 @@ export default function NaviBar(){
                     <Nav.Link href="/">Список олимпиад</Nav.Link>
                 </Nav>
                 <Nav>
-                    <Button variant='primary' className='me-2' onClick={handleShowLogin}>Войти</Button>
-                    <Button variant='primary' onClick={handleShowSign}>Зарегистрироваться</Button>
+                    <Button variant='light' className='me-2' onClick={handleShowLogin}>Войти</Button>
+                    <Button variant='light' onClick={handleShowSign}>Зарегистрироваться</Button>
                 </Nav>
             </Navbar.Collapse>
         </Container>
@@ -46,6 +46,7 @@ export default function NaviBar(){
                     <Form.Label>Пароль</Form.Label>
                     <Form.Control type='password' placeholder='Введите пароль' />
                 </Form.Group>
+                <Button className='mt-3'>Войти</Button>
             </Form>
         </Modal.Body>
     </Modal>
@@ -71,6 +72,10 @@ export default function NaviBar(){
                     <Form.Label>Пароль</Form.Label>
                     <Form.Control type='password' placeholder='Введите пароль' />
                 </Form.Group>
+                <Form.Group>
+                    <Button className='mt-3'>Зарегистрироваться</Button>
+                </Form.Group>
+                
             </Form>
         </Modal.Body>
     </Modal>
