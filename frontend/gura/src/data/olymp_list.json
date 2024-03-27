@@ -10,6 +10,17 @@
         "olymp_name":"СВОШ по математике",
         "olymp_date_start":"2024-02-15",
         "olymp_time":"02:00:00"
+    },
+    {
+        "id":"3",
+        "olymp_name":"СВОШ по руссккому языку",
+        "olymp_date_start":"2024-03-15",
+        "olymp_time":"01:30:00"
+    },
+    {
+        "id":"4",
+        "olymp_name":"СВОШ по якутскому языку",
+        "olymp_date_start":"2024-03-15",
+        "olymp_time":"01:30:00"
     }
 ]
-        
