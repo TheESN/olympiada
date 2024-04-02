@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
 import './gg.css';
 
 const data = require("../data/olymp_list.json")
 
-export default function ListTable(){
+export default function Table({theadData, tbodyData}){
     return (
+        <>
         <Container>
         <Table striped>
             <thead>
@@ -30,5 +31,10 @@ export default function ListTable(){
             </tbody>
         </Table>
         </Container>
+        <div className="AddButton">
+            <Button>Add</Button>
+        </div>
+        </>
+        
     )
 }

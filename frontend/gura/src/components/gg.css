@@ -11,3 +11,8 @@
 .TabList{
   background-color: rgb(255, 255, 255);
 }
+
+.AddButton{
+  text-align: end;
+  padding: 10px;
+}
