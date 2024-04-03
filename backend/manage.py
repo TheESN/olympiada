@@ -3,6 +3,7 @@
 import os
 import sys
 
+#login - hp     password - 193677
 
 def main():
     """Run administrative tasks."""

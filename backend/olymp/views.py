@@ -26,6 +26,21 @@ class OlympViewSet(APIView):
         ser = OlympSerializer(olympiada)
         return Response(ser.data)
 
+    def post(self, request, id, format = None):
+        olympiada = get_object_or_404(Olympiada, pk=id)
+        output = { "valid": False }
+        #ser = OlympSerializer(olympiada, request.data)
+        if request.method == "POST":
+            ser = OlympSerializer(olympiada, request.data)
+            if ser.is_valid():
+                ser.save()
+                output["valid"] = True
+                output["olymp"] = ser.data
+            else:
+                output["valid"] = False
+        return Response(output)
+
+
 class OlympViewList(ModelViewSet):
     queryset = Olympiada.objects.all()
     serializer_class = OlympSerializer
