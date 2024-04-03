@@ -17,15 +17,6 @@ const TableBody = props => {
 
   return (
     <tbody>
-      {showSpinner && (
-        <tr key="spinner-0">
-          <td colSpan={columns} className="text-center">
-            <div className="spinner-border" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-          </td>
-        </tr>
-      )}
       {!showSpinner &&
         rows &&
         rows.map(value => {

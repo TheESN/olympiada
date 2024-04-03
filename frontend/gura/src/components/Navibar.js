@@ -74,8 +74,7 @@ export default function NaviBar(){
                 </Form.Group>
                 <Form.Group>
                     <Button className='mt-3'>Зарегистрироваться</Button>
-                </Form.Group>
-                
+                </Form.Group> 
             </Form>
         </Modal.Body>
     </Modal>

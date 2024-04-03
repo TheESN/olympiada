@@ -1,8 +1,9 @@
 import React from "react";
 import TableBody from './TableBody';
 import TableHeader from "./TableHeader";
+import { Button } from "react-bootstrap";
 
-const Table = props => {
+const TableNew = props => {
   const { headers, rows } = props;
   return (
     <div>
@@ -14,4 +15,4 @@ const Table = props => {
   );
 };
 
-export default Table;
+export default TableNew;

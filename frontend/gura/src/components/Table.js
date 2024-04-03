@@ -24,17 +24,14 @@ export default function Table({theadData, tbodyData}){
                     <td>{tablist.olymp_name}</td>
                     <td>{tablist.olymp_date_start}</td>
                     <td>{tablist.time}</td>
-                    <div>
-                        <Button variant="outline-primary" size="sm" className="TabList">Записаться</Button>
-                    </div>
+                    <td>{tablist.asdfg}</td>
+                    <td>
+                        <Button>asd</Button>
+                    </td>
                 </tr>
             </tbody>
         </Table>
         </Container>
-        <div className="AddButton">
-            <Button>Add</Button>
-        </div>
         </>
-        
     )
 }
