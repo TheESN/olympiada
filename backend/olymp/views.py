@@ -9,6 +9,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework import permissions
 
 
 # Create your views here.
@@ -21,6 +22,7 @@ class EmployeeViewSet(APIView):
 class EmployeeViewList(ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class StudentViewSet(APIView):
     def get(self, request, id, format=None):
