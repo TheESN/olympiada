@@ -16,16 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from olymp.views import EmployeeViewSet, EmployeeViewList, OlympViewSet, OlympViewList
+from olymp.views import EmployeeViewSet, EmployeeViewList, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList
+from rest_framework.authtoken import views
 
 api = [
     path('getemployee/<int:id>', EmployeeViewSet.as_view()),
     path('getemployees', EmployeeViewList.as_view({'get': 'list'})),
     path('getolympiada/<int:id>', OlympViewSet.as_view()),
-    path('getolympiadas', OlympViewList.as_view({'get': 'list'}))
-
+    path('getolympiadas', OlympViewList.as_view({'get': 'list'})),
+    path('getstudent/<int:id>', StudentViewSet.as_view()),
+    path('getstudents', StudentViewList.as_view({'get': 'list'}))
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include((api, 'olymp'), namespace='api'))
+    path('api/', include((api, 'olymp'), namespace='api')),
+    path('api-token-auth/', views.obtain_auth_token)
 ]
