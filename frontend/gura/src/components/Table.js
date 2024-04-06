@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
 import './gg.css';
 
 const data = require("../data/olymp_list.json")
 
-export default function ListTable(){
+export default function Table({theadData, tbodyData}){
     return (
+        <>
         <Container>
         <Table striped>
             <thead>
@@ -23,12 +24,14 @@ export default function ListTable(){
                     <td>{tablist.olymp_name}</td>
                     <td>{tablist.olymp_date_start}</td>
                     <td>{tablist.time}</td>
-                    <div>
-                        <Button variant="outline-primary" size="sm" className="TabList">Записаться</Button>
-                    </div>
+                    <td>{tablist.asdfg}</td>
+                    <td>
+                        <Button>asd</Button>
+                    </td>
                 </tr>
             </tbody>
         </Table>
         </Container>
+        </>
     )
 }
