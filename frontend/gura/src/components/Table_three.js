@@ -1,63 +1,47 @@
 import React, { useEffect, useState } from 'react'
-import JsonData from '../data/olymp_list.json'
-import axios from 'axios'
-
 import { Button, Container, Table } from 'react-bootstrap'
+import axios from "axios"
+
 function JsonDataDisplay(id){
     const Clicked = (event) =>{
         var id = event.target.id;
         console.log(id)
     }
 
-	const defaultValue = [];
-
-	const [olymps, setOlymps] = useState([]);
-
-	const getApiData = async() => {
-		const response = await fetch(
-			'http://localhost:8000/api/getolympiadas')
-		.then(response => response.json());
-
-		setOlymps(response);
-	};
+	//const [olymps, setOlymps] = useState([]);
 
 	// const getApiData = async() => {
-	// 	const response = await axios(
-	// 		"http://localhost:8000/api/getolympiadas"
-			
-	// 	);
+	// 	const response = await fetch(
+	// 		'http://localhost:8000/api/getolympiadas')
+	// 	.then(response => response.json());
 
 	// 	setOlymps(response);
 	// };
 
-	useEffect(() => {
-		getApiData();
-	}, []);
+	// useEffect(() => {
+	// 	getApiData();
+	// }, []);
 
-	// const DisplayData=JsonData.map(
-	// 	(info)=>{
-	// 		return(
-	// 			<tr>
-	// 				<td>{info.id}</td>
-	// 				<td>{info.olymp_name}</td>
-	// 				<td>{info.olymp_date_start}</td>
-    //                 <td>{info.olymp_time}</td>
-    //                 <td><Button variant='primary' onClick={Clicked} id={info.id}>Записаться</Button></td>
-	// 			</tr>
-	// 		)
-	// 	}
-	// )
+	const [columns, setColumns] = useState([])
+	const [olymps, setOlymps] = useState([])
+
+	useEffect(() => {
+		axios.get('http://localhost:8000/api/getolympiadas')
+		.then(res => {
+			setOlymps(res.data)
+		})
+	}, [])
 
 	const DisplayData = olymps.map((olymp) => {
 		return(
-						<tr>
-							<td>{olymp.id}</td>
-							<td>{olymp.olymp_name}</td>
-							<td>{olymp.olymp_date_start}</td>
-			                <td>{olymp.olymp_time}</td>
-			                <td><Button variant='primary' onClick={Clicked} id={olymp.id}>Записаться</Button></td>
-						</tr>
-					)
+			<tr>
+				<td>{olymp.id}</td>
+				<td>{olymp.olymp_name}</td>
+				<td>{olymp.olymp_date_start}</td>
+			    <td>{olymp.olymp_time}</td>
+			    <td><Button variant='primary' onClick={Clicked} id={olymp.id}>Записаться</Button></td>
+			</tr>
+		)
 	})
 
 	return(
@@ -78,8 +62,6 @@ function JsonDataDisplay(id){
 			</Table>
         </Container>
         </>
-        
-		
 	)
 }
 
