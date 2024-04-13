@@ -7,22 +7,7 @@ function JsonDataDisplay(id){
         var id = event.target.id;
         console.log(id)
     }
-
-	//const [olymps, setOlymps] = useState([]);
-
-	// const getApiData = async() => {
-	// 	const response = await fetch(
-	// 		'http://localhost:8000/api/getolympiadas')
-	// 	.then(response => response.json());
-
-	// 	setOlymps(response);
-	// };
-
-	// useEffect(() => {
-	// 	getApiData();
-	// }, []);
-
-	const [columns, setColumns] = useState([])
+	
 	const [olymps, setOlymps] = useState([])
 
 	useEffect(() => {

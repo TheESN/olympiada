@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import  NaviBar  from './components/Navibar';
 import AddButton from "./components/AddButton";
 
-import data from "./data/olymp_list.json"
 import JsonDataDisplay from './components/Table_three';
 
 function App() {
