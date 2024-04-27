@@ -22,7 +22,7 @@ class EmployeeViewSet(APIView):
 class EmployeeViewList(ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 class StudentViewSet(APIView):
     def get(self, request, id, format=None):
