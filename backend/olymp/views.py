@@ -91,3 +91,6 @@ class AddOlympViewSet(APIView):
 class OlympViewList(ModelViewSet):
     queryset = Olympiada.objects.all()
     serializer_class = OlympSerializer
+
+class RepresentativeViewList(ModelViewSet):
+    pass
