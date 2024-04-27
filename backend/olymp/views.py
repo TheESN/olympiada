@@ -48,6 +48,28 @@ class OlympViewSet(APIView):
             return Response(ser.data, status=status.HTTP_201_CREATED)
         return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, id, format=None):
+        output = {"valid": True, "message": ''}
+        if request.method == 'DELETE':
+            olympiada = get_object_or_404(Olympiada, pk=id)
+            try:
+                output["olympiada"] = olympiada.id
+                olympiada.delete()
+                output["message"] = 'Успешно!'
+            except:
+                del output["olympiada"]
+                output["valid"] = False
+                output["message"] = 'Ошибка!'
+            return Response(output)
+
+    def put(self, request, id, format=None):
+        olympiada = get_object_or_404(Olympiada, pk=id)
+        ser = OlympSerializer(olympiada, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data)
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class AddOlympViewSet(APIView):
     def post(self, request):
         output = {"valid": False}
