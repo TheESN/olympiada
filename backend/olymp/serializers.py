@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Person, Employee, Student, Olympiada
+from .models import Person, Employee, Student, Olympiada, Representative
 
 
 class PersonSerializer(serializers.ModelSerializer):
@@ -24,3 +24,8 @@ class OlympSerializer(serializers.ModelSerializer):
     class Meta:
         model = Olympiada
         fields = ['id', 'olymp_name', 'olymp_date_start', 'olymp_time']   #No creators yet!
+
+class RepresentativeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Representative
+        fields = ['id', 'name', 'user']

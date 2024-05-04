@@ -2,9 +2,11 @@ from django.shortcuts import get_object_or_404
 from .models import Employee
 from .models import Olympiada
 from .models import Student
+from .models import Representative
 from .serializers import EmployeeSerializer
 from .serializers import OlympSerializer
 from .serializers import StudentSerializer
+from .serializers import RepresentativeSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -63,12 +65,15 @@ class OlympViewSet(APIView):
             return Response(output)
 
     def put(self, request, id, format=None):
+        output = {"valid": False}
         olympiada = get_object_or_404(Olympiada, pk=id)
         ser = OlympSerializer(olympiada, data=request.data)
         if ser.is_valid():
             ser.save()
-            return Response(ser.data)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+            output["valid"] = True
+        else:
+            output["valid"] = False
+        return Response(output)
 
 class AddOlympViewSet(APIView):
     def post(self, request):
@@ -91,3 +96,57 @@ class AddOlympViewSet(APIView):
 class OlympViewList(ModelViewSet):
     queryset = Olympiada.objects.all()
     serializer_class = OlympSerializer
+
+class RepresentativeViewSet(APIView):
+    def get(self, request, id, format=None):
+        #id = request.GET['id']
+        representative = get_object_or_404(Representative, pk=id)
+        ser = RepresentativeSerializer(representative)
+        return Response(ser.data)
+
+    def delete(self, request, id, format=None):
+        output = {"valid": True, "message": ''}
+        if request.method == 'DELETE':
+            representative = get_object_or_404(Representative, pk=id)
+            try:
+                output["representative"] = representative.id
+                representative.delete()
+                output["message"] = 'Успешно!'
+            except:
+                del output["representative"]
+                output["valid"] = False
+                output["message"] = 'Ошибка!'
+            return Response(output)
+
+    def put(self, request, id, format=None):
+        output = {"valid": False}
+        representative = get_object_or_404(Representative, pk=id)
+        ser = RepresentativeSerializer(representative, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            output["valid"] = True
+        else:
+            output["valid"] = False
+        return Response(output)
+
+class AddRepresentativeViewSet(APIView):
+    def post(self, request):
+        output = {"valid": False}
+        # ser = RepresentativeSerializer(representative, request.data)
+        if request.method == "POST":
+            try:
+                ser = RepresentativeSerializer(data=request.data)
+                if ser.is_valid():
+                    ser.save()
+                    output["valid"] = True
+                else:
+                    output["valid"] = False
+                    output['msg'] = 'Проверьте правильность заполнения формы'
+            except Exception as e:
+                output['valid'] = False
+                output['msg'] = 'Ошибка при сохранении'
+        return Response(output)
+
+class RepresentativeViewList(ModelViewSet):
+    queryset = Representative.objects.all()
+    serializer_class = RepresentativeSerializer
