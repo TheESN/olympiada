@@ -7,7 +7,7 @@ import { Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 
 
 import JsonDataDisplay from './components/Table_olymp';
-import appli_list from './components/Table_Application';
+import Appli_list from './components/Table_Application';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<JsonDataDisplay />}></Route>
-        <Route path='/application' element={<appli_list />}></Route>
+        <Route path='/application' element={<Appli_list />}></Route>
       </Routes>
     </BrowserRouter>
     

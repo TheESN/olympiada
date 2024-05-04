@@ -2,117 +2,30 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Table, Form, Modal } from 'react-bootstrap'
 import axios from "axios"
 
-function JsonDataDisplay(id){
-	const [showModalEditOlymp, setShowModalEditOlymp] = useState(false);
+function Appli_list(id){
+	const [applications, setApplications] = useState([])
 
-	const [showModalRegister, setShowModalRegister] = useState(false);
-
-	const [editOlymp, setEditOlymp] = useState({
-		"id":-1,
-		"olymp_name":"a",
-		"olymp_date_start":"",
-		"olymp_time":""
-	}
-	);
-
-	//Показ модальное окно редактирования
-    const ShowWindEditOlymp = (event) => {
-		event.preventDefault();
-		
-		id = event.target.id;
-		let v = findOlympById(id);
-		setEditOlymp(v);
-		setShowModalEditOlymp(true)
-	}
-
-	//Показ модальное окно записи
-	const ShowModalRegister = (event) => {
-		event.preventDefault();
-		
-		setShowModalRegister(true)
-	}
-
-	//Закрыть модальное окно
-    const CloseWind = () => {
-		setShowModalEditOlymp(false)
-		setShowModalRegister(false)
-	}
-
-	const [inputData, setInputData] = useState({name:''})
-
-    const Clicked = (event) =>{
-		id = event.target.id
-        console.log(id)
-    }
-	
-	const [olymps, setOlymps] = useState([])
-
-	//Запрос списка олимпиады
+	//Запрос списка заявок
 	useEffect(() => {
-		axios.get('http://localhost:8000/api/getolympiadas')
+		axios.get('http://localhost:8000/api/getapplications')
 		.then(res => {
-			
-			setOlymps(res.data)
+			setApplications(res.data)
 		})
 	}, [])
 
-	//Редактирование олимпиады
-	function SubmitEdit(event){
-		event.preventDefault()
-
-		var url = "http://localhost:8000/api/getolympiada/" + editOlymp.id.toString();
-
-        axios.put(url, inputData)
-        .then(res => {
-            if (res.data.valid === true){
-                alert("Данные обновлены");
-                console.log(res.data.valid)
-            }
-            else{
-                alert("Неправильно введены данные");
-            }
-        })
-    }
-
-	//Удаление олимпиады
-	function DeleteSubmit(event){
-		event.preventDefault()
-
-		var url = "http://localhost:8000/api/getolympiada/" + editOlymp.id.toString();
-
-        axios.delete(url)
-        .then(res => {
-                alert("Удаленео");
-        })
-    }
-
-	function RegisterSubmit(event){
-		event.preventDefault()
-
-		var url = "http://localhost:8000/api/getolympiada/";
-    }
-
 	//Вывод таблицы
-	const DisplayData = olymps.map((olymp, index) => {
+	const DisplayData = applications.map((app, index) => {
 		return(
 			<tr>
 				<td>{index + 1}</td>
-				<td><a href='#' onClick={ShowWindEditOlymp} id={olymp.id}>{olymp.olymp_name}</a></td>
-				<td>{olymp.olymp_date_start}</td>
-			    <td>{olymp.olymp_time}</td>
-			    <td><Button variant='primary' onClick={ShowModalRegister} id={olymp.id}>Записаться</Button></td>
+				<td>{app.applied_student}</td>
+				<td>{app.applied_olymp}</td>
+			    <td>{app.application_date}</td>
+				<td>{app.application_employee}</td>
+			    <td><Button variant='primary'>Записаться</Button></td>
 			</tr>
 		)
 	})
-
-	//Поиск олимпиады по айди
-	function findOlympById(ID) {
-		for(var i=0;i<olymps.length;i++){
-			if (olymps[i].id == ID){		
-				return olymps[i];
-			}
-	    } 
-	}
 
 	return(
         <>
@@ -124,6 +37,7 @@ function JsonDataDisplay(id){
 					<th>Название</th>
 					<th>Дата проведения</th>
                     <th>Время начала</th>
+					<th>АНПРОрпр</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -131,34 +45,8 @@ function JsonDataDisplay(id){
 				</tbody>
 			</Table>
         </Container>
-
-		{/* Модальное окно редактирования олимпиады */}
-		<Modal show={showModalEditOlymp} onHide={CloseWind}>
-            <Modal.Header closeButton>
-                <Modal.Title>Изменить олимпиаду</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-					{/* <Form.Control type='hidden' value={editOlymp.id}/> */}
-                    <Form.Group>
-                        <Form.Label>Название</Form.Label>
-                            <Form.Control type='text' name="olymp_name" defaultValue={editOlymp.olymp_name} onChange={e => setInputData({...inputData, olymp_name: e.target.value})}  required/>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Дата начала</Form.Label>
-                        <Form.Control type='datefield'  name="olymp_date_start" placeholder={editOlymp.olymp_date_start} onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})} required/>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Длительность</Form.Label>
-                        <Form.Control type='time'  name="olymp_time" defaultValue={editOlymp.olymp_time} onChange={e => setInputData({...inputData, olymp_time: e.target.value})} required/>
-                    </Form.Group>
-                    <Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
-					<Button variant='danger' className='ms-2 mt-3' type='submit' onClick={DeleteSubmit}>Удалить</Button>
-                </Form>
-            </Modal.Body>
-        </Modal>
         </>
 	)
 }
 
-export default JsonDataDisplay;
+export default Appli_list;
