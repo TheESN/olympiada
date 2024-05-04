@@ -2,11 +2,9 @@ from django.shortcuts import get_object_or_404
 from .models import Employee
 from .models import Olympiada
 from .models import Student
-from .models import Representative
 from .serializers import EmployeeSerializer
 from .serializers import OlympSerializer
 from .serializers import StudentSerializer
-from .serializers import RepresentativeSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
