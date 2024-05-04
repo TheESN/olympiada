@@ -43,13 +43,6 @@ class OlympViewSet(APIView):
         ser = OlympSerializer(olympiada)
         return Response(ser.data)
 
-    def post(self, request, format=None):
-        ser = OlympSerializer(data=request.data)
-        if ser.is_valid():
-            ser.save()
-            return Response(ser.data, status=status.HTTP_201_CREATED)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
-
     def delete(self, request, id, format=None):
         output = {"valid": True, "message": ''}
         if request.method == 'DELETE':
@@ -103,3 +96,5 @@ class ApplicationViewSet(APIView):
 class ApplicationViewList(ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+
+
