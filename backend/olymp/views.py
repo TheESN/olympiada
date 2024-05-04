@@ -2,9 +2,11 @@ from django.shortcuts import get_object_or_404
 from .models import Employee
 from .models import Olympiada
 from .models import Student
+from .models import Application
 from .serializers import EmployeeSerializer
 from .serializers import OlympSerializer
 from .serializers import StudentSerializer
+from .serializers import ApplicationSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -91,3 +93,13 @@ class AddOlympViewSet(APIView):
 class OlympViewList(ModelViewSet):
     queryset = Olympiada.objects.all()
     serializer_class = OlympSerializer
+
+class ApplicationViewSet(APIView):
+    def get(self, request, id, format=None):
+        application = get_object_or_404(Application, pk=id)
+        ser = ApplicationSerializer(application)
+        return Response(ser.data)
+
+class ApplicationViewList(ModelViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
