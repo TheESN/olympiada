@@ -44,3 +44,10 @@ class Student(Person):
     special_needs = models.BooleanField("Ограниченные возможности здоровья", default=False)
     teacher = models.ForeignKey(Person, verbose_name="Учитель", null=True, on_delete=models.SET_NULL, related_name='teachers')
     contact_phone = models.CharField("Контактный номер телефона", max_length=20)
+
+class Application(models.Model):
+    applied_student = models.ForeignKey(Student, verbose_name="Учащийся", on_delete=models.CASCADE, related_name='students')
+    applied_olymp = models.ForeignKey(Olympiada, verbose_name="Олимпиада", on_delete=models.CASCADE, related_name='olympiadas')
+    application_date = models.DateTimeField("Дата регистрации")
+    application_employee = models.ForeignKey(Employee, verbose_name="Ответственный", null=True, on_delete=models.SET_NULL, related_name='employees')
+

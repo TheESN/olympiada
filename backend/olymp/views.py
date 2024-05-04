@@ -2,9 +2,11 @@ from django.shortcuts import get_object_or_404
 from .models import Employee
 from .models import Olympiada
 from .models import Student
+from .models import Application
 from .serializers import EmployeeSerializer
 from .serializers import OlympSerializer
 from .serializers import StudentSerializer
+from .serializers import ApplicationSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -22,7 +24,7 @@ class EmployeeViewSet(APIView):
 class EmployeeViewList(ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 class StudentViewSet(APIView):
     def get(self, request, id, format=None):
@@ -40,13 +42,6 @@ class OlympViewSet(APIView):
         olympiada = get_object_or_404(Olympiada, pk=id)
         ser = OlympSerializer(olympiada)
         return Response(ser.data)
-
-    def post(self, request, format=None):
-        ser = OlympSerializer(data=request.data)
-        if ser.is_valid():
-            ser.save()
-            return Response(ser.data, status=status.HTTP_201_CREATED)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id, format=None):
         output = {"valid": True, "message": ''}
@@ -94,3 +89,15 @@ class AddOlympViewSet(APIView):
 class OlympViewList(ModelViewSet):
     queryset = Olympiada.objects.all()
     serializer_class = OlympSerializer
+
+class ApplicationViewSet(APIView):
+    def get(self, request, id, format=None):
+        application = get_object_or_404(Application, pk=id)
+        ser = ApplicationSerializer(application)
+        return Response(ser.data)
+
+class ApplicationViewList(ModelViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+
+
