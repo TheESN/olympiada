@@ -63,12 +63,15 @@ class OlympViewSet(APIView):
             return Response(output)
 
     def put(self, request, id, format=None):
+        output = {"valid": False}
         olympiada = get_object_or_404(Olympiada, pk=id)
         ser = OlympSerializer(olympiada, data=request.data)
         if ser.is_valid():
             ser.save()
-            return Response(ser.data)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+            output["valid"] = True
+        else:
+            output["valid"] = False
+        return Response(output)
 
 class AddOlympViewSet(APIView):
     def post(self, request):
