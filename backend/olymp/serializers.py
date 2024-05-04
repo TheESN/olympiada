@@ -11,7 +11,7 @@ class PersonSerializer(serializers.ModelSerializer):
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ['id', 'name', 'role', 'user']
+        fields = '__all__'
 
 
 class StudentSerializer(serializers.ModelSerializer):
