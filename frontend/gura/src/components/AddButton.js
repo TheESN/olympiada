@@ -11,6 +11,7 @@ export default function ListTable(){
 
     const [inputData, setInputData] = useState({name:''})
 
+    //Добавление олимпиады
     function handleSubmit(event){
         event.preventDefault()
 
