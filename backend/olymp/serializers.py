@@ -28,4 +28,4 @@ class OlympSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ['id', 'applied_student', 'applied_olymp', 'application_date']
+        fields = ['id', 'applied_student', 'applied_olymp', 'application_date', 'application_employee']
