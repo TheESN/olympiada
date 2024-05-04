@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from olymp.views import EmployeeViewSet, EmployeeViewList, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, ApplicationViewSet, ApplicationViewList, AddOlympViewSet
+from olymp.views import EmployeeViewSet, EmployeeViewList, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, ApplicationViewSet, ApplicationViewList, AddOlympViewSet, AddApplicationViewSet
 from rest_framework.authtoken import views
 
 
@@ -29,7 +29,8 @@ api = [
     path('getstudent/<int:id>', StudentViewSet.as_view()),
     path('getstudents', StudentViewList.as_view({'get': 'list'})),
     path('getapplication/<int:id>', ApplicationViewSet.as_view()),
-    path('getapplications', ApplicationViewList.as_view({'get': 'list'}))
+    path('getapplications', ApplicationViewList.as_view({'get': 'list'})),
+    path('application', AddApplicationViewSet.as_view())
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
