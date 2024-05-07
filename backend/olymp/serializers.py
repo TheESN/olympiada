@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Person, Employee, Student, Olympiada, Application
+from .models import Person, Employee, Student, Olympiada, Application, Subdivision
 
 
 class PersonSerializer(serializers.ModelSerializer):
@@ -29,3 +29,8 @@ class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = ['id', 'applied_student', 'applied_olymp', 'application_date', 'application_employee']
+
+class SubdivisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subdivision
+        fields = ['id', 'subdivision_name']
