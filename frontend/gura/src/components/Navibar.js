@@ -29,6 +29,7 @@ export default function NaviBar(){
                 <Nav className="me-auto" variant="underline">
                     <Nav.Link href="/">Список олимпиад</Nav.Link>
                     <Nav.Link href="/application">Список заявок</Nav.Link>
+                    <Nav.Link href="/employees">Список ответсвенных</Nav.Link>
                 </Nav>
                 <Nav>
                     <Button variant='light' className='me-2' onClick={handleShowLogin}>Войти</Button>

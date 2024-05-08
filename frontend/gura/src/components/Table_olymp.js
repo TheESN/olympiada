@@ -15,6 +15,30 @@ function JsonDataDisplay(id){
 	}
 	);
 
+	const [showModal, setShowModal] = useState(false);
+
+    const ShowWind = () => setShowModal(true)
+
+    const [inputData, setInputData] = useState({name:''})
+
+
+	
+    //Добавление олимпиады
+    function handleSubmit(event){
+        event.preventDefault()
+
+        axios.post('http://localhost:8000/api/olympiada', inputData)
+        .then(res => {
+            if (res.data.valid === true){
+                alert("Данные добавлены");
+                console.log(res.data.valid)
+            }
+            else{
+                alert("Неправильно введены данные");
+            }
+        })
+    }
+
 	//Показ модальное окно редактирования
     const ShowWindEditOlymp = (event) => {
 		event.preventDefault();
@@ -36,14 +60,8 @@ function JsonDataDisplay(id){
     const CloseWind = () => {
 		setShowModalEditOlymp(false)
 		setShowModalRegister(false)
+		setShowModal(false)
 	}
-
-	const [inputData, setInputData] = useState({name:''})
-
-    const Clicked = (event) =>{
-		id = event.target.id
-        console.log(id)
-    }
 	
 	const [olymps, setOlymps] = useState([])
 
@@ -101,6 +119,7 @@ function JsonDataDisplay(id){
 				<td>{olymp.olymp_date_start}</td>
 			    <td>{olymp.olymp_time}</td>
 			    <td><Button variant='primary' onClick={ShowModalRegister} id={olymp.id}>Записаться</Button></td>
+				
 			</tr>
 		)
 	})
@@ -132,6 +151,35 @@ function JsonDataDisplay(id){
 			</Table>
         </Container>
 
+		<div className="AddButton">
+            <Button onClick={ShowWind}>Добавить</Button>
+        </div>
+
+		{/* модальное окно Добавление */}
+        <Modal show={showModal} onHide={CloseWind}>
+            <Modal.Header closeButton>
+                <Modal.Title>Добавить олимпиаду</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group>
+                        <Form.Label>Название</Form.Label>
+                            <Form.Control type='text' name="olymp_name" onChange={e => setInputData({...inputData, olymp_name: e.target.value})}  required/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Дата начала</Form.Label>
+                        <Form.Control type='datefield'  name="olymp_date_start" onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})} required/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Длительность</Form.Label>
+                        <Form.Control type='time'  name="olymp_time" onChange={e => setInputData({...inputData, olymp_time: e.target.value})} required/>
+                    </Form.Group>
+                    <Button className='mt-3' type="submit" >Добавить</Button>
+                </Form>
+            </Modal.Body>
+        </Modal>		
+
+
 		{/* Модальное окно редактирования олимпиады */}
 		<Modal show={showModalEditOlymp} onHide={CloseWind}>
             <Modal.Header closeButton>
@@ -139,18 +187,17 @@ function JsonDataDisplay(id){
             </Modal.Header>
             <Modal.Body>
                 <Form>
-					{/* <Form.Control type='hidden' value={editOlymp.id}/> */}
                     <Form.Group>
                         <Form.Label>Название</Form.Label>
-                            <Form.Control type='text' name="olymp_name" defaultValue={editOlymp.olymp_name} onChange={e => setInputData({...inputData, olymp_name: e.target.value})}  required/>
+                            <Form.Control type='text' name="olymp_name" value={editOlymp.olymp_name} onChange={e => setInputData({...inputData, olymp_name: e.target.value})}  required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Дата начала</Form.Label>
-                        <Form.Control type='datefield'  name="olymp_date_start" placeholder={editOlymp.olymp_date_start} onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})} required/>
+                        <Form.Control type='datefield'  name="olymp_date_start" value={editOlymp.olymp_date_start} onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})} required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Длительность</Form.Label>
-                        <Form.Control type='time'  name="olymp_time" defaultValue={editOlymp.olymp_time} onChange={e => setInputData({...inputData, olymp_time: e.target.value})} required/>
+                        <Form.Control type='time'  name="olymp_time" value={editOlymp.olymp_time} onChange={e => setInputData({...inputData, olymp_time: e.target.value})} required/>
                     </Form.Group>
                     <Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
 					<Button variant='danger' className='ms-2 mt-3' type='submit' onClick={DeleteSubmit}>Удалить</Button>
