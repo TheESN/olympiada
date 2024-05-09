@@ -3,10 +3,12 @@ from .models import Employee
 from .models import Olympiada
 from .models import Student
 from .models import Application
+from .models import Subdivision
 from .serializers import EmployeeSerializer
 from .serializers import OlympSerializer
 from .serializers import StudentSerializer
 from .serializers import ApplicationSerializer
+from .serializers import SubdivisionSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -34,12 +36,13 @@ class EmployeeViewSet(APIView):
                 output["message"] = 'Ошибка!'
             return Response(output)
     def put(self, request, id, format=None):
+        output = {"valid": False}
         employee = get_object_or_404(Employee, pk=id)
         ser = EmployeeSerializer(employee, data=request.data)
         if ser.is_valid():
             ser.save()
-            return Response(ser.data)
-        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+            output["valid"] = True
+        return Response(output)
 
 class AddEmployeeViewSet(APIView):
     def post(self, request):
@@ -102,8 +105,6 @@ class OlympViewSet(APIView):
         if ser.is_valid():
             ser.save()
             output["valid"] = True
-        else:
-            output["valid"] = False
         return Response(output)
 
 class AddOlympViewSet(APIView):
@@ -133,9 +134,81 @@ class ApplicationViewSet(APIView):
         application = get_object_or_404(Application, pk=id)
         ser = ApplicationSerializer(application)
         return Response(ser.data)
+    def delete(self, request, id, format=None):
+        output = {"valid": True, "message": ''}
+        if request.method == "DELETE":
+            application = get_object_or_404(Application, pk=id)
+            try:
+                output["application"] = application.id
+                application.delete()
+                output["message"] = 'Успешно!'
+            except:
+                del output["application"]
+                output["valid"] = False
+                output["message"] = 'Ошибка!'
+            return Response(output)
+
+    def put(self, request, id, format=None):
+        application = get_object_or_404(Application, pk=id)
+        ser = ApplicationSerializer(application, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data)
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ApplicationViewList(ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
 
+class AddApplicationViewSet(APIView):
+    def post(self, request):
+        output = {"valid": False}
+        if request.method == "POST":
+            try:
+                ser = ApplicationSerializer(data=request.data)
+                if ser.is_valid():
+                    ser.save()
+                    output["valid"] = True
+                else:
+                    output["valid"] = False
+                    output['msg'] = 'Проверьте правильность заполнения формы'
+            except Exception as e:
+                output['valid'] = False
+                output['msg'] = 'Ошибка при сохранении'
+            return Response(output)
 
+class SubdivisionViewSet(APIView):
+    def get(self, request, id, format=None):
+        #id = request.GET['id']
+        subdivision = get_object_or_404(Subdivision, pk=id)
+        ser = SubdivisionSerializer(subdivision)
+        return Response(ser.data)
+    def put(self, request, id, format=None):
+        output = {"valid": False}
+        subdivision = get_object_or_404(Subdivision, pk=id)
+        ser = SubdivisionSerializer(subdivision, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            output["valid"] = True
+        return Response(output)
+
+class AddSubdivisionViewSet(APIView):
+    def post(self, request):
+        output = {"valid": False}
+        if request.method == "POST":
+            try:
+                ser = SubdivisionSerializer(data=request.data, many=True)
+                if ser.is_valid():
+                    ser.save()
+                    output["valid"] = True
+                else:
+                    output["valid"] = False
+                    output['msg'] = 'Проверьте правильность заполнения формы'
+            except Exception as e:
+                output['valid'] = False
+                output['msg'] = 'Ошибка при сохранении'
+        return Response(output)
+
+class SubdivisionViewList(ModelViewSet):
+    queryset = Subdivision.objects.all()
+    serializer_class = SubdivisionSerializer

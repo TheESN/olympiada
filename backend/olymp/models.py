@@ -51,3 +51,5 @@ class Application(models.Model):
     application_date = models.DateTimeField("Дата регистрации")
     application_employee = models.ForeignKey(Employee, verbose_name="Ответственный", null=True, on_delete=models.SET_NULL, related_name='employees')
 
+class Subdivision(models.Model):
+    subdivision_name = models.CharField("Наименование района", max_length=200, db_index=True)
