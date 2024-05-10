@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import permissions
+import pandas as pd
 
 
 # Create your views here.
@@ -198,6 +199,25 @@ class AddSubdivisionViewSet(APIView):
         if request.method == "POST":
             try:
                 ser = SubdivisionSerializer(data=request.data, many=True)
+                if ser.is_valid():
+                    ser.save()
+                    output["valid"] = True
+                else:
+                    output["valid"] = False
+                    output['msg'] = 'Проверьте правильность заполнения формы'
+            except Exception as e:
+                output['valid'] = False
+                output['msg'] = 'Ошибка при сохранении'
+        return Response(output)
+
+class SubdivisionExcelImportViewSet(APIView):
+    def post(self, request):
+        output = {"valid": False}
+        if request.method == "POST":
+            try:
+                file = request.FILES['file']
+                df = pd.read_excel(file)
+                ser = SubdivisionSerializer(data=df.to_dict('subdivision_name'), many=True)
                 if ser.is_valid():
                     ser.save()
                     output["valid"] = True

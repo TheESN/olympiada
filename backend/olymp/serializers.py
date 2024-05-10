@@ -26,6 +26,7 @@ class OlympSerializer(serializers.ModelSerializer):
         fields = ['id', 'olymp_name', 'olymp_date_start', 'olymp_time']   #No creators yet!
 
 class ApplicationSerializer(serializers.ModelSerializer):
+    applied_olymp = OlympSerializer()
     class Meta:
         model = Application
         fields = ['id', 'applied_student', 'applied_olymp', 'application_date', 'application_employee']
