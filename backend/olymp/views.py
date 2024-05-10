@@ -4,11 +4,13 @@ from .models import Olympiada
 from .models import Student
 from .models import Application
 from .models import Subdivision
+from django.contrib.auth.models import User
 from .serializers import EmployeeSerializer
 from .serializers import OlympSerializer
 from .serializers import StudentSerializer
 from .serializers import ApplicationSerializer
 from .serializers import SubdivisionSerializer
+from .serializers import UserSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -212,3 +214,8 @@ class AddSubdivisionViewSet(APIView):
 class SubdivisionViewList(ModelViewSet):
     queryset = Subdivision.objects.all()
     serializer_class = SubdivisionSerializer
+
+class UserViewList(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    #permission_classes = [permissions.IsAuthenticated]
