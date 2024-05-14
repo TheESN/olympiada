@@ -1,7 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import  NaviBar  from './components/Navibar';
-import AddButton from "./components/AddButton";
 import React from 'react';
 import { Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 

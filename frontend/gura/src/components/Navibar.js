@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Button, Container, Form, Modal, Nav, Navbar} from 'react-bootstrap';
 
-import './gg.css';
+import './Appearance.css';
 
 export default function NaviBar(){
 
