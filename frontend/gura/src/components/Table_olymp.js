@@ -6,6 +6,8 @@ function JsonDataDisplay(id){
 	const [showModalEditOlymp, setShowModalEditOlymp] = useState(false);
 
 	const [showModalRegister, setShowModalRegister] = useState(false);
+    
+    const [olymps, setOlymps] = useState([])
 
 	const [editOlymp, setEditOlymp] = useState({
 		"id":-1,
@@ -63,7 +65,7 @@ function JsonDataDisplay(id){
 		setShowModal(false)
 	}
 	
-	const [olymps, setOlymps] = useState([])
+	
 
 	//Запрос списка олимпиады
 	useEffect(() => {

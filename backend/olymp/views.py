@@ -133,7 +133,9 @@ class ApplicationViewSet(APIView):
     def get(self, request, id, format=None):
         application = get_object_or_404(Application, pk=id)
         ser = ApplicationSerializer(application)
-        return Response(ser.data)
+        output = ser.data
+        output["Название"] = application.applied_olymp.olymp_name
+        return Response(output)
     def delete(self, request, id, format=None):
         output = {"valid": True, "message": ''}
         if request.method == "DELETE":

@@ -27,6 +27,7 @@ function Employee_list(id){
 	    } 
 	}
 
+	//Добавление
 	function handleSubmit(event){
         event.preventDefault()
 
@@ -69,7 +70,7 @@ function Employee_list(id){
 
 	const [inputData, setInputData] = useState({user:1})
 
-	//Удаление ответсвенного
+	//Редактирование ответсвенного
 	function SubmitEdit(event){
 		event.preventDefault()
 
@@ -81,7 +82,7 @@ function Employee_list(id){
         .then(res => {
             if (res.data.valid === true){
                 alert("Данные обновлены");
-                console.log(res.data.valid)
+                console.log(res.data)
             }
             else{
                 alert("Неправильно введены данные");
@@ -117,7 +118,6 @@ function Employee_list(id){
 				<td>{emp.name}</td>
 				<td>{emp.sex}</td>
 			    <td>{emp.role}</td>
-				<td>{emp.user}</td>
 			    <td><Button variant='primary' onClick={ShowWindEditOlymp} id={emp.id}>Изменить</Button></td>
 			</tr>
 		)
@@ -133,7 +133,6 @@ function Employee_list(id){
 					<th>ФИО</th>
 					<th>Пол</th>
                     <th>Роль</th>
-					<th>user</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -165,7 +164,7 @@ function Employee_list(id){
 							label="Мужской"
 							name="radioGroup"
 							id="option1"
-							value={"0"}
+							value={"Мужской"}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
 						<Form.Check
@@ -173,10 +172,9 @@ function Employee_list(id){
 							label="Женский"
 							name="radioGroup"
 							id="option2"
-							value={"1"}
+							value={"Женский"}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
-                        <Form.Control type='text'  name="sex" onChange={e => setInputData({...inputData, sex: e.target.value})} />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Роль</Form.Label>
@@ -203,12 +201,12 @@ function Employee_list(id){
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Пол</Form.Label>
-						{/* <Form.Check
+						<Form.Check
 							type="radio"
 							label="Мужской"
 							name="radioGroup"
 							id="option1"
-							value={"0"}
+							value={"Мужской"}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
 						<Form.Check
@@ -216,16 +214,17 @@ function Employee_list(id){
 							label="Женский"
 							name="radioGroup"
 							id="option2"
-							value={"1"}
+							value={"Женский"}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
-						/> */}
-                        <Form.Control type='text'  name="sex" defaultValue={editEmployee.sex} onChange={e => setInputData({...inputData, sex: e.target.value})} required/>
+						/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Роль</Form.Label>
                         <Form.Control type='text'  name="role" defaultValue={editEmployee.role} onChange={e => setInputData({...inputData, role: e.target.value})} required/>
                     </Form.Group>
-					<Form.Control type='hidden' name='user' value={"1"} onChange={e => setInputData({...inputData, user: e.target.value})}/>
+					<Form.Group>
+						<Form.Control type='hidden' name='user' value={"1"} onChange={e => setInputData({...inputData, user: e.target.value})}/>
+					</Form.Group>
 					<Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
 					<Button variant='danger' className='ms-2 mt-3' type='submit' onClick={DeleteSubmit}>Удалить</Button>
                 </Form>

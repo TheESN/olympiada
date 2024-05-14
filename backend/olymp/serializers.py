@@ -5,7 +5,7 @@ from .models import Person, Employee, Student, Olympiada, Application, Subdivisi
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ['id', 'name', 'sex']
+        fields = ['id', 'name', 'sex', 'gender']
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -13,6 +13,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = '__all__'
 
+gender = serializers.SerializerMethodField('')
+
+def getGender(self, obj):
+    return obj.sex.username
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,10 +29,21 @@ class OlympSerializer(serializers.ModelSerializer):
         model = Olympiada
         fields = ['id', 'olymp_name', 'olymp_date_start', 'olymp_time']   #No creators yet!
 
+
+###############
+# class Name(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = '__all__'
+
+###############
+
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = ['id', 'applied_student', 'applied_olymp', 'application_date', 'application_employee']
+
+
 
 class SubdivisionSerializer(serializers.ModelSerializer):
     class Meta:

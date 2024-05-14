@@ -4,6 +4,7 @@ import axios from "axios"
 
 function Appli_list(id){
 	const [applications, setApplications] = useState([])
+	const [olymps, setOlymps] = useState([])
 
 	//Запрос списка заявок
 	useEffect(() => {
@@ -12,6 +13,21 @@ function Appli_list(id){
 			setApplications(res.data)
 		})
 	}, [])
+
+	//Запрос списка олимпиады
+	useEffect(() => {
+		axios.get('http://localhost:8000/api/getolympiadas')
+		.then(res => {
+			setOlymps(res.data)
+			
+		})
+	}, [])
+
+	const clicked = (event) => {
+		event.preventDefault();
+
+		console.log(event)
+	}
 
 	//Вывод таблицы
 	const DisplayData = applications.map((app, index) => {
@@ -22,7 +38,7 @@ function Appli_list(id){
 				<td>{app.applied_olymp}</td>
 			    <td>{app.application_date}</td>
 				<td>{app.application_employee}</td>
-			    <td><Button variant='primary'>Записаться</Button></td>
+			    <td><Button variant='primary' onClick={clicked}>Записаться</Button></td>
 			</tr>
 		)
 	})
@@ -34,10 +50,10 @@ function Appli_list(id){
 				<thead>
 					<tr>
 					<th>#</th>
-					<th>Название</th>
-					<th>Дата проведения</th>
-                    <th>Время начала</th>
-					<th>АНПРОрпр</th>
+					<th>ФИО</th>
+					<th>Олимпиада</th>
+                    <th>Дата подачи</th>
+					<th>Оргнаиз</th>
 					</tr>
 				</thead>
 				<tbody>
