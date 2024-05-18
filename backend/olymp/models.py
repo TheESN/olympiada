@@ -23,6 +23,13 @@ female = 1
 
 sex = ((male, "Мужской"),(female, "Женский"))
 
+
+pending = 0
+accepted = 1
+rejected = 2
+
+APPLICATION_STATUS = ((pending, "В ожидании"), (accepted, "Принята"), (rejected, "Отклонена"))
+
 class Person(models.Model):
     name = models.CharField(max_length=200)
     #sex = models.CharField(max_length=200)
@@ -51,6 +58,11 @@ class Application(models.Model):
     applied_olymp = models.ForeignKey(Olympiada, verbose_name="Олимпиада", on_delete=models.CASCADE, related_name='olympiadas')
     application_date = models.DateTimeField("Дата регистрации")
     application_employee = models.ForeignKey(Employee, verbose_name="Ответственный", null=True, on_delete=models.SET_NULL, related_name='employees')
+    application_status = models.IntegerField(default=0, verbose_name="Статус заявки", choices=APPLICATION_STATUS)
 
 class Subdivision(models.Model):
     subdivision_name = models.CharField("Наименование района", max_length=200, db_index=True)
+
+class School(models.Model):
+    school_name = models.CharField("Название образовательной организации", max_length=200)
+    school_subdivision = models.ForeignKey(Subdivision, verbose_name="Местоположение", null=True, on_delete=models.SET_NULL, related_name='subdivisions')

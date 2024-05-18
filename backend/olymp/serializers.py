@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Person, Employee, Student, Olympiada, Application, Subdivision
+from .models import Person, Employee, Student, Olympiada, Application, Subdivision, School
 from django.contrib.auth.models import User
 
 
@@ -36,22 +36,33 @@ class OlympSerializer(serializers.ModelSerializer):
         fields = ['id', 'olymp_name', 'olymp_date_start', 'olymp_time']   #No creators yet!
 
 
-###############
-# class Name(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = '__all__'
-
-###############
-
 class ApplicationSerializer(serializers.ModelSerializer):
+    applied_student = StudentSerializer(read_only=True)
+    applied_student_id = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all(), source="applied_student", write_only=True)
+    applied_olymp = OlympSerializer(read_only=True)
+    applied_olymp_id = serializers.PrimaryKeyRelatedField(queryset=Olympiada.objects.all(), source="applied_olymp", write_only=True)
     class Meta:
         model = Application
-        fields = ['id', 'applied_student', 'applied_olymp', 'application_date', 'application_employee']
+        fields = ['id', 'applied_student', 'applied_student_id', 'applied_olymp', 'applied_olymp_id', 'application_date', 'application_employee', 'application_status']
 
 
+class ApplicationStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = ['application_status']
 
+        
+class AppplicationsStatusSertializerMultiple(serializers.Serializer):
+    status_dict = serializers.DictField(child=serializers.IntegerField())     
+
+    
 class SubdivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subdivision
         fields = ['id', 'subdivision_name']
+
+
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = ['id', 'school_name', 'school_subdivision']

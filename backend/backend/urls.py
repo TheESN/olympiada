@@ -19,6 +19,7 @@ from django.urls import path, include
 from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, ApplicationViewSet, ApplicationViewList, AddOlympViewSet, AddApplicationViewSet
 from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList
 from olymp.views import UserViewList, GenderViewList, RoleViewList
+from olymp.views import ChangeApplicationStatus, ChangeApplicationStatusMultiple
 from rest_framework.authtoken import views
 
 
@@ -34,6 +35,8 @@ api = [
     path('getapplication/<int:id>', ApplicationViewSet.as_view()),
     path('getapplications', ApplicationViewList.as_view({'get': 'list'})),
     path('application', AddApplicationViewSet.as_view()),
+    path('applicationstatus/<int:id>', ChangeApplicationStatus.as_view()),
+    path('applicationstatuses', ChangeApplicationStatusMultiple.as_view()),
     path('subdivision', AddSubdivisionViewSet.as_view()),
     path('getsubdivision/<int:id>', SubdivisionViewSet.as_view()),
     path('getsubdivisions', SubdivisionViewList.as_view({'get': 'list'})),
