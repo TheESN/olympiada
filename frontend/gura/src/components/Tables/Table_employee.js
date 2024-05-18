@@ -98,7 +98,7 @@ function Employee_list(id){
 
         axios.delete(url)
         .then(res => {
-                alert("Удаленео");
+                alert("Удалено");
         })
     }
 
@@ -118,6 +118,7 @@ function Employee_list(id){
 				<td>{emp.name}</td>
 				<td>{emp.sex}</td>
 			    <td>{emp.role}</td>
+				<td>{emp.user}</td>
 			    <td><Button variant='primary' onClick={ShowWindEditOlymp} id={emp.id}>Изменить</Button></td>
 			</tr>
 		)
@@ -133,6 +134,7 @@ function Employee_list(id){
 					<th>ФИО</th>
 					<th>Пол</th>
                     <th>Роль</th>
+					<th>Логин</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -164,7 +166,7 @@ function Employee_list(id){
 							label="Мужской"
 							name="radioGroup"
 							id="option1"
-							value={"Мужской"}
+							value={0}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
 						<Form.Check
@@ -172,7 +174,7 @@ function Employee_list(id){
 							label="Женский"
 							name="radioGroup"
 							id="option2"
-							value={"Женский"}
+							value={1}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
                     </Form.Group>
@@ -206,7 +208,7 @@ function Employee_list(id){
 							label="Мужской"
 							name="radioGroup"
 							id="option1"
-							value={"Мужской"}
+							value={0}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
 						<Form.Check
@@ -214,7 +216,7 @@ function Employee_list(id){
 							label="Женский"
 							name="radioGroup"
 							id="option2"
-							value={"Женский"}
+							value={1}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
                     </Form.Group>

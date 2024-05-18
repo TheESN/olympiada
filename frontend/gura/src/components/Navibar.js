@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Button, Container, Form, Modal, Nav, Navbar} from 'react-bootstrap';
 
-import './Appearance.css';
+import './Design.css';
 
 export default function NaviBar(){
 

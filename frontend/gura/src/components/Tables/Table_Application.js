@@ -4,23 +4,12 @@ import axios from "axios"
 
 function Appli_list(id){
 	const [applications, setApplications] = useState([])
-	const [olymps, setOlymps] = useState([])
 
 	//Запрос списка заявок
 	useEffect(() => {
 		axios.get('http://localhost:8000/api/getapplications')
 		.then(res => {
 			setApplications(res.data)
-		})
-	}, [])
-
-	//Запрос списка олимпиады
-	
-	useEffect(() => {
-		axios.get('http://localhost:8000/api/getolympiadas')
-		.then(res => {
-			setOlymps(res.data)
-			
 		})
 	}, [])
 
@@ -39,7 +28,8 @@ function Appli_list(id){
 				<td>{app.applied_olymp}</td>
 			    <td>{app.application_date}</td>
 				<td>{app.application_employee}</td>
-			    <td><Button variant='primary' onClick={clicked}>Записаться</Button></td>
+			    <td><Button variant='success' onClick={clicked}>Принять</Button></td>
+				<td><Button variant='danger' onClick={clicked}>Отказать</Button></td>
 			</tr>
 		)
 	})
@@ -53,8 +43,8 @@ function Appli_list(id){
 					<th>#</th>
 					<th>ФИО</th>
 					<th>Олимпиада</th>
-                    <th>Дата подачи</th>
-					<th>Оргнаиз</th>
+                    <th>Дата заявки</th>
+					<th>Оргнизатор</th>
 					</tr>
 				</thead>
 				<tbody>
