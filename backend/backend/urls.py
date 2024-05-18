@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, ApplicationViewSet, ApplicationViewList, AddOlympViewSet, AddApplicationViewSet
 from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList
+from olymp.views import UserViewList, GenderViewList, RoleViewList
 from rest_framework.authtoken import views
 
 
@@ -35,7 +36,10 @@ api = [
     path('application', AddApplicationViewSet.as_view()),
     path('subdivision', AddSubdivisionViewSet.as_view()),
     path('getsubdivision/<int:id>', SubdivisionViewSet.as_view()),
-    path('getsubdivisions', SubdivisionViewList.as_view({'get': 'list'}))
+    path('getsubdivisions', SubdivisionViewList.as_view({'get': 'list'})),
+    path('getusers', UserViewList.as_view({'get': 'list'})),
+    path('getgenders', GenderViewList.as_view()),
+    path('getroles', RoleViewList.as_view())
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
