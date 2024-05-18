@@ -5,9 +5,9 @@ import React from 'react';
 import { Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 
 
-import JsonDataDisplay from './components/Table_olymp';
-import Appli_list from './components/Table_Application';
-import Employee_list from './components/Table_employee';
+import JsonDataDisplay from './components/Tables/Table_olymp';
+import Appli_list from './components/Tables/Table_Application';
+import Employee_list from './components/Tables/Table_employee';
 
 function App() {
   return (

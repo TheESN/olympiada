@@ -15,6 +15,7 @@ function Appli_list(id){
 	}, [])
 
 	//Запрос списка олимпиады
+	
 	useEffect(() => {
 		axios.get('http://localhost:8000/api/getolympiadas')
 		.then(res => {

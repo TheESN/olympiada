@@ -26,6 +26,7 @@ function JsonDataDisplay(id){
 
 	
     //Добавление олимпиады
+
     function handleSubmit(event){
         event.preventDefault()
 
@@ -166,15 +167,21 @@ function JsonDataDisplay(id){
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label>Название</Form.Label>
-                            <Form.Control type='text' name="olymp_name" onChange={e => setInputData({...inputData, olymp_name: e.target.value})}  required/>
+                            <Form.Control type='text' name="olymp_name" 
+                            onChange={e => setInputData({...inputData, olymp_name: e.target.value})} 
+                             required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Дата начала</Form.Label>
-                        <Form.Control type='datefield'  name="olymp_date_start" onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})} required/>
+                        <Form.Control type='datefield'  name="olymp_date_start"
+                         onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})}
+                          required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Длительность</Form.Label>
-                        <Form.Control type='time'  name="olymp_time" onChange={e => setInputData({...inputData, olymp_time: e.target.value})} required/>
+                        <Form.Control type='time'  name="olymp_time"
+                         onChange={e => setInputData({...inputData, olymp_time: e.target.value})} 
+                         required/>
                     </Form.Group>
                     <Button className='mt-3' type="submit" >Добавить</Button>
                 </Form>
@@ -191,15 +198,24 @@ function JsonDataDisplay(id){
                 <Form>
                     <Form.Group>
                         <Form.Label>Название</Form.Label>
-                            <Form.Control type='text' name="olymp_name" value={editOlymp.olymp_name} onChange={e => setInputData({...inputData, olymp_name: e.target.value})}  required/>
+                            <Form.Control type='text' name="olymp_name" 
+                            defaultValue={editOlymp.olymp_name} onChange={e => 
+                            setInputData({...inputData, olymp_name: e.target.value})}  
+                            required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Дата начала</Form.Label>
-                        <Form.Control type='datefield'  name="olymp_date_start" value={editOlymp.olymp_date_start} onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})} required/>
+                        <Form.Control type='datefield'  name="olymp_date_start" 
+                        defaultValue={editOlymp.olymp_date_start} onChange={e =>
+                         setInputData({...inputData, olymp_date_start: e.target.value})} 
+                         required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Длительность</Form.Label>
-                        <Form.Control type='time'  name="olymp_time" value={editOlymp.olymp_time} onChange={e => setInputData({...inputData, olymp_time: e.target.value})} required/>
+                        <Form.Control type='time'  name="olymp_time"
+                        defaultValue={editOlymp.olymp_time} onChange={e =>
+                         setInputData({...inputData, olymp_time: e.target.value})}
+                          required/>
                     </Form.Group>
                     <Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
 					<Button variant='danger' className='ms-2 mt-3' type='submit' onClick={DeleteSubmit}>Удалить</Button>
