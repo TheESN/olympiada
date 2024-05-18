@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('olymp', '0003_application'),
+        ('olymp', '0004_application_application_status'),
     ]
 
     operations = [

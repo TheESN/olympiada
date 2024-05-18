@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ['id', 'name', 'sex']
+        fields = ['id', 'name', 'sex', 'gender']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = '__all__'
 
+gender = serializers.SerializerMethodField('')
+
+def getGender(self, obj):
+    return obj.sex.username
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:

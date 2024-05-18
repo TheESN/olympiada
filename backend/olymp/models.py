@@ -32,6 +32,7 @@ APPLICATION_STATUS = ((pending, "В ожидании"), (accepted, "Принят
 
 class Person(models.Model):
     name = models.CharField(max_length=200)
+    #sex = models.CharField(max_length=200)
     sex = models.IntegerField("Пол", choices=sex)
     #city = models.CharField(max_length=200)
     #munic_entity = models.CharField(max_length=200)

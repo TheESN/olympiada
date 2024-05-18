@@ -1,31 +1,25 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import  NaviBar  from './components/Navibar';
-import schema from "./data/schema.json";
-import TableNew from "./components/Table_new";
-import AddButton from "./components/AddButton";
+import React from 'react';
+import { Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 
-import data from "./data/olymp_list.json"
-import JsonDataDisplay from './components/Table_three';
+
+import JsonDataDisplay from './components/Tables/Table_olymp';
+import Appli_list from './components/Tables/Table_Application';
+import Employee_list from './components/Tables/Table_employee';
 
 function App() {
   return (
     <>
     <NaviBar/>
-    {/* способ номер 2 */}
-    {/* <div className="container p-2">
-      <div className="row">
-        <div className="col">
-          <TableNew headers={Object.keys(schema)} rows={data} />
-        </div>
-      </div>
-    </div> */}
-    
-    {/* способ номер 3 */}
-    <div>
-      <JsonDataDisplay />
-    </div>
-    <AddButton/>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<JsonDataDisplay />}></Route>
+        <Route path='/application' element={<Appli_list />}></Route>
+        <Route path='/employees' element={<Employee_list />}></Route>
+      </Routes>
+    </BrowserRouter>  
     </>
   );
 }
