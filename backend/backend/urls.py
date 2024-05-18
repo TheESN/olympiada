@@ -36,7 +36,7 @@ api = [
     path('getapplications', ApplicationViewList.as_view({'get': 'list'})),
     path('application', AddApplicationViewSet.as_view()),
     path('applicationstatus/<int:id>', ChangeApplicationStatus.as_view()),
-    path('applicationstatuses', ChangeApplicationStatusMultiple.as_view())
+    path('applicationstatuses', ChangeApplicationStatusMultiple.as_view()),
     path('subdivision', AddSubdivisionViewSet.as_view()),
     path('getsubdivision/<int:id>', SubdivisionViewSet.as_view()),
     path('getsubdivisions', SubdivisionViewList.as_view({'get': 'list'})),
