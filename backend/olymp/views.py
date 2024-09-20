@@ -5,6 +5,7 @@ from .models import Student
 from .models import Application
 from .models import Subdivision
 from .models import sex, ROLES
+from .models import School
 from django.contrib.auth.models import User
 from .serializers import EmployeeSerializer
 from .serializers import OlympSerializer
@@ -13,6 +14,7 @@ from .serializers import ApplicationSerializer
 from .serializers import ApplicationStatusSerializer, AppplicationsStatusSertializerMultiple
 from .serializers import SubdivisionSerializer
 from .serializers import UserSerializer
+from .serializers import SchoolSerializer
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -259,3 +261,7 @@ class RoleViewList(APIView):
     def get(self, request):
         role_dict = dict(ROLES)
         return Response(role_dict)
+
+class SchoolViewList(ModelViewSet):
+    queryset = School.objects.all()
+    serializer_class = SchoolSerializer

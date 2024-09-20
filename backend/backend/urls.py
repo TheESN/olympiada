@@ -20,6 +20,7 @@ from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, S
 from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList
 from olymp.views import UserViewList, GenderViewList, RoleViewList
 from olymp.views import ChangeApplicationStatus, ChangeApplicationStatusMultiple
+from olymp.views import SchoolViewList
 from rest_framework.authtoken import views
 
 
@@ -42,7 +43,8 @@ api = [
     path('getsubdivisions', SubdivisionViewList.as_view({'get': 'list'})),
     path('getusers', UserViewList.as_view({'get': 'list'})),
     path('getgenders', GenderViewList.as_view()),
-    path('getroles', RoleViewList.as_view())
+    path('getroles', RoleViewList.as_view()),
+    path('getschools', SchoolViewList.as_view({'get': 'list'}))
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
