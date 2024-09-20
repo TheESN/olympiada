@@ -265,3 +265,9 @@ class RoleViewList(APIView):
 class SchoolViewList(ModelViewSet):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
+
+class SchoolViewSet(APIView):
+    def get(self, request, id, format=None):
+        school = get_object_or_404(School, pk=id)
+        ser = SchoolSerializer(school)
+        return Response(ser.data)
