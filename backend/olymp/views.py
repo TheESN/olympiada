@@ -271,3 +271,20 @@ class SchoolViewSet(APIView):
         school = get_object_or_404(School, pk=id)
         ser = SchoolSerializer(school)
         return Response(ser.data)
+
+class AddSchoolViewSet(APIView):
+    def post(self, request):
+        output = {"valid": False}
+        if request.method == "POST":
+            try:
+                ser = SchoolSerializer(data=request.data)
+                if ser.is_valid():
+                    ser.save()
+                    output["valid"] = True
+                else:
+                    output["valid"] = False
+                    output['msg'] = 'Проверьте правильность заполнения формы'
+            except Exception as e:
+                output['valid'] = False
+                output['msg'] = 'Ошибка при сохранении'
+        return Response(output)
