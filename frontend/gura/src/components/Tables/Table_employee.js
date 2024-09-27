@@ -29,8 +29,7 @@ function Employee_list(id){
 
 	//Добавление
 	function handleSubmit(event){
-        event.preventDefault()
-
+		inputData["user"] = 1
 		console.log(inputData)
 
         axios.post('http://localhost:8000/api/employee', inputData)
@@ -90,9 +89,8 @@ function Employee_list(id){
         })
     }
 
-	//Удаление олимпиады
+	//Удаление ответственного
 	function DeleteSubmit(event){
-		event.preventDefault()
 
 		var url = "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
 
@@ -102,7 +100,7 @@ function Employee_list(id){
         })
     }
 
-	//Запрос списка заявок
+	//Запрос списка ответственного
 	useEffect(() => {
 		axios.get('http://localhost:8000/api/getemployees')
 		.then(res => {
@@ -166,7 +164,7 @@ function Employee_list(id){
 							label="Мужской"
 							name="radioGroup"
 							id="option1"
-							value={0}
+							value="Мужской"
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
 						<Form.Check
@@ -174,13 +172,28 @@ function Employee_list(id){
 							label="Женский"
 							name="radioGroup"
 							id="option2"
-							value={1}
+							value="Женский"
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
                     </Form.Group>
-                    <Form.Group>
+					<Form.Group>
                         <Form.Label>Роль</Form.Label>
-                        <Form.Control type='text'  name="role" onChange={e => setInputData({...inputData, role: e.target.value})} />
+						<Form.Check
+							type="radio"
+							label="Ответственный"
+							name="roleGroup"
+							id="option1"
+							value="Ответственный"
+							onChange={e => setInputData({...inputData, role: e.target.value})}
+						/>
+						<Form.Check
+							type="radio"
+							label="Представитель муниципалитета"
+							name="roleGroup"
+							id="option2"
+							value="Представитель муниципалитета"
+							onChange={e => setInputData({...inputData, role: e.target.value})}
+						/>
                     </Form.Group>
 					<Form.Group>
 						<Form.Control type='hidden' name='user' value={"1"} onChange={e => setInputData({...inputData, user: e.target.value})}/>
@@ -225,7 +238,7 @@ function Employee_list(id){
                         <Form.Control type='text'  name="role" defaultValue={editEmployee.role} onChange={e => setInputData({...inputData, role: e.target.value})} required/>
                     </Form.Group>
 					<Form.Group>
-						<Form.Control type='hidden' name='user' value={"1"} onChange={e => setInputData({...inputData, user: e.target.value})}/>
+						<Form.Control type='hidden' name='user' value={1} onChange={e => setInputData({...inputData, user: e.target.value})}/>
 					</Form.Group>
 					<Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
 					<Button variant='danger' className='ms-2 mt-3' type='submit' onClick={DeleteSubmit}>Удалить</Button>
