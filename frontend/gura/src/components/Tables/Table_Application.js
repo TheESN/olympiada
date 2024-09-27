@@ -24,8 +24,8 @@ function Appli_list(id){
 		return(
 			<tr>
 				<td>{index + 1}</td>
-				<td>{app.applied_student}</td>
-				<td>{app.applied_olymp}</td>
+				<td>{app.applied_student.name}</td>
+				<td>{app.applied_olymp.olymp_name}</td>
 			    <td>{app.application_date}</td>
 				<td>{app.application_employee}</td>
 			    <td><Button variant='success' onClick={clicked}>Принять</Button></td>

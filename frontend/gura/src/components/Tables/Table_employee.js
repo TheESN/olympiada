@@ -68,7 +68,7 @@ function Employee_list(id){
 		setShowModalEditEmployee(true)
 	}
 
-	const [inputData, setInputData] = useState({user:1})
+	const [inputData, setInputData] = useState({})
 
 	//Редактирование ответсвенного
 	function SubmitEdit(event){
@@ -151,7 +151,7 @@ function Employee_list(id){
         {/* Модальное окно добваления ответственных */}
 		<Modal show={showModalAddEmployee} onHide={CloseWind}>
             <Modal.Header closeButton>
-                <Modal.Title>Изменить олимпиаду</Modal.Title>
+                <Modal.Title>Добавить ответсвенного</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
@@ -193,7 +193,7 @@ function Employee_list(id){
 		{/* Модальное окно редактриованния ответственных */}
 		<Modal show={showModalEditEmployee} onHide={CloseWind}>
             <Modal.Header closeButton>
-                <Modal.Title>Изменить олимпиаду</Modal.Title>
+                <Modal.Title>Изменить ответсвенного</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>

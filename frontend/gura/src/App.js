@@ -1,4 +1,4 @@
-import './App.css';
+import './components/Design.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import  NaviBar  from './components/Navibar';
 import React from 'react';
