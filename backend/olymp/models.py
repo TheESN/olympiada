@@ -11,15 +11,14 @@ class Olympiada(models.Model):
     #olymp_creator = models.CharField(max_length=200)
 
     
-organizer = "Организатор"
-representative = "Представитель муниципалитета"
+organizer = 0
+representative = 1
 
 ROLES =  ((organizer, "Организатор"),
          (representative, "Представитель муниципалитета"))
 
-
-male = "Мужской"
-female = "Женский"
+male = 0
+female = 1
 
 sex = ((male, "Мужской"),(female, "Женский"))
 
@@ -33,7 +32,7 @@ APPLICATION_STATUS = ((pending, "В ожидании"), (accepted, "Принят
 class Person(models.Model):
     name = models.CharField(max_length=200)
     #sex = models.CharField(max_length=200)
-    sex = models.CharField("Пол", choices=sex, max_length=15)
+    sex = models.IntegerField("Пол", choices=sex)
     #city = models.CharField(max_length=200)
     #munic_entity = models.CharField(max_length=200)
     def __str__(self):
@@ -41,7 +40,7 @@ class Person(models.Model):
 
 
 class Employee(Person):
-    role = models.CharField(default=0, choices=ROLES, max_length=100)
+    role = models.IntegerField(default=0, choices=ROLES)
     user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
 
 

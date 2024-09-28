@@ -29,7 +29,9 @@ function Employee_list(id){
 
 	//Добавление
 	function handleSubmit(event){
+		event.preventDefault()
 		inputData["user"] = 1
+
 		console.log(inputData)
 
         axios.post('http://localhost:8000/api/employee', inputData)
@@ -164,7 +166,7 @@ function Employee_list(id){
 							label="Мужской"
 							name="radioGroup"
 							id="option1"
-							value="Мужской"
+							value={0}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
 						<Form.Check
@@ -172,7 +174,7 @@ function Employee_list(id){
 							label="Женский"
 							name="radioGroup"
 							id="option2"
-							value="Женский"
+							value={1}
 							onChange={e => setInputData({...inputData, sex: e.target.value})}
 						/>
                     </Form.Group>
@@ -183,7 +185,7 @@ function Employee_list(id){
 							label="Ответственный"
 							name="roleGroup"
 							id="option1"
-							value="Ответственный"
+							value={0}
 							onChange={e => setInputData({...inputData, role: e.target.value})}
 						/>
 						<Form.Check
@@ -191,7 +193,7 @@ function Employee_list(id){
 							label="Представитель муниципалитета"
 							name="roleGroup"
 							id="option2"
-							value="Представитель муниципалитета"
+							value={1}
 							onChange={e => setInputData({...inputData, role: e.target.value})}
 						/>
                     </Form.Group>
