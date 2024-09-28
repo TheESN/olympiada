@@ -271,6 +271,27 @@ class SchoolViewSet(APIView):
         school = get_object_or_404(School, pk=id)
         ser = SchoolSerializer(school)
         return Response(ser.data)
+    def put(self, request, id, format=None):
+        output = {"valid": False}
+        school = get_object_or_404(School, pk=id)
+        ser = SchoolSerializer(school, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            output["valid"] = True
+        return Response(output)
+    def delete(self, request, id, format=None):
+        output = {"valid": True, "message": ''}
+        if request.method == "DELETE":
+            school = get_object_or_404(Application, pk=id)
+            try:
+                output["application"] = school.id
+                school.delete()
+                output["message"] = 'Успешно!'
+            except:
+                del output["application"]
+                output["valid"] = False
+                output["message"] = 'Ошибка!'
+            return Response(output)
 
 class AddSchoolViewSet(APIView):
     def post(self, request):
