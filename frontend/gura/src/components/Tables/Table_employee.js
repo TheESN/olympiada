@@ -5,6 +5,9 @@ import axios from "axios"
 
 function Employee_list(id){
 	const [employees, setEmployees] = useState([])
+	const [genders, setGenders] = useState([])
+	const [roles, setRoles] = useState([])
+	const [inputData, setInputData] = useState({})
 
 	const [showModalAddEmployee, setShowModalAddEmployee] = useState(false);
 
@@ -20,31 +23,14 @@ function Employee_list(id){
 	);
 
 	function findEmployeeById(ID) {
-		for(var i=0;i<employees.length;i++){
-			if (employees[i].id == ID){		
+		for(var i=0;i<employees.length;i++)
+			{
+			if (employees[i].id == ID)
+				{		
 				return employees[i];
 			}
 	    } 
 	}
-
-	//Добавление
-	function handleSubmit(event){
-		event.preventDefault()
-		inputData["user"] = 1
-
-		console.log(inputData)
-
-        axios.post('http://localhost:8000/api/employee', inputData)
-        .then(res => {
-            if (res.data.valid === true){
-                alert("Данные добавлены");
-                console.log(res.data)
-            }
-            else{
-                alert("Неправильно введены данные");
-            }
-        })
-    }
 
 	//Показ модальное окно добавления
 	const ShowModalAddEmployee = (event) => {
@@ -69,7 +55,24 @@ function Employee_list(id){
 		setShowModalEditEmployee(true)
 	}
 
-	const [inputData, setInputData] = useState({})
+	//Добавление
+	function handleSubmit(event){
+		event.preventDefault()
+		inputData["user"] = 1
+
+		console.log(inputData)
+
+        axios.post('http://localhost:8000/api/employee', inputData)
+        .then(res => {
+            if (res.data.valid === true){
+                alert("Данные добавлены");
+                console.log(res.data)
+            }
+            else{
+                alert("Неправильно введены данные");
+            }
+        })
+    }
 
 	//Редактирование ответсвенного
 	function SubmitEdit(event){
@@ -93,7 +96,6 @@ function Employee_list(id){
 
 	//Удаление ответственного
 	function DeleteSubmit(event){
-
 		var url = "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
 
         axios.delete(url)
@@ -110,15 +112,32 @@ function Employee_list(id){
 		})
 	}, [])
 
+	//Запрос списка полов
+	useEffect(() => {
+		axios.get('http://localhost:8000/api/getgenders')
+		.then(res => {
+			setGenders(res.data)
+		})
+	}, [])
+
+	//Запрос списка ролей
+	useEffect(() => {
+		axios.get('http://localhost:8000/api/getroles')
+		.then(res => {
+			setRoles(res.data)
+		})
+	}, [])
+
+
 	//Вывод таблицы
 	const DisplayData = employees.map((emp, index) => {
 		return(
+			
 			<tr>
 				<td>{index + 1}</td>
 				<td>{emp.name}</td>
-				<td>{emp.sex}</td>
-			    <td>{emp.role}</td>
-				<td>{emp.user}</td>
+				<td>{genders[emp.sex]}</td>
+			    <td>{roles[emp.role]}</td>
 			    <td><Button variant='primary' onClick={ShowWindEditOlymp} id={emp.id}>Изменить</Button></td>
 			</tr>
 		)
@@ -134,7 +153,6 @@ function Employee_list(id){
 					<th>ФИО</th>
 					<th>Пол</th>
                     <th>Роль</th>
-					<th>Логин</th>
 					</tr>
 				</thead>
 				<tbody>
