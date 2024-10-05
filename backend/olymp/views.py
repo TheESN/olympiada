@@ -241,6 +241,31 @@ class AddSubdivisionViewSet(APIView):
                 output['msg'] = 'Ошибка при сохранении'
         return Response(output)
 
+
+class UserViewSet(APIView):
+    def get(self, request, id, format=None):
+        #id = request.GET['id']
+        user = get_object_or_404(User, pk=id)
+        ser = UserSerializer(user)
+        return Response(ser.data)
+
+class AddUserViewSet(APIView):
+    def post(self, request):
+        output = {"valid": False}
+        if request.method == "POST":
+            try:
+                ser = UserSerializer(data=request.data)
+                if ser.is_valid():
+                    ser.save()
+                    output["valid"] = True
+                else:
+                    output["valid"] = False
+                    output['msg'] = 'Проверьте правильность заполнения формы'
+            except Exception as e:
+                output['valid'] = False
+                output['msg'] = 'Ошибка при сохранении'
+        return Response(output)
+
 class SubdivisionViewList(ModelViewSet):
     queryset = Subdivision.objects.all()
     serializer_class = SubdivisionSerializer
