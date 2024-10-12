@@ -1,15 +1,25 @@
+from cgitb import reset
+
+from django.db.models.expressions import result
 from openpyxl import load_workbook
+from .factory import Factory
 
 class SchoolParser():
-    def parse_excel(self, filename):
+    @classmethod
+    def parse_excel(cls, filename):
         wb = load_workbook(filename=filename)
         ws = wb.active
+        return cls.load_schools(ws)
 
-    def load_schools(self, worksheet):
+    @classmethod
+    def load_schools(cls, worksheet):
+        result = ""
         for row in worksheet.iter_rows(min_row=2):
-            self.load_school(row)
+            result += cls.load_school(row)
+        return result
 
-    def load_school(self, row):
-        pass
+    @classmethod
+    def load_school(cls, row):
+        return Factory.create_school(row[1].value, row[0].value)
 
 
