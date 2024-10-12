@@ -1,6 +1,7 @@
 import os.path
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.db.models.expressions import result
 from django.shortcuts import get_object_or_404
 from rest_framework.parsers import FileUploadParser
 from .models import Employee
@@ -25,6 +26,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import permissions
+from .parse_schools import SchoolParser
 
 
 # Create your views here.
@@ -348,10 +350,11 @@ class FileUploadView(APIView):
     parser_classes = [FileUploadParser]
     def put(self, request, filename, format=None):
         folder='folder'
+        result = {"error": ""}
 
         file_obj = request.data['file']
         full_path = os.path.join(folder, filename)
         with open(full_path, 'wb') as f:
             f.write(file_obj.read())
-
-        return Response(status=204)
+        result["error"] += SchoolParser.parse_excel(full_path)
+        return Response(result)
