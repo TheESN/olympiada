@@ -19,6 +19,7 @@ from django.urls import path, include, re_path
 from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, ApplicationViewSet, ApplicationViewList, AddOlympViewSet, AddApplicationViewSet
 from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList
 from olymp.views import UserViewList, GenderViewList, RoleViewList
+from olymp.views import UserViewSet, AddUserViewSet
 from olymp.views import ChangeApplicationStatus, ChangeApplicationStatusMultiple
 from olymp.views import SchoolViewList, SchoolViewSet, AddSchoolViewSet
 from olymp.views import FileUploadView
@@ -48,6 +49,8 @@ api = [
     path('getschool/<int:id>', SchoolViewSet.as_view()),
     path('school', AddSchoolViewSet.as_view()),
     path('uploadfile', FileUploadView.as_view())
+    path('getuser', UserViewSet.as_view()),
+    path('adduser', AddUserViewSet.as_view())
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
