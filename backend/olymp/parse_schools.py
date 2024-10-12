@@ -15,7 +15,10 @@ class SchoolParser():
     def load_schools(cls, worksheet):
         result = ""
         for row in worksheet.iter_rows(min_row=2):
-            result += cls.load_school(row)
+            try:
+                result += cls.load_school(row)
+            except:
+                result += "Не удалось добавить школу " + row[1].value + "\n"
         return result
 
     @classmethod
