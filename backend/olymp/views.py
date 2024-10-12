@@ -1,3 +1,5 @@
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from .models import Employee
 from .models import Olympiada
@@ -12,7 +14,7 @@ from .serializers import StudentSerializer
 from .serializers import ApplicationSerializer
 from .serializers import ApplicationStatusSerializer, AppplicationsStatusSertializerMultiple
 from .serializers import SubdivisionSerializer
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserSerializer_confident
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -256,7 +258,11 @@ class AddUserViewSet(APIView):
             try:
                 ser = UserSerializer(data=request.data)
                 if ser.is_valid():
-                    ser.save()
+                    User.objects.create_user(
+                        ser.initial_data['username'],
+                        ser.initial_data['email'],
+                        ser.initial_data['password']
+                    )
                     output["valid"] = True
                 else:
                     output["valid"] = False
@@ -272,7 +278,7 @@ class SubdivisionViewList(ModelViewSet):
 
 class UserViewList(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserSerializer_confident
     #permission_classes = [permissions.IsAuthenticated]
 
 class GenderViewList(APIView):
