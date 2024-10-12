@@ -1,6 +1,3 @@
-from cgitb import reset
-
-from django.db.models.expressions import result
 from openpyxl import load_workbook
 from .factory import Factory
 
