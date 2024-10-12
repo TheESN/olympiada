@@ -1,4 +1,8 @@
+import os.path
+
 from django.shortcuts import get_object_or_404
+from rest_framework.parsers import FileUploadParser
+
 from .models import Employee
 from .models import Olympiada
 from .models import Student
@@ -309,3 +313,15 @@ class AddSchoolViewSet(APIView):
                 output['valid'] = False
                 output['msg'] = 'Ошибка при сохранении'
         return Response(output)
+
+class FileUploadView(APIView):
+    parser_classes = [FileUploadParser]
+    def put(self, request, filename, format=None):
+        folder='folder'
+
+        file_obj = request.data['file']
+        full_path = os.path.join(folder, filename)
+        with open(full_path, 'wb') as f:
+            f.write(file_obj.read())
+
+        return Response(status=204)
