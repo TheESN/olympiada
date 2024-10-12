@@ -48,7 +48,7 @@ api = [
     path('getschools', SchoolViewList.as_view({'get': 'list'})),
     path('getschool/<int:id>', SchoolViewSet.as_view()),
     path('school', AddSchoolViewSet.as_view()),
-    path('uploadfile', FileUploadView.as_view())
+    path('uploadfile', FileUploadView.as_view()),
     path('getuser', UserViewSet.as_view()),
     path('adduser', AddUserViewSet.as_view())
 ]
