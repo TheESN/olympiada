@@ -12,7 +12,7 @@ function JsonDataDisplay(id){
 
 	const [editOlymp, setEditOlymp] = useState({
 		"id":-1,
-		"olymp_name":"a",
+		"olymp_name":"",
 		"olymp_date_start":"",
 		"olymp_time":""
 	}
@@ -78,11 +78,11 @@ function JsonDataDisplay(id){
 	function SubmitEdit(event){
 		event.preventDefault()
         
-        console.log(inputData)
+        console.log(editOlymp)
 
 		var url = "http://localhost:8000/api/getolympiada/" + editOlymp.id.toString();
 
-        axios.put(url, inputData)
+        axios.put(url, editOlymp)
         .then(res => {
             if (res.data.valid === true){
                 alert("Данные обновлены");
@@ -134,8 +134,7 @@ function JsonDataDisplay(id){
 				<td><a href='#' onClick={ShowWindEditOlymp} id={olymp.id}>{olymp.olymp_name}</a></td>
 				<td>{olymp.olymp_date_start}</td>
 			    <td>{olymp.olymp_time}</td>
-			    <td><Button variant='primary' onClick={ShowModalRegister} id={olymp.id}>Записаться</Button></td>
-				
+			    <td><Button variant='primary' onClick={ShowModalRegister} id={olymp.id}>Записаться</Button></td>				
 			</tr>
 		)
 	})
@@ -213,21 +212,21 @@ function JsonDataDisplay(id){
                         <Form.Label>Название</Form.Label>
                             <Form.Control type='text' name="olymp_name" 
                             defaultValue={editOlymp.olymp_name} onChange={e => 
-                            setInputData({...inputData, olymp_name: e.target.value})}
+                            setEditOlymp({...editOlymp, olymp_name: e.target.value})}
                             required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Дата начала</Form.Label>
                         <Form.Control type='datefield'  name="olymp_date_start" 
                         defaultValue={editOlymp.olymp_date_start} onChange={e =>
-                         setInputData({...inputData, olymp_date_start: e.target.value})} 
+                            setEditOlymp({...editOlymp, olymp_date_start: e.target.value})} 
                          required/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Длительность</Form.Label>
                         <Form.Control type='time'  name="olymp_time"
                         defaultValue={editOlymp.olymp_time} onChange={e =>
-                         setInputData({...inputData, olymp_time: e.target.value})}
+                            setEditOlymp({...editOlymp, olymp_time: e.target.value})}
                           required/>
                     </Form.Group>
                     <Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
