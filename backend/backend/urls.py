@@ -15,13 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, ApplicationViewSet, ApplicationViewList, AddOlympViewSet, AddApplicationViewSet
 from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList
 from olymp.views import UserViewList, GenderViewList, RoleViewList
+from olymp.views import UserViewSet, AddUserViewSet
 from olymp.views import ChangeApplicationStatus, ChangeApplicationStatusMultiple
+from olymp.views import SchoolViewList, SchoolViewSet, AddSchoolViewSet
+from olymp.views import FileUploadView
 from rest_framework.authtoken import views
-
 
 api = [
     path('employee', AddEmployeeViewSet.as_view()),
@@ -42,10 +44,17 @@ api = [
     path('getsubdivisions', SubdivisionViewList.as_view({'get': 'list'})),
     path('getusers', UserViewList.as_view({'get': 'list'})),
     path('getgenders', GenderViewList.as_view()),
-    path('getroles', RoleViewList.as_view())
+    path('getroles', RoleViewList.as_view()),
+    path('getschools', SchoolViewList.as_view({'get': 'list'})),
+    path('getschool/<int:id>', SchoolViewSet.as_view()),
+    path('school', AddSchoolViewSet.as_view()),
+    path('uploadfile', FileUploadView.as_view()),
+    path('getuser', UserViewSet.as_view()),
+    path('adduser', AddUserViewSet.as_view())
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include((api, 'olymp'), namespace='api')),
-    path('api-token-auth/', views.obtain_auth_token)
+    path('api-token-auth/', views.obtain_auth_token),
+    re_path(r'^upload/(?P<filename>[^/]+)$', FileUploadView.as_view())
 ]
