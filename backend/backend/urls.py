@@ -23,6 +23,7 @@ from olymp.views import UserViewSet, AddUserViewSet
 from olymp.views import ChangeApplicationStatus, ChangeApplicationStatusMultiple
 from olymp.views import SchoolViewList, SchoolViewSet, AddSchoolViewSet
 from olymp.views import FileUploadView
+from olymp.application_views import ApplicationUploadView
 from rest_framework.authtoken import views
 
 api = [
@@ -56,5 +57,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include((api, 'olymp'), namespace='api')),
     path('api-token-auth/', views.obtain_auth_token),
-    re_path(r'^upload/(?P<filename>[^/]+)$', FileUploadView.as_view())
+    re_path(r'^upload/(?P<filename>[^/]+)$', FileUploadView.as_view()),
+    re_path(r'^upload/participants/<int:olymp_id>/(?P<filename>[^/]+)$', ApplicationUploadView.as_view())
 ]

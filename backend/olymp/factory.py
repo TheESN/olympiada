@@ -1,6 +1,7 @@
 from django.db.models.expressions import result
 
 from .models import Subdivision, School
+from .models import Application, Country, Student, Olympiada, Employee
 
 class Factory():
     @classmethod
@@ -16,4 +17,6 @@ class Factory():
             result += "Для школы " + school_name + " не найдено Муниципальное Образование " + subdivision_name + "\n"
         return result
     def create_subdivision(self):
+        pass
+    def create_application(self):
         pass
