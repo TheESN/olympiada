@@ -66,7 +66,7 @@ class Application(models.Model):
     participate = models.IntegerField("Класс участия", validators=[MinValueValidator(1), MaxValueValidator(12)])
     school = models.ForeignKey("School", verbose_name="Общеобразовательная организация", null=True, on_delete=models.SET_NULL, related_name='schools')
     teacher = models.ForeignKey(Person, verbose_name="Учитель", null=True, on_delete=models.SET_NULL, related_name='teachers')
-
+    subdivision = models.ForeignKey("Subdivision", verbose_name="Местоположение", null=True, on_delete=models.SET_NULL, related_name='app_subdivisions')
 
 class Subdivision(models.Model):
     subdivision_name = models.CharField("Наименование района", max_length=200, db_index=True)

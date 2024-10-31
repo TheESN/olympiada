@@ -6,4 +6,8 @@ class ApplicationParser():
     def parse_excel(cls, filename, olympiada, employee):
         wb = load_workbook(filename=filename)
         ws = wb.active
-        # return cls.load_schools(ws)
+        return cls.load_applications(ws)
+
+    @classmethod
+    def load_applications(cls, worksheet):
+        pass
