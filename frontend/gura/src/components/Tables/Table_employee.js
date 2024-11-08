@@ -125,6 +125,7 @@ function Employee_list(id) {
   useEffect(() => {
     axios.get("http://localhost:8000/api/getemployees").then((res) => {
       setEmployees(res.data);
+      
     });
   }, []);
 
@@ -132,6 +133,7 @@ function Employee_list(id) {
   useEffect(() => {
     axios.get("http://localhost:8000/api/getgenders").then((res) => {
       setGenders(res.data);
+      console.log(res.data)
     });
   }, []);
 

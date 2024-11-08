@@ -10,6 +10,10 @@ function Appli_list(id){
 		
 	})
 
+	const appli_statuses = [
+		"В ожидании", "Принято","Отказано"
+	]
+
 	const [showModalEditAppli, setShowModalEditAppli] = useState(false);
 
 	function Refresh() {
@@ -38,18 +42,14 @@ function Appli_list(id){
         
         console.log(editAppli)
 
-		var url = "http://localhost:8000/api/getapplication/" + editAppli.id.toString()
+		var url = "http://localhost:8000/api/applicationstatus/" + editAppli.id.toString()
 
         axios.put(url, editAppli)
         .then(res => {
-            if (res.data.valid === true){
-                alert("Данные обновлены");
+                alert("Статус изменён");
+				Refresh();
                 console.log(res.data)
-            }
-            else{
-                alert("Неправильно введены данные");
-                console.log(res.data)
-            }
+				setShowModalEditAppli(false)
         })
     }
 
@@ -59,6 +59,8 @@ function Appli_list(id){
 			if (applications[i].id == ID){
 				let new_appli = applications.map(({id, application_status}) => ({id, application_status}))
 				return new_appli[i]
+
+				// return applications[i].application_status
 			}
 	    } 
 	}
@@ -73,7 +75,7 @@ function Appli_list(id){
 
 		setEditAppli(v);
 		setShowModalEditAppli(true);
-	  };
+	}
 
 	//Вывод таблицы
 	const DisplayData = applications.map((app, index) => {
@@ -84,7 +86,7 @@ function Appli_list(id){
 				<td>{app.applied_olymp.olymp_name}</td>
 			    <td>{app.application_date}</td>
 				<td>{app.application_employee}</td>
-				<td>{app.application_status}</td>
+				<td>{appli_statuses[app.application_status]}</td>
 				<td><Button onClick={ShowWindEditOlymp} id={app.id}>Изменить статус</Button></td>
 				
 			</tr>
