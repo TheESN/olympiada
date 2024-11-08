@@ -4,6 +4,21 @@ import axios from "axios"
 
 function Appli_list(id){
 	const [applications, setApplications] = useState([])
+	const [editAppli, setEditAppli] = useState({
+		"id": -1,
+        "application_status": -1
+		
+	})
+
+	const [showModalEditAppli, setShowModalEditAppli] = useState(false);
+
+	function Refresh() {
+		axios.get('http://localhost:8000/api/getapplications')
+		.then(res => {
+			setApplications(res.data)
+		})
+	  }
+	
 
 	//Запрос списка заявок
 	useEffect(() => {
@@ -13,11 +28,52 @@ function Appli_list(id){
 		})
 	}, [])
 
-	const clicked = (event) => {
+	const CloseWind = () => {
+		setShowModalEditAppli(false)
+	}
+
+	//Редактирование олимпиады
+	function SubmitEdit(event){
+		event.preventDefault()
+        
+        console.log(editAppli)
+
+		var url = "http://localhost:8000/api/getapplication/" + editAppli.id.toString()
+
+        axios.put(url, editAppli)
+        .then(res => {
+            if (res.data.valid === true){
+                alert("Данные обновлены");
+                console.log(res.data)
+            }
+            else{
+                alert("Неправильно введены данные");
+                console.log(res.data)
+            }
+        })
+    }
+
+	//Поиск заявки по айди
+	function findAppliById(ID) {
+		for(var i=0;i<applications.length;i++){
+			if (applications[i].id == ID){
+				let new_appli = applications.map(({id, application_status}) => ({id, application_status}))
+				return new_appli[i]
+			}
+	    } 
+	}
+
+	const ShowWindEditOlymp = (event) => {
 		event.preventDefault();
 
-		console.log(event)
-	}
+		console.log()
+	
+		id = event.target.id;
+		let v = findAppliById(id);
+
+		setEditAppli(v);
+		setShowModalEditAppli(true);
+	  };
 
 	//Вывод таблицы
 	const DisplayData = applications.map((app, index) => {
@@ -28,8 +84,9 @@ function Appli_list(id){
 				<td>{app.applied_olymp.olymp_name}</td>
 			    <td>{app.application_date}</td>
 				<td>{app.application_employee}</td>
-			    <td><Button variant='success' onClick={clicked}>Принять</Button></td>
-				<td><Button variant='danger' onClick={clicked}>Отказать</Button></td>
+				<td>{app.application_status}</td>
+				<td><Button onClick={ShowWindEditOlymp} id={app.id}>Изменить статус</Button></td>
+				
 			</tr>
 		)
 	})
@@ -45,6 +102,7 @@ function Appli_list(id){
 					<th>Олимпиада</th>
                     <th>Дата заявки</th>
 					<th>Оргнизатор</th>
+					<th>Application status</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -52,7 +110,27 @@ function Appli_list(id){
 				</tbody>
 			</Table>
         </Container>
-        </>
+
+		<Modal show={showModalEditAppli} onHide={CloseWind}>
+            <Modal.Header closeButton>
+                <Modal.Title>Изменить олимпиаду</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group>
+					<Form.Select defaultValue={editAppli.application_status} onChange={e =>
+                            setEditAppli({...editAppli, application_status: e.target.value})}>
+						<option value={0}>В ожидании</option>
+						<option value={1}>Принять</option>
+						<option value={2} >Отказать</option>
+					</Form.Select>
+                    </Form.Group>
+                    <Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
+                </Form>
+            </Modal.Body>
+        </Modal>
+
+        </>	
 	)
 }
 

@@ -46,6 +46,9 @@ function Employee_list(id) {
 
     id = event.target.id;
     let v = findEmployeeById(id);
+
+    console.log("after search function - ", v)
+
     setEditEmployee(v);
     setShowModalEditEmployee(true);
   };
@@ -53,17 +56,28 @@ function Employee_list(id) {
   //Добавление
   function handleSubmit(event) {
     event.preventDefault();
-    inputData["user"] = 1;
 
     console.log(inputData);
 
-    axios.post("http://localhost:8000/api/employee", inputData).then((res) => {
+    axios.post("http://localhost:8000/api/adduser", inputData).then((res) => {
       if (res.data.valid === true) {
-        alert("Данные добавлены");
+        alert("Юзер добавлен");
         console.log(res.data);
-        setShowModalAddEmployee(false);
+
+        inputData["user"] = res.data.user_id
+
+        axios.post("http://localhost:8000/api/employee", inputData).then((res) => {
+          if (res.data.valid === true) {
+            alert("Ответсвенный добавлен");
+            console.log(res.data);
+            setShowModalAddEmployee(false);
+          } else {
+            alert("Ответсвенный не добавлен");
+          }
+        });
+
       } else {
-        alert("Неправильно введены данные");
+        alert("Юзер не добавлен");
       }
     });
   }
@@ -72,16 +86,16 @@ function Employee_list(id) {
   function SubmitEdit(event) {
     event.preventDefault();
 
-    console.log(editEmployee);
-
     var url =
       "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
+
+    console.log("avaible roles - ", roles)
 
     axios.put(url, editEmployee).then((res) => {
       if (res.data.valid === true) {
         alert("Данные обновлены");
-        console.log(res.data);
-        setShowModalEditEmployee(false);
+        console.log("after update - ", editEmployee);
+        
         Refresh();
       } else {
         alert("Неправильно введены данные");
@@ -93,8 +107,7 @@ function Employee_list(id) {
   function DeleteSubmit(event) {
     event.preventDefault();
 
-    var url =
-      "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
+    var url = "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
 
     axios.delete(url).then((res) => {
       setShowModalEditEmployee(false);
@@ -193,42 +206,54 @@ function Employee_list(id) {
             </Form.Group>
             <Form.Group>
               <Form.Label>Пол</Form.Label>
-              <Form.Select
-                onChange={(e) =>
-                  setInputData({ ...inputData, sex: e.target.value })
-                }
-              >
+              <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
                 <option>Выберите пол</option>
                 {genderSelect}
               </Form.Select>
             </Form.Group>
             <Form.Group>
               <Form.Label>Роль</Form.Label>
-              <Form.Select
-                onChange={(e) =>
-                  setInputData({ ...inputData, role: e.target.value })
-                }
-              >
+              <Form.Select onChange={(e) => setInputData({ ...inputData, role: e.target.value })}>
                 <option>Выберите роль</option>
                 {rolesSelect}
               </Form.Select>
             </Form.Group>
+
             <Form.Group>
+              <Form.Label>Username</Form.Label>
               <Form.Control
-                type="hidden"
-                name="user"
-                value={"1"}
+                type="text"
+                name="name"
                 onChange={(e) =>
-                  setInputData({ ...inputData, user: e.target.value })
-                }
+                  setInputData({ ...inputData, username: e.target.value })}
               />
             </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                onChange={(e) =>
+                  setInputData({ ...inputData, password: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Label>email</Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              onChange={(e) =>
+                setInputData({ ...inputData, email: e.target.value })}
+            />
+
             <Button className="mt-3" type="submit">
               Добавить
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
+
 
       {/* Модальное окно редактриованния ответственных */}
       <Modal show={showModalEditEmployee} onHide={CloseWind}>
@@ -261,39 +286,37 @@ function Employee_list(id) {
                 {genderSelect}
               </Form.Select>
             </Form.Group>
+
             <Form.Group>
               <Form.Label>Роль</Form.Label>
               <Form.Select
                 defaultValue={editEmployee.role}
                 onChange={(e) =>
-                  setInputData({ ...inputData, role: e.target.value })
-                }
-              >
+                  setEditEmployee({ ...editEmployee, role: e.target.value })}>
                 <option>Выберите роль</option>
                 {rolesSelect}
               </Form.Select>
             </Form.Group>
+
             <Form.Group>
+              <Form.Label>Username</Form.Label>
               <Form.Control
-                type="hidden"
-                name="user"
-                value={1}
+                type="text"
+                name="name"
+                defaultValue={editEmployee.user}
                 onChange={(e) =>
-                  setInputData({ ...inputData, user: e.target.value })
+                  setInputData({ ...inputData, username: e.target.value })
                 }
               />
             </Form.Group>
+
             <Button className="mt-3" type="submit" onClick={SubmitEdit}>
               Обновить
             </Button>
-            <Button
-              variant="danger"
-              className="ms-2 mt-3"
-              type="submit"
-              onClick={DeleteSubmit}
-            >
+            <Button variant="danger" className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>
               Удалить
             </Button>
+
           </Form>
         </Modal.Body>
       </Modal>

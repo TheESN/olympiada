@@ -186,6 +186,7 @@ function JsonDataDisplay(id){
                     <Form.Group>
                         <Form.Label>Дата начала</Form.Label>
                         <Form.Control type='datefield'  name="olymp_date_start"
+                        placeholder='ГГГГ-ММ-ДД'
                          onChange={e => setInputData({...inputData, olymp_date_start: e.target.value})}
                           required/>
                     </Form.Group>

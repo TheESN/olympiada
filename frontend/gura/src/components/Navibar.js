@@ -30,6 +30,7 @@ export default function NaviBar(){
                     <Nav.Link href="/">Список олимпиад</Nav.Link>
                     <Nav.Link href="/application">Список заявок</Nav.Link>
                     <Nav.Link href="/employees">Список ответсвенных</Nav.Link>
+                    <Nav.Link href="/students">Список students</Nav.Link>
                 </Nav>
                 <Nav>
                     <Button variant='light' className='me-2' onClick={handleShowLogin}>Войти</Button>
