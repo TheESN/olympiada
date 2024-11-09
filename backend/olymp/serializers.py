@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Person, Employee, Student, Olympiada, Application, Subdivision, School
+from .models import Person, Employee, Student, Olympiada, Application, Subdivision, School, Country
 from django.contrib.auth.models import User
 
 
@@ -98,4 +98,10 @@ class ApplicationStatusSerializer(serializers.ModelSerializer):
 
 class AppplicationsStatusSertializerMultiple(serializers.Serializer):
     status_dict = serializers.DictField(child=serializers.IntegerField())
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ['id', 'country_name']
 
