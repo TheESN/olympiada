@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Olympiada, Person, Employee, Student, Application, Subdivision, School
+from .models import Olympiada, Person, Employee, Student, Application, Subdivision, School, Country
 
 # Register your models here.
 admin.site.register(Olympiada)
@@ -9,3 +9,4 @@ admin.site.register(Student)
 admin.site.register(Application)
 admin.site.register(Subdivision)
 admin.site.register(School)
+admin.site.register(Country)
