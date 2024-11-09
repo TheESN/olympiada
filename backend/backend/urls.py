@@ -16,14 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, ApplicationViewSet, ApplicationViewList, AddOlympViewSet, AddApplicationViewSet
+from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, AddOlympViewSet
 from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList
 from olymp.views import UserViewList, GenderViewList, RoleViewList
 from olymp.views import UserViewSet, AddUserViewSet
-from olymp.views import ChangeApplicationStatus, ChangeApplicationStatusMultiple
 from olymp.views import SchoolViewList, SchoolViewSet, AddSchoolViewSet
 from olymp.views import FileUploadView
-from olymp.application_views import ApplicationUploadView
+from olymp.application_views import ApplicationUploadView, ApplicationViewSet, ApplicationViewList, AddApplicationViewSet, ChangeApplicationStatus, ChangeApplicationStatusMultiple
 from rest_framework.authtoken import views
 
 api = [
@@ -58,5 +57,5 @@ urlpatterns = [
     path('api/', include((api, 'olymp'), namespace='api')),
     path('api-token-auth/', views.obtain_auth_token),
     re_path(r'^upload/(?P<filename>[^/]+)$', FileUploadView.as_view()),
-    re_path(r'^upload/participants/<int:olymp_id>/(?P<filename>[^/]+)$', ApplicationUploadView.as_view())
+    re_path(r'^upload/participants/(?P<olymp_id>\d+)/(?P<filename>[^/]+)$', ApplicationUploadView.as_view())
 ]
