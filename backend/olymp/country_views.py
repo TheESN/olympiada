@@ -14,6 +14,46 @@ class CountryViewSet(APIView):
         output = ser.data
         return Response(output)
 
+    def delete(self, request, id, format=None):
+        output = {"valid": True, "message": ''}
+        if request.method == 'DELETE':
+            country = get_object_or_404(Country, pk=id)
+            try:
+                output["country"] = country.id
+                country.delete()
+                output["message"] = 'Успешно!'
+            except:
+                del output["olympiada"]
+                output["valid"] = False
+                output["message"] = 'Ошибка!'
+            return Response(output)
+
+    def put(self, request, id, format=None):
+        output = {"valid": False}
+        country = get_object_or_404(Country, pk=id)
+        ser = CountrySerializer(country, data=request.data)
+        if ser.is_valid():
+            ser.save()
+            output["valid"] = True
+        return Response(output)
+
 class CountryViewList(ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
+
+class AddCountryViewSet(APIView):
+    def post(self, request):
+        output = {"valid": False}
+        if request.method == "POST":
+            try:
+                ser = CountrySerializer(data=request.data)
+                if ser.is_valid():
+                    ser.save()
+                    output["valid"] = True
+                else:
+                    output["valid"] = False
+                    output['msg'] = 'Проверьте правильность заполнения формы'
+            except Exception as e:
+                output['valid'] = False
+                output['msg'] = 'Ошибка при сохранении'
+        return Response(output)

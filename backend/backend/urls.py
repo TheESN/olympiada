@@ -23,7 +23,7 @@ from olymp.views import UserViewSet, AddUserViewSet
 from olymp.views import SchoolViewList, SchoolViewSet, AddSchoolViewSet
 from olymp.views import FileUploadView, SubdivisionFileUploadView
 from olymp.application_views import ApplicationUploadView, ApplicationViewSet, ApplicationViewList, AddApplicationViewSet, ChangeApplicationStatus, ChangeApplicationStatusMultiple
-from olymp.country_views import CountryViewSet, CountryViewList
+from olymp.country_views import CountryViewSet, CountryViewList, AddCountryViewSet
 from rest_framework.authtoken import views
 
 api = [
@@ -54,6 +54,7 @@ api = [
     path('adduser', AddUserViewSet.as_view()),
     path('getcountry/<int:id>', CountryViewSet.as_view()),
     path('getcountries', CountryViewList.as_view({'get': 'list'})),
+    path('country', AddCountryViewSet.as_view())
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
