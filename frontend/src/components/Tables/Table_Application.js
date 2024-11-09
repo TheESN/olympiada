@@ -82,13 +82,18 @@ function Appli_list(id){
 		return(
 			<tr>
 				<td>{index + 1}</td>
-				<td>{app.applied_student.name}</td>
-				<td>{app.applied_olymp.olymp_name}</td>
-			    <td>{app.application_date}</td>
-				<td>{app.application_employee}</td>
-				<td>{appli_statuses[app.application_status]}</td>
+				<td>{app.student.name}</td>
+				<td>{app.olymp.olymp_name}</td>
+				<td>{app.date}</td>
+				{/* организатор / админ */}
+				<td>{app.employee}</td>
+				<td>{appli_statuses[app.status]}</td>
+				<td>{app.participate}</td>
+				<td>{app.school.school_name}</td>
+				{/* учит ребёнка */}
+				<td>{app.teacher}</td>
+				<td>{app.subdivision.subdivision_name}</td>
 				<td><Button onClick={ShowWindEditOlymp} id={app.id}>Изменить статус</Button></td>
-				
 			</tr>
 		)
 	})
@@ -105,6 +110,10 @@ function Appli_list(id){
                     <th>Дата заявки</th>
 					<th>Оргнизатор</th>
 					<th>Application status</th>
+					<th>participate</th>
+					<th>School</th>
+					<th>teacher</th>
+					<th>Subdivision</th>
 					</tr>
 				</thead>
 				<tbody>

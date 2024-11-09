@@ -9,16 +9,34 @@ function JsonDataDisplay(id) {
     const [showModalRegister, setShowModalRegister] = useState(false);
 
     const [students, setStudents] = useState([])
+    
+    const [genders, setGenders] = useState([]);
+    const genderSelect = Object.entries(genders).map(([key, value]) => {
+        return <option value={key}>{value}</option>;
+    });
+
+    const [specNeeds] = useState(
+        {
+            "true": "Есть",
+            "false": "Нет"
+        }
+    )
+
+    const specN = [ "yes", "no"]
+    const specNeedsSelect = Object.entries(specNeeds).map(([key, value]) => {
+        return <option value={key}>{value}</option>;
+    });
+ 
 
     const [editStudent, setEditStudent] = useState({
         "id": -1,
         "name": "",
         "birthday": "",
         "course_study": -1,
-        "course_participate": -1,
         "special_needs": false,
-        "teacher": -1,
-        "contact_phone": "-1"
+        "contact_phone": "-1",
+        "sex": -1,
+        "country": ""
     }
     );
 
@@ -27,7 +45,6 @@ function JsonDataDisplay(id) {
     const ShowWind = () => setShowModal(true)
 
     const [inputData, setInputData] = useState({ applied_olymp_id: '' })
-    const [inputAppData, setInputAppData] = useState({})
 
     //Показ модальное окно редактирования
     const ShowWindEditStud = (event) => {
@@ -39,29 +56,32 @@ function JsonDataDisplay(id) {
         setShowModalEditStud(true)
     }
 
-    //Показ модальное окно записи
-    const ShowModalRegister = (event) => {
-        event.preventDefault();
-
-        setShowModalRegister(true)
-    }
-
     //Закрыть модальное окно
     const CloseWind = () => {
         setShowModalEditStud(false)
         setShowModalRegister(false)
         setShowModal(false)
     }
-
+    
     //Запрос списка олимпиады
     useEffect(() => {
         axios.get('http://localhost:8000/api/getstudents')
-            .then(res => {
-                setStudents(res.data)
-            })
+        .then(res => {
+            setStudents(res.data)
+        })
     }, [])
 
-    //Добавление олимпиады
+    console.log(specNeeds)
+
+    //get genders
+    useEffect(() => {
+        axios.get("http://localhost:8000/api/getgenders").then((res) => {
+          setGenders(res.data);
+          
+        });
+    }, []);
+
+    //Добавление
     function handleSubmit(event) {
         event.preventDefault()
 
@@ -77,18 +97,6 @@ function JsonDataDisplay(id) {
             })
     }
 
-    //Удаление олимпиады
-    function DeleteSubmit(event) {
-        event.preventDefault()
-
-        var url = "http://localhost:8000/api/getolympiada/" + editStudent.id.toString();
-
-        axios.delete(url)
-            .then(res => {
-                alert("Удаленео");
-            })
-    }
-
     //Вывод таблицы
     const DisplayData = students.map((stud, index) => {
         return (
@@ -97,10 +105,10 @@ function JsonDataDisplay(id) {
                 <td><a href='#' onClick={ShowWindEditStud} id={stud.if}>{stud.name}</a></td>
                 <td>{stud.birthday}</td>
                 <td>{stud.course_study}</td>
-                <td>{stud.course_participate}</td>
-                <td>{stud.special_needs}</td>
-                <td>{stud.teacher}</td>
+                <td>{specN[index]}</td>
                 <td>{stud.contact_phone}</td>
+                <td>{genders[index]}</td>
+                <td>{stud.country}</td>
             </tr>
         )
     })
@@ -124,10 +132,10 @@ function JsonDataDisplay(id) {
                             <th>Имя</th>
                             <th>Дата рождения</th>
                             <th>Класс обучения</th>
-                            <th>Класс участия</th>
-                            <th>Инвалидность</th>
-                            <th>Учитель</th>
+                            <th>Special needs</th>
                             <th>Телефон</th>
+                            <th>Пол</th>
+                            <th>Гражданство</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -148,14 +156,104 @@ function JsonDataDisplay(id) {
                     <Form onSubmit={handleSubmit}>
                         <Form.Group>
                             <Form.Label>Name</Form.Label>
-                            <Form.Control type='text' name='stud_name'
+                            <Form.Control type='text'
                             onChange={e => setInputData({...inputData, name: e.target.value})}
                             required/>
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Birthday</Form.Label>
+                            <Form.Control type='date' placeholder='YYYY-MM-DD'
+                                onChange={e => setInputData({...inputData, birthday: e.target.value})}
+                                required/>
                         </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Gender</Form.Label>
+                            <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
+                                <option>Выберите пол</option>
+                                {genderSelect}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>course_study</Form.Label>
+                            <Form.Control type='number'
+                                onChange={e => setInputData({...inputData, course_study: e.target.value})}
+                                required />
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Special needs</Form.Label>
+                            <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
+                                <option>Выберите пол</option>
+                                {specNeedsSelect}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Phone number</Form.Label>
+                            <Form.Control type='number'
+                                onChange={e => setInputData({...inputData, contact_phone: e.target.value})}
+                                required />
+                        </Form.Group>
+
+                        
+                    </Form>
+                </Modal.Body>
+            </Modal>
+
+            <Modal show={showModalEditStud} onHide={CloseWind}>
+                <Modal.Header closeButton>
+                    <Modal.Title>asd</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group>
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control type='text'
+                            onChange={e => setInputData({...inputData, name: e.target.value})}
+                            required/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Birthday</Form.Label>
+                            <Form.Control type='date' placeholder='YYYY-MM-DD'
+                                onChange={e => setInputData({...inputData, birthday: e.target.value})}
+                                required/>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Gender</Form.Label>
+                            <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
+                                <option>Выберите пол</option>
+                                {genderSelect}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>course_study</Form.Label>
+                            <Form.Control type='number'
+                                onChange={e => setInputData({...inputData, course_study: e.target.value})}
+                                required />
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Special needs</Form.Label>
+                            <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
+                                <option>Выберите пол</option>
+                                {specNeedsSelect}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Phone number</Form.Label>
+                            <Form.Control type='number'
+                                onChange={e => setInputData({...inputData, contact_phone: e.target.value})}
+                                required />
+                        </Form.Group>
+
+                        
                     </Form>
                 </Modal.Body>
             </Modal>

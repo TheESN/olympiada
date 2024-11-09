@@ -67,6 +67,7 @@ function JsonDataDisplay(id){
             if (res.data.valid === true){
                 alert("Данные добавлены");
                 console.log(res.data.valid)
+                Refresh()
             }
             else{
                 alert("Неправильно введены данные");
@@ -87,6 +88,7 @@ function JsonDataDisplay(id){
             if (res.data.valid === true){
                 alert("Данные обновлены");
                 console.log(res.data)
+                Refresh()
             }
             else{
                 alert("Неправильно введены данные");
@@ -104,6 +106,7 @@ function JsonDataDisplay(id){
         axios.delete(url)
         .then(res => {
                 alert("Удаленео");
+                Refresh()
         })
     }
 
@@ -147,6 +150,13 @@ function JsonDataDisplay(id){
 			}
 	    } 
 	}
+
+    function Refresh(){
+        axios.get('http://localhost:8000/api/getolympiadas')
+        .then(res => {
+            setOlymps(res.data)
+        })
+    }
 
 	return(
         <>

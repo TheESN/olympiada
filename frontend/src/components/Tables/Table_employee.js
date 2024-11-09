@@ -4,12 +4,13 @@ import axios from "axios";
 
 function Employee_list(id) {
   const [employees, setEmployees] = useState([]);
-  const [genders, setGenders] = useState([]);
   const [roles, setRoles] = useState([]);
+  const [users, setUsers] = useState([])
   const [inputData, setInputData] = useState({});
 
   const [showModalAddEmployee, setShowModalAddEmployee] = useState(false);
   const [showModalEditEmployee, setShowModalEditEmployee] = useState(false);
+  const [showModalEditUser, setShowModalEditUser] = useState(false);
 
   const [editEmployee, setEditEmployee] = useState({
     id: -1,
@@ -19,10 +20,24 @@ function Employee_list(id) {
     user: -1,
   });
 
+  const [editUser, setEditUser] = useState({
+    id: -1,
+    username: "",
+    email: ""
+  })
+
   function findEmployeeById(ID) {
     for (var i = 0; i < employees.length; i++) {
       if (employees[i].id == ID) {
         return employees[i];
+      }
+    }
+  }
+
+  function findUserById(ID) {
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].id == ID) {
+        return users[i];
       }
     }
   }
@@ -36,21 +51,38 @@ function Employee_list(id) {
 
   //Закрыть модальное окно
   const CloseWind = () => {
-    setShowModalAddEmployee(false);
-    setShowModalEditEmployee(false);
+    setShowModalAddEmployee(false)
+    setShowModalEditEmployee(false)
   };
 
+  const BackToEmployee = () => {
+    setShowModalEditEmployee(true)
+    setShowModalEditUser(false)
+  }
+
   //Показ модальное окно редактирования
-  const ShowWindEditOlymp = (event) => {
+  const ShowWindEditEmployeeOlymp = (event) => {
     event.preventDefault();
 
     id = event.target.id;
-    let v = findEmployeeById(id);
-
-    console.log("after search function - ", v)
+    let v = findEmployeeById(id)
 
     setEditEmployee(v);
     setShowModalEditEmployee(true);
+  };
+
+  //Показ модальное окно редактирования user
+  const ShowWindEditUserOlymp = (event) => {
+    event.preventDefault();
+
+    id = event.target.id;
+    let v = findUserById(id);
+
+    console.log("after search function - ", v)
+
+    setEditUser(v);
+    setShowModalEditEmployee(false)
+    setShowModalEditUser(true)
   };
 
   //Добавление
@@ -71,6 +103,7 @@ function Employee_list(id) {
             alert("Ответсвенный добавлен");
             console.log(res.data);
             setShowModalAddEmployee(false);
+            Refresh()
           } else {
             alert("Ответсвенный не добавлен");
           }
@@ -83,7 +116,7 @@ function Employee_list(id) {
   }
 
   //Редактирование ответсвенного
-  function SubmitEdit(event) {
+  function SubmitEmployeeEdit(event) {
     event.preventDefault();
 
     var url =
@@ -95,6 +128,24 @@ function Employee_list(id) {
       if (res.data.valid === true) {
         alert("Данные обновлены");
         console.log("after update - ", editEmployee);
+        
+        Refresh();
+      } else {
+        alert("Неправильно введены данные");
+      }
+    });
+  }
+
+  function SubmitUserEdit(event) {
+    event.preventDefault();
+
+    var url =
+      "http://localhost:8000/api/getuser/" + editUser.id.toString();
+
+    axios.put(url, editUser).then((res) => {
+      if (res.data.valid === true) {
+        alert("Данные обновлены");
+        console.log("after update - ", editUser);
         
         Refresh();
       } else {
@@ -129,18 +180,17 @@ function Employee_list(id) {
     });
   }, []);
 
-  //Запрос списка полов
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getgenders").then((res) => {
-      setGenders(res.data);
-      console.log(res.data)
-    });
-  }, []);
-
   //Запрос списка ролей
   useEffect(() => {
     axios.get("http://localhost:8000/api/getroles").then((res) => {
       setRoles(res.data);
+    });
+  }, []);
+
+  //Запрос списка user
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/getusers").then((res) => {
+      setUsers(res.data);
     });
   }, []);
 
@@ -150,19 +200,14 @@ function Employee_list(id) {
       <tr>
         <td>{index + 1}</td>
         <td>{emp.name}</td>
-        <td>{genders[emp.sex]}</td>
         <td>{roles[emp.role]}</td>
         <td>
-          <Button variant="primary" onClick={ShowWindEditOlymp} id={emp.id}>
+          <Button variant="primary" onClick={ShowWindEditEmployeeOlymp} id={emp.id}>
             Изменить
           </Button>
         </td>
       </tr>
     );
-  });
-
-  const genderSelect = Object.entries(genders).map(([key, value]) => {
-    return <option value={key}>{value}</option>;
   });
 
   const rolesSelect = Object.entries(roles).map(([key, value]) => {
@@ -177,7 +222,6 @@ function Employee_list(id) {
             <tr>
               <th>#</th>
               <th>ФИО</th>
-              <th>Пол</th>
               <th>Роль</th>
             </tr>
           </thead>
@@ -205,13 +249,6 @@ function Employee_list(id) {
                   setInputData({ ...inputData, name: e.target.value })
                 }
               />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Пол</Form.Label>
-              <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
-                <option>Выберите пол</option>
-                {genderSelect}
-              </Form.Select>
             </Form.Group>
             <Form.Group>
               <Form.Label>Роль</Form.Label>
@@ -276,18 +313,6 @@ function Employee_list(id) {
                 required
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Пол</Form.Label>
-              <Form.Select
-                defaultValue={editEmployee.sex}
-                onChange={(e) =>
-                  setEditEmployee({ ...editEmployee, sex: e.target.value })
-                }
-              >
-                <option>Выберите пол</option>
-                {genderSelect}
-              </Form.Select>
-            </Form.Group>
 
             <Form.Group>
               <Form.Label>Роль</Form.Label>
@@ -310,15 +335,54 @@ function Employee_list(id) {
                   setInputData({ ...inputData, username: e.target.value })
                 }
               />
+              <Button className="mt-2" onClick={ShowWindEditUserOlymp} id={editEmployee.user}>Edit user</Button>
             </Form.Group>
 
-            <Button className="mt-3" type="submit" onClick={SubmitEdit}>
+            <Button className="mt-3" type="submit" onClick={SubmitEmployeeEdit}>
               Обновить
             </Button>
             <Button variant="danger" className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>
               Удалить
             </Button>
 
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      {/* Модальное окно редактриованния user */}
+      <Modal show={showModalEditUser} onHide={BackToEmployee}>
+        <Modal.Header closeButton>
+          <Modal.Title>Изменить ответсвенного</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                defaultValue={editUser.username}
+                onChange={(e) =>
+                  setEditUser({ ...editUser, username: e.target.value })
+                }
+                required
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                defaultValue={editUser.email}
+                onChange={(e) =>
+                  setEditUser({ ...editUser, email: e.target.value })
+                }
+                required
+              />
+            </Form.Group>
+
+            <Button className="mt-3" type="submit" onClick={SubmitUserEdit}>
+              Обновить
+            </Button>
           </Form>
         </Modal.Body>
       </Modal>
