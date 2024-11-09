@@ -21,7 +21,7 @@ from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionVi
 from olymp.views import UserViewList, GenderViewList, RoleViewList
 from olymp.views import UserViewSet, AddUserViewSet
 from olymp.views import SchoolViewList, SchoolViewSet, AddSchoolViewSet
-from olymp.views import FileUploadView
+from olymp.views import FileUploadView, SubdivisionFileUploadView
 from olymp.application_views import ApplicationUploadView, ApplicationViewSet, ApplicationViewList, AddApplicationViewSet, ChangeApplicationStatus, ChangeApplicationStatusMultiple
 from rest_framework.authtoken import views
 
@@ -57,5 +57,6 @@ urlpatterns = [
     path('api/', include((api, 'olymp'), namespace='api')),
     path('api-token-auth/', views.obtain_auth_token),
     re_path(r'^upload/(?P<filename>[^/]+)$', FileUploadView.as_view()),
-    re_path(r'^upload/participants/(?P<olymp_id>\d+)/(?P<filename>[^/]+)$', ApplicationUploadView.as_view())
+    re_path(r'^upload/participants/(?P<olymp_id>\d+)/(?P<filename>[^/]+)$', ApplicationUploadView.as_view()),
+    re_path(r'^uploadsubdivision/(?P<filename>[^/]+)$', SubdivisionFileUploadView.as_view()),
 ]

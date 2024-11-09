@@ -17,8 +17,6 @@ class Factory():
         else:
             result += "Для школы " + school_name + " не найдено Муниципальное Образование " + subdivision_name + "\n"
         return result
-    def create_subdivision(self):
-        pass
 
     @classmethod
     def create_application(cls, data_array, olympiada, employee):
@@ -105,3 +103,15 @@ class Factory():
         if subdivision is None:
             result += "Для студента " + student_name + " не указано муниципальное образование \n"
         return subdivision, result
+
+    @classmethod
+    def create_subdivision(cls, subdivision_name):
+        result = ""
+        sd = Subdivision.objects.filter(subdivision_name__icontains=subdivision_name).first()
+        if sd is None:
+            subdivision = Subdivision()
+            subdivision.subdivision_name = subdivision_name
+            subdivision.save()
+        else:
+            result += "Муниципальное образование " + subdivision_name + " уже существует.\n"
+        return result

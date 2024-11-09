@@ -25,6 +25,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import permissions
 from .parse_schools import SchoolParser
+from .parse_subdivisions import SubdivisionParser
 
 
 # Create your views here.
@@ -187,12 +188,13 @@ class AddUserViewSet(APIView):
             try:
                 ser = UserSerializer(data=request.data)
                 if ser.is_valid():
-                    User.objects.create_user(
+                    user = User.objects.create_user(
                         ser.initial_data['username'],
                         ser.initial_data['email'],
                         ser.initial_data['password']
                     )
                     output["valid"] = True
+                    output["user_id"] = user.id
                 else:
                     output["valid"] = False
                     output['msg'] = 'Проверьте правильность заполнения формы'
@@ -280,3 +282,17 @@ class FileUploadView(APIView):
             f.write(file_obj.read())
         result["error"] += SchoolParser.parse_excel(full_path)
         return Response(result)
+
+
+class SubdivisionFileUploadView(APIView):
+    parser_classes = [FileUploadParser]
+    def put(self, request, filename, format=None):
+        folder='folder'
+        result = {"error": ""}
+        file_obj = request.data['file']
+        full_path = os.path.join(folder, filename)
+        with open(full_path, 'wb') as f:
+            f.write(file_obj.read())
+        result["error"] += SubdivisionParser.parse_excel(full_path)
+        return Response(result)
+
