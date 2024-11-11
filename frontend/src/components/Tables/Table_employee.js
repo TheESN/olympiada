@@ -335,6 +335,7 @@ function Employee_list(id) {
                   setInputData({ ...inputData, username: e.target.value })
                 }
               />
+
               <Button className="mt-2" onClick={ShowWindEditUserOlymp} id={editEmployee.user}>Edit user</Button>
             </Form.Group>
 

@@ -6,7 +6,8 @@ function Appli_list(id){
 	const [applications, setApplications] = useState([])
 	const [editAppli, setEditAppli] = useState({
 		"id": -1,
-        "application_status": -1
+        "application_status": -1,
+		"participate": -1
 		
 	})
 
@@ -37,7 +38,7 @@ function Appli_list(id){
 	}
 
 	//Редактирование олимпиады
-	function SubmitEdit(event){
+	function SubmitStatusEdit(event){
 		event.preventDefault()
         
         console.log(editAppli)
@@ -48,19 +49,52 @@ function Appli_list(id){
         .then(res => {
                 alert("Статус изменён");
 				Refresh();
-                console.log(res.data)
+                console.log("status edit - ", res.data)
 				setShowModalEditAppli(false)
         })
     }
+
+
+	function SubmitEdit(event) {
+		event.preventDefault();
+	
+		var url =
+		  "http://localhost:8000/api/getapplication/" + editAppli.id.toString();
+	
+		console.log("application edit - ", editAppli)
+	
+		axios.put(url, editAppli).then((res) => {
+		  if (res.data.valid === true) {
+			alert("Данные обновлены");
+			console.log("after update - ", editAppli);
+			
+			Refresh();
+		  } else {
+			alert("Неправильно введены данные");
+		  }
+		});
+	  }
+
+	function DeleteApp(event){
+		event.preventDefault()
+
+		var url = "http://localhost:8000/api/getapplication/" + editAppli.id.toString()
+
+		axios.delete(url).then((res) => {
+			setShowModalEditAppli(false);
+			Refresh()
+			alert("Удалено");
+		  });
+	}
 
 	//Поиск заявки по айди
 	function findAppliById(ID) {
 		for(var i=0;i<applications.length;i++){
 			if (applications[i].id == ID){
-				let new_appli = applications.map(({id, application_status}) => ({id, application_status}))
-				return new_appli[i]
+				// let new_appli = applications.map(({id, application_status}) => ({id, application_status}))
+				// return new_appli[i]
 
-				// return applications[i].application_status
+				return applications[i]
 			}
 	    } 
 	}
@@ -129,14 +163,28 @@ function Appli_list(id){
             <Modal.Body>
                 <Form>
                     <Form.Group>
-					<Form.Select defaultValue={editAppli.application_status} onChange={e =>
-                            setEditAppli({...editAppli, application_status: e.target.value})}>
+					<Form.Select defaultValue={editAppli.status} onChange={e =>
+                            setEditAppli({...editAppli, status: e.target.value})}>
 						<option value={0}>В ожидании</option>
 						<option value={1}>Принять</option>
 						<option value={2} >Отказать</option>
 					</Form.Select>
                     </Form.Group>
-                    <Button className='mt-3' type="submit" onClick={SubmitEdit}>Обновить</Button>
+
+					<Form.Group>
+						<Form.Label>participate</Form.Label>
+						<Form.Control type='text'
+							defaultValue={editAppli.participate}
+							onChange={(e) =>
+							setEditAppli({ ...editAppli, participate: e.target.value })
+							}
+							required
+						/>
+					</Form.Group>
+
+                    <Button className='mt-3' variant='success' type="submit" onClick={SubmitStatusEdit}>Обновить status</Button>
+					<Button className='mt-3 ms-2' variant='success' type="submit" onClick={SubmitEdit}>Обновить</Button>
+					<Button className='mt-3 ms-2' variant='danger' type='submit' onClick={DeleteApp}>Delete</Button>
                 </Form>
             </Modal.Body>
         </Modal>
