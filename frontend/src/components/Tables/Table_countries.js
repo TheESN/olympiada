@@ -4,26 +4,25 @@ import axios from "axios"
 import { Component } from 'react'
 
 function JsonDataDisplay(id){
-    const [schools, setSchools] = useState([])
+    const [countries, setCountries] = useState([])
 
 	//Запрос списка олимпиады
 	useEffect(() => {
 		axios.get('http://localhost:8000/api/getcountries')
 		.then(res => {
 			
-			setSchools(res.data)
+			setCountries(res.data)
 		})
 	}, [])
 
 
 
 	//Вывод таблицы
-	const DisplayData = schools.map((school, index) => {
+	const DisplayData = countries.map((countrie, index) => {
 		return(
 			<tr>
 				<td>{index + 1}</td>
-				<td>{school.school_name}</td>
-				<td>{school.school_subdivision}</td>
+				<td>{countrie.country_name}</td>
 			</tr>
 		)
 	})
@@ -36,7 +35,6 @@ function JsonDataDisplay(id){
 					<tr>
                         <th>#</th>
                         <th>Название</th>
-                        <th>subdivision</th>
 					</tr>
 				</thead>
 				<tbody>
