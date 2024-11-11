@@ -31,6 +31,9 @@ export default function NaviBar(){
                     <Nav.Link href="/application">Список заявок</Nav.Link>
                     <Nav.Link href="/employees">Список ответсвенных</Nav.Link>
                     <Nav.Link href="/students">Список students</Nav.Link>
+                    <Nav.Link href="/schools">Список schools</Nav.Link>
+                    <Nav.Link href="/subdivisions">Список subdivision</Nav.Link>
+                    <Nav.Link href="/countries">Список countries</Nav.Link>
                 </Nav>
                 <Nav>
                     <Button variant='light' className='me-2' onClick={handleShowLogin}>Войти</Button>
