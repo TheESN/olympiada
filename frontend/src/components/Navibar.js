@@ -23,17 +23,17 @@ export default function NaviBar(){
     <>
     <Navbar collapseOnSelect  expand="lg" bg="fon">
         <Container>
-            <Navbar.Brand className='mb-1'>Olymp</Navbar.Brand>
+            <Navbar.Brand className='mb-1 text-light'>SakhaOlymp</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto" variant="underline">
-                    <Nav.Link href="/">Список олимпиад</Nav.Link>
-                    <Nav.Link href="/application">Список заявок</Nav.Link>
-                    <Nav.Link href="/employees">Список ответсвенных</Nav.Link>
-                    <Nav.Link href="/students">Список students</Nav.Link>
-                    <Nav.Link href="/schools">Список schools</Nav.Link>
-                    <Nav.Link href="/subdivisions">Список subdivision</Nav.Link>
-                    <Nav.Link href="/countries">Список countries</Nav.Link>
+                <Nav className="me-auto fon" variant="underline">
+                    <Nav.Link href="/" className='text-light'>Список олимпиад</Nav.Link>
+                    <Nav.Link href="/application" className='text-light'>Список заявок</Nav.Link>
+                    <Nav.Link href="/employees" className='text-light'>Список ответсвенных</Nav.Link>
+                    <Nav.Link href="/students" className='text-light'>Список students</Nav.Link>
+                    <Nav.Link href="/schools" className='text-light'>Список schools</Nav.Link>
+                    <Nav.Link href="/subdivisions" className='text-light'>Список subdivision</Nav.Link>
+                    <Nav.Link href="/countries" className='text-light'>Список countries</Nav.Link>
                 </Nav>
                 <Nav>
                     <Button variant='light' className='me-2' onClick={handleShowLogin}>Войти</Button>

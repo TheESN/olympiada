@@ -1,119 +1,134 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Button, Container, Table, Form, Modal } from 'react-bootstrap'
-import axios from "axios"
-import { Component } from 'react'
+import React, { useEffect, useState, useRef } from "react";
+import { Button, Container, Table, Form, Modal } from "react-bootstrap";
+import axios from "axios";
+import { Component } from "react";
 
-function JsonDataDisplay(id){
-    const [schools, setSchools] = useState([])
-	const [inputData, setInputData] = useState([])
-	const [editSchool, setEditSchool] = useState({
-		id: -1,
-	})
+function JsonDataDisplay(id) {
+  const [schools, setSchools] = useState([]);
+  const [inputData, setInputData] = useState([]);
+  const [editSchool, setEditSchool] = useState({
+    id: -1,
+  });
 
-	const [showModal, setShowModal] = useState(false)
-	const [showModalEditSchool, setShowModalEditSchool] = useState(false)
+  const [showModal, setShowModal] = useState(false);
+  const [showModalEditSchool, setShowModalEditSchool] = useState(false);
 
-    const ShowWind = () => setShowModal(true)
+  const ShowWindAdd = () => setShowModal(true);
+  const ShowWindEdit = () => setShowModalEditSchool(true);
 
-	const CloseWind = () => {
-		setShowModalEditSchool(false)
-		setShowModal(false)
-	}
+  const CloseWind = () => {
+    setShowModalEditSchool(false);
+    setShowModal(false);
+  };
 
-	//Запрос списка олимпиады
-	useEffect(() => {
-		axios.get('http://localhost:8000/api/getschools')
-		.then(res => {
-			
-			setSchools(res.data)
-		})
-	}, [])
+  //Запрос списка олимпиады
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/getschools").then((res) => {
+      setSchools(res.data);
+    });
+  }, []);
 
-	function handleSubmit(event){
-        event.preventDefault()
+  function handleSubmit(event) {
+    event.preventDefault();
 
-        axios.post('http://localhost:8000/api/school', inputData)
-        .then(res => {
-            if (res.data.valid === true){
-                alert("Данные добавлены");
-                console.log(res.data.valid)
-                Refresh()
-            }
-            else{
-                alert("Неправильно введены данные");
-            }
-        })
-    }
+    axios.post("http://localhost:8000/api/school", inputData).then((res) => {
+      if (res.data.valid === true) {
+        alert("Данные добавлены");
+        console.log(res.data.valid);
+        Refresh();
+      } else {
+        alert("Неправильно введены данные");
+      }
+    });
+  }
 
+  function Refresh() {
+    axios.get("http://localhost:8000/api/getschools").then((res) => {
+      setSchools(res.data);
+    });
+  }
 
-	function Refresh(){
-        axios.get('http://localhost:8000/api/getschools')
-        .then(res => {
-            setSchools(res.data)
-        })
-    }
+  //Вывод таблицы
+  const DisplayData = schools.map((school, index) => {
+    return (
+      <tr>
+        <td>{index + 1}</td>
+        <td>{school.school_name}</td>
+        <td>{school.school_subdivision}</td>
+        <td>
+          <Button variant="primary" onClick={ShowWindEdit} id={school.id}>
+            Edit
+          </Button>
+        </td>
+      </tr>
+    );
+  });
 
+  return (
+    <>
+      <Container>
+        <Table striped>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Название</th>
+              <th>subdivision</th>
+            </tr>
+          </thead>
+          <tbody>{DisplayData}</tbody>
+        </Table>
+      </Container>
 
+      <div className="AddButton">
+        <Button onClick={ShowWindAdd}>Добавить</Button>
+      </div>
 
-	//Вывод таблицы
-	const DisplayData = schools.map((school, index) => {
-		return(
-			<tr>
-				<td>{index + 1}</td>
-				<td>{school.school_name}</td>
-				<td>{school.school_subdivision}</td>
-			</tr>
-		)
-	})
+      <Modal show={showModal} onHide={CloseWind}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add school</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) =>
+                  setInputData({ ...inputData, school_name: e.target.value })
+                }
+                required
+              />
+            </Form.Group>
 
-	return(
-        <>
-        <Container>
-			<Table striped>
-				<thead>
-					<tr>
-                        <th>#</th>
-                        <th>Название</th>
-                        <th>subdivision</th>
-					</tr>
-				</thead>
-				<tbody>
-					{DisplayData}
-				</tbody>
-			</Table>
-        </Container>
+            <Form.Group>
+              <Form.Label>subdivision</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) =>
+                  setInputData({
+                    ...inputData,
+                    school_subdivision: e.target.value,
+                  })
+                }
+                required
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
-		<div className="AddButton">
-            <Button onClick={ShowWind}>Добавить</Button>
-        </div>
-
-		<Modal show={showModal} onHide={CloseWind}>
-                <Modal.Header closeButton>
-                    <Modal.Title>asd</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group>
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type='text'
-                            onChange={e => setInputData({...inputData, school_name: e.target.value})}
-                            required/>
-                        </Form.Group>
-
-						<Form.Group>
-                            <Form.Label>subdivision</Form.Label>
-                            <Form.Control type='text'
-                            onChange={e => setInputData({...inputData, school_subdivision: e.target.value})}
-                            required/>
-                        </Form.Group>
-
-                        
-                    </Form>
-                </Modal.Body>
-            </Modal>
-
-        </>
-	)
+      <Modal show={showModalEditSchool} onHide={CloseWind}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <h1>Edit</h1>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
 }
 
 export default JsonDataDisplay;

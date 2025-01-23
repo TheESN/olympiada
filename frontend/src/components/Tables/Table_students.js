@@ -197,7 +197,9 @@ function JsonDataDisplay(id) {
                                 onChange={e => setInputData({...inputData, contact_phone: e.target.value})}
                                 required />
                         </Form.Group>
-
+                        <Button className='mt-3' type='submit'>
+                            Save
+                        </Button>
                         
                     </Form>
                 </Modal.Body>
@@ -252,7 +254,9 @@ function JsonDataDisplay(id) {
                                 onChange={e => setInputData({...inputData, contact_phone: e.target.value})}
                                 required />
                         </Form.Group>
-
+                        <Button className='mt-3' type='submit'>
+                            Save
+                        </Button>
                         
                     </Form>
                 </Modal.Body>

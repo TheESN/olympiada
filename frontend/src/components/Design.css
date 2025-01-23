@@ -1,11 +1,17 @@
 .bg-fon {
-    background-color: #d1c9ff
+  /* background-color: #a1c9fd #00b8ff */
+
+  background-color: #273267;
 }
 
 .olemplist{
   text-align: center;
   margin-top: 20px;
-  
+}
+
+button{
+  background-color: #e7af5a !important;
+  border-color: #e7af5a !important;
 }
 
 .TabList{
@@ -20,3 +26,15 @@
 .btnn{
   margin-right: 15%;
 }
+
+.table tbody tr td:first-child {
+	border-radius: 8px 0 0 8px;
+}
+.table tbody tr td:last-child {
+	border-radius: 0 8px 8px 0;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+   background-color: #fafcfd;
+ }
