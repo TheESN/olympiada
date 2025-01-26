@@ -126,6 +126,7 @@ function JsonDataDisplay(id) {
       if (res.data.valid === true) {
         alert("Данные добавлены");
         console.log(res.data.valid);
+        setShowModal(false);
         Refresh();
       } else {
         alert("Неправильно введены данные");
@@ -146,6 +147,7 @@ function JsonDataDisplay(id) {
       if (res.data.valid === true) {
         alert("Данные обновлены");
         console.log(res.data);
+        setShowModalEditOlymp(false);
         Refresh();
       } else {
         alert("Неправильно введены данные");
@@ -161,8 +163,9 @@ function JsonDataDisplay(id) {
     var url =
       "http://localhost:8000/api/getolympiada/" + editOlymp.id.toString();
 
-    axios.delete(url).then((res) => {
-      alert("Удаленео");
+    axios.delete(url).then(() => {
+      alert("Удалено");
+      setShowModalEditOlymp(false);
       Refresh();
     });
   }
@@ -172,15 +175,20 @@ function JsonDataDisplay(id) {
     event.preventDefault();
 
     inputAppData["status"] = 0;
+    inputAppData["employee"] = 1;
+    inputAppData["participate"] = 1;
+    inputAppData["date"] = "2024-11-09T02:39:48Z";
 
     var url = "http://localhost:8000/api/application";
 
     axios.post(url, inputAppData).then((res) => {
       if (res.data.valid === true) {
         alert("Данные добавлены");
+        setShowModalRegister(false);
       } else {
-        alert("Неправильно введены данные");
+        alert(res.data.msg);
         console.log(inputAppData);
+        console.log(res.data.valid);
       }
     });
   }
@@ -344,12 +352,7 @@ function JsonDataDisplay(id) {
             <Button className="mt-3" type="submit" onClick={SubmitEdit}>
               Обновить
             </Button>
-            <Button
-              variant="danger"
-              className="ms-2 mt-3"
-              type="submit"
-              onClick={DeleteSubmit}
-            >
+            <Button className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>
               Удалить
             </Button>
           </Form>
@@ -424,6 +427,21 @@ function JsonDataDisplay(id) {
             </Form.Group>
 
             <Form.Group>
+              <Form.Label>Employee</Form.Label>
+              <Form.Select
+                onChange={(e) =>
+                  setInputAppData({
+                    ...inputAppData,
+                    employee: e.target.value,
+                  })
+                }
+              >
+                <option>Select an employee</option>
+                {employeesSelect}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group>
               <Form.Label>Participate</Form.Label>
               <Form.Control
                 type="number"
@@ -431,6 +449,21 @@ function JsonDataDisplay(id) {
                   setInputAppData({
                     ...inputAppData,
                     participate: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Дата начала</Form.Label>
+              <Form.Control
+                type="datefield"
+                name="olymp_date_start"
+                placeholder="ГГГГ-ММ-ДД"
+                onChange={(e) =>
+                  setInputAppData({
+                    ...inputAppData,
+                    date: e.target.value,
                   })
                 }
               />

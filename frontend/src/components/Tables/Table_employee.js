@@ -5,7 +5,7 @@ import axios from "axios";
 function Employee_list(id) {
   const [employees, setEmployees] = useState([]);
   const [roles, setRoles] = useState([]);
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
   const [inputData, setInputData] = useState({});
 
   const [showModalAddEmployee, setShowModalAddEmployee] = useState(false);
@@ -23,8 +23,8 @@ function Employee_list(id) {
   const [editUser, setEditUser] = useState({
     id: -1,
     username: "",
-    email: ""
-  })
+    email: "",
+  });
 
   function findEmployeeById(ID) {
     for (var i = 0; i < employees.length; i++) {
@@ -51,21 +51,21 @@ function Employee_list(id) {
 
   //Закрыть модальное окно
   const CloseWind = () => {
-    setShowModalAddEmployee(false)
-    setShowModalEditEmployee(false)
+    setShowModalAddEmployee(false);
+    setShowModalEditEmployee(false);
   };
 
   const BackToEmployee = () => {
-    setShowModalEditEmployee(true)
-    setShowModalEditUser(false)
-  }
+    setShowModalEditEmployee(true);
+    setShowModalEditUser(false);
+  };
 
   //Показ модальное окно редактирования
   const ShowWindEditEmployeeOlymp = (event) => {
     event.preventDefault();
 
     id = event.target.id;
-    let v = findEmployeeById(id)
+    let v = findEmployeeById(id);
 
     setEditEmployee(v);
     setShowModalEditEmployee(true);
@@ -78,11 +78,11 @@ function Employee_list(id) {
     id = event.target.id;
     let v = findUserById(id);
 
-    console.log("after search function - ", v)
+    console.log("after search function - ", v);
 
     setEditUser(v);
-    setShowModalEditEmployee(false)
-    setShowModalEditUser(true)
+    setShowModalEditEmployee(false);
+    setShowModalEditUser(true);
   };
 
   //Добавление
@@ -96,19 +96,20 @@ function Employee_list(id) {
         alert("Юзер добавлен");
         console.log(res.data);
 
-        inputData["user"] = res.data.user_id
+        inputData["user"] = res.data.user_id;
 
-        axios.post("http://localhost:8000/api/employee", inputData).then((res) => {
-          if (res.data.valid === true) {
-            alert("Ответсвенный добавлен");
-            console.log(res.data);
-            setShowModalAddEmployee(false);
-            Refresh()
-          } else {
-            alert("Ответсвенный не добавлен");
-          }
-        });
-
+        axios
+          .post("http://localhost:8000/api/employee", inputData)
+          .then((res) => {
+            if (res.data.valid === true) {
+              alert("Ответсвенный добавлен");
+              console.log(res.data);
+              setShowModalAddEmployee(false);
+              Refresh();
+            } else {
+              alert("Ответсвенный не добавлен");
+            }
+          });
       } else {
         alert("Юзер не добавлен");
       }
@@ -122,13 +123,13 @@ function Employee_list(id) {
     var url =
       "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
 
-    console.log("avaible roles - ", roles)
+    console.log("avaible roles - ", roles);
 
     axios.put(url, editEmployee).then((res) => {
       if (res.data.valid === true) {
         alert("Данные обновлены");
         console.log("after update - ", editEmployee);
-        
+
         Refresh();
       } else {
         alert("Неправильно введены данные");
@@ -140,14 +141,13 @@ function Employee_list(id) {
   function SubmitUserEdit(event) {
     event.preventDefault();
 
-    var url =
-      "http://localhost:8000/api/getuser/" + editUser.id.toString();
+    var url = "http://localhost:8000/api/getuser/" + editUser.id.toString();
 
     axios.put(url, editUser).then((res) => {
       if (res.data.valid === true) {
         alert("Данные обновлены");
         console.log("after update - ", editUser);
-        
+
         Refresh();
       } else {
         alert("Неправильно введены данные");
@@ -159,7 +159,8 @@ function Employee_list(id) {
   function DeleteSubmit(event) {
     event.preventDefault();
 
-    var url = "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
+    var url =
+      "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
 
     axios.delete(url).then((res) => {
       setShowModalEditEmployee(false);
@@ -177,7 +178,6 @@ function Employee_list(id) {
   useEffect(() => {
     axios.get("http://localhost:8000/api/getemployees").then((res) => {
       setEmployees(res.data);
-      
     });
   }, []);
 
@@ -203,7 +203,11 @@ function Employee_list(id) {
         <td>{emp.name}</td>
         <td>{roles[emp.role]}</td>
         <td>
-          <Button variant="primary" onClick={ShowWindEditEmployeeOlymp} id={emp.id}>
+          <Button
+            variant="primary"
+            onClick={ShowWindEditEmployeeOlymp}
+            id={emp.id}
+          >
             Изменить
           </Button>
         </td>
@@ -253,7 +257,11 @@ function Employee_list(id) {
             </Form.Group>
             <Form.Group>
               <Form.Label>Роль</Form.Label>
-              <Form.Select onChange={(e) => setInputData({ ...inputData, role: e.target.value })}>
+              <Form.Select
+                onChange={(e) =>
+                  setInputData({ ...inputData, role: e.target.value })
+                }
+              >
                 <option>Выберите роль</option>
                 {rolesSelect}
               </Form.Select>
@@ -265,7 +273,8 @@ function Employee_list(id) {
                 type="text"
                 name="name"
                 onChange={(e) =>
-                  setInputData({ ...inputData, username: e.target.value })}
+                  setInputData({ ...inputData, username: e.target.value })
+                }
               />
             </Form.Group>
 
@@ -275,7 +284,8 @@ function Employee_list(id) {
                 type="text"
                 name="name"
                 onChange={(e) =>
-                  setInputData({ ...inputData, password: e.target.value })}
+                  setInputData({ ...inputData, password: e.target.value })
+                }
               />
             </Form.Group>
 
@@ -284,7 +294,8 @@ function Employee_list(id) {
               type="text"
               name="name"
               onChange={(e) =>
-                setInputData({ ...inputData, email: e.target.value })}
+                setInputData({ ...inputData, email: e.target.value })
+              }
             />
 
             <Button className="mt-3" type="submit">
@@ -293,7 +304,6 @@ function Employee_list(id) {
           </Form>
         </Modal.Body>
       </Modal>
-
 
       {/* Модальное окно редактриованния ответственных */}
       <Modal show={showModalEditEmployee} onHide={CloseWind}>
@@ -320,7 +330,9 @@ function Employee_list(id) {
               <Form.Select
                 defaultValue={editEmployee.role}
                 onChange={(e) =>
-                  setEditEmployee({ ...editEmployee, role: e.target.value })}>
+                  setEditEmployee({ ...editEmployee, role: e.target.value })
+                }
+              >
                 <option>Выберите роль</option>
                 {rolesSelect}
               </Form.Select>
@@ -337,16 +349,21 @@ function Employee_list(id) {
                 }
               />
 
-              <Button className="mt-2" onClick={ShowWindEditUserOlymp} id={editEmployee.user}>Edit user</Button>
+              <Button
+                className="mt-2"
+                onClick={ShowWindEditUserOlymp}
+                id={editEmployee.user}
+              >
+                Edit user
+              </Button>
             </Form.Group>
 
             <Button className="mt-3" type="submit" onClick={SubmitEmployeeEdit}>
               Обновить
             </Button>
-            <Button variant="danger" className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>
+            <Button className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>
               Удалить
             </Button>
-
           </Form>
         </Modal.Body>
       </Modal>
