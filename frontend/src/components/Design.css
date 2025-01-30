@@ -9,6 +9,7 @@
   margin-top: 20px;
 }
 
+/* Buttons */
 button{
   background-color: #e7af5a !important;
   border-color: #e7af5a !important;
@@ -18,9 +19,15 @@ button{
   background-color: rgb(255, 255, 255);
 }
 
+/* Расположение кнопки добавить */
 .AddButton{
   text-align: end;
   margin-right: 15%;
+}
+
+/* Поле для добавления файла */
+.fileUploadField{
+  margin-left: 65%;
 }
 
 .btnn{

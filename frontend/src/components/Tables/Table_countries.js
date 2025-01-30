@@ -3,23 +3,23 @@ import { Button, Container, Table, Form, Modal } from 'react-bootstrap'
 import axios from "axios"
 import { Component } from 'react'
 
-function JsonDataDisplay(id){
-    const [countries, setCountries] = useState([])
+function JsonDataDisplay(id) {
+	const [countries, setCountries] = useState([])
 
 	//Запрос списка олимпиады
 	useEffect(() => {
 		axios.get('http://localhost:8000/api/getcountries')
-		.then(res => {
-			
-			setCountries(res.data)
-		})
+			.then(res => {
+
+				setCountries(res.data)
+			})
 	}, [])
 
 
 
 	//Вывод таблицы
 	const DisplayData = countries.map((countrie, index) => {
-		return(
+		return (
 			<tr>
 				<td>{index + 1}</td>
 				<td>{countrie.country_name}</td>
@@ -27,22 +27,27 @@ function JsonDataDisplay(id){
 		)
 	})
 
-	return(
-        <>
-        <Container>
-			<Table striped>
-				<thead>
-					<tr>
-                        <th>#</th>
-                        <th>Название</th>
-					</tr>
-				</thead>
-				<tbody>
-					{DisplayData}
-				</tbody>
-			</Table>
-        </Container>
-        </>
+	return (
+		<>
+			<Container>
+				<Table striped>
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Название</th>
+						</tr>
+					</thead>
+					<tbody>
+						{DisplayData}
+					</tbody>
+				</Table>
+			</Container>
+
+			<div className="fileUploadField AddButton">
+				<Form.Control type="file" />
+				<Button className="mt-3">Загрузить</Button>
+			</div>
+		</>
 	)
 }
 

@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import { Button, Container, Form, Modal, Nav, Navbar} from 'react-bootstrap';
 
-import './Design.css';
-
 export default function NaviBar(){
 
     const [showLog, setShowLog] = useState(false);

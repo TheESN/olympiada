@@ -3,6 +3,7 @@ import { Button, Container, Table, Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import { Component } from "react";
 
+
 function JsonDataDisplay(id) {
   const [subdivisions, setSubdivisions] = useState([]);
 
@@ -35,7 +36,13 @@ function JsonDataDisplay(id) {
           </thead>
           <tbody>{DisplayData}</tbody>
         </Table>
+
       </Container>
+
+      <div className="fileUploadField AddButton">
+        <Form.Control type="file" />
+        <Button className="mt-3">Загрузить</Button>
+      </div>
     </>
   );
 }
