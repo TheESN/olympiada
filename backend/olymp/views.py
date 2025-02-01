@@ -242,13 +242,17 @@ class SchoolViewSet(APIView):
     def delete(self, request, id, format=None):
         output = {"valid": True, "message": ''}
         if request.method == "DELETE":
-            school = get_object_or_404(Application, pk=id)
+            school = get_object_or_404(School, pk=id)
+            apps = school.application_set.all()
             try:
-                output["application"] = school.id
-                school.delete()
-                output["message"] = 'Успешно!'
+                if (len(apps) != 0):
+                    raise Exception
+                else:
+                    output["school"] = school.id
+                    school.delete()
+                    output["message"] = 'Успешно!'
             except:
-                del output["application"]
+                del output["school"]
                 output["valid"] = False
                 output["message"] = 'Ошибка!'
             return Response(output)
