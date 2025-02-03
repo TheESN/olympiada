@@ -1,12 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Container, Table, Form, Modal } from 'react-bootstrap'
 import axios from "axios"
-import { Component } from 'react'
 
 function JsonDataDisplay(id) {
     const [showModalEditStud, setShowModalEditStud] = useState(false);
-
-    const [showModalRegister, setShowModalRegister] = useState(false);
 
     const [students, setStudents] = useState([])
     
@@ -59,7 +56,6 @@ function JsonDataDisplay(id) {
     //Закрыть модальное окно
     const CloseWind = () => {
         setShowModalEditStud(false)
-        setShowModalRegister(false)
         setShowModal(false)
     }
     

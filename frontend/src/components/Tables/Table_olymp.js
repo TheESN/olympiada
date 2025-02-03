@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Table, Form, Modal } from "react-bootstrap";
 import axios from "axios";
-import { Component } from "react";
 
 function JsonDataDisplay(id) {
   const [showModalEditOlymp, setShowModalEditOlymp] = useState(false);
@@ -45,7 +44,7 @@ function JsonDataDisplay(id) {
 
     id = event.target.id;
     let v = findOlympById(id);
-    setInputAppData({ olymp: v });
+    setInputAppData({ olymp_id: v.id });
     setShowModalRegister(true);
   };
 
@@ -74,6 +73,7 @@ function JsonDataDisplay(id) {
   useEffect(() => {
     axios.get("http://localhost:8000/api/getemployees").then((res) => {
       setEmployees(res.data);
+      console.log(res.data)
     });
   }, []);
 
@@ -175,9 +175,6 @@ function JsonDataDisplay(id) {
     event.preventDefault();
 
     inputAppData["status"] = 0;
-    inputAppData["employee"] = 1;
-    inputAppData["participate"] = 1;
-    inputAppData["date"] = "2024-11-09T02:39:48Z";
 
     var url = "http://localhost:8000/api/application";
 
@@ -372,7 +369,7 @@ function JsonDataDisplay(id) {
                 onChange={(e) =>
                   setInputAppData({
                     ...inputAppData,
-                    student: students[e.target.value],
+                    student_id: students[e.target.value].id,
                   })
                 }
               >
@@ -387,7 +384,7 @@ function JsonDataDisplay(id) {
                 onChange={(e) =>
                   setInputAppData({
                     ...inputAppData,
-                    school: schools[e.target.value],
+                    school_id: schools[e.target.value].id,
                   })
                 }
               >
@@ -402,7 +399,7 @@ function JsonDataDisplay(id) {
                 onChange={(e) =>
                   setInputAppData({
                     ...inputAppData,
-                    subdivision: subdivisions[e.target.value],
+                    subdivision_id: subdivisions[e.target.value].id,
                   })
                 }
               >
@@ -417,7 +414,7 @@ function JsonDataDisplay(id) {
                 onChange={(e) =>
                   setInputAppData({
                     ...inputAppData,
-                    teacher: e.target.value,
+                    teacher: teachers[e.target.value].id,
                   })
                 }
               >
@@ -432,7 +429,7 @@ function JsonDataDisplay(id) {
                 onChange={(e) =>
                   setInputAppData({
                     ...inputAppData,
-                    employee: e.target.value,
+                    employee: employees[e.target.value].id,
                   })
                 }
               >
@@ -449,21 +446,6 @@ function JsonDataDisplay(id) {
                   setInputAppData({
                     ...inputAppData,
                     participate: e.target.value,
-                  })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>Дата начала</Form.Label>
-              <Form.Control
-                type="datefield"
-                name="olymp_date_start"
-                placeholder="ГГГГ-ММ-ДД"
-                onChange={(e) =>
-                  setInputAppData({
-                    ...inputAppData,
-                    date: e.target.value,
                   })
                 }
               />
