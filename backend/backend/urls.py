@@ -16,15 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from olymp.views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet, StudentViewSet, StudentViewList, OlympViewSet, OlympViewList, AddOlympViewSet
-from olymp.views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList
+from olymp.olymp_views import OlympViewSet, OlympViewList, AddOlympViewSet
+from olymp.employee_views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet
+from olymp.student_views import StudentViewSet, StudentViewList
 from olymp.views import UserViewList, GenderViewList, RoleViewList
 from olymp.views import UserViewSet, AddUserViewSet
-from olymp.views import SchoolViewList, SchoolViewSet, AddSchoolViewSet
-from olymp.views import FileUploadView, SubdivisionFileUploadView
+from olymp.school_views import SchoolViewList, SchoolViewSet, AddSchoolViewSet, FileUploadView
+from olymp.subdivision_views import SubdivisionViewSet, AddSubdivisionViewSet, SubdivisionViewList, SubdivisionFileUploadView
 from olymp.application_views import ApplicationUploadView, ApplicationViewSet, ApplicationViewList, AddApplicationViewSet, ChangeApplicationStatus, ChangeApplicationStatusMultiple
+from olymp.participant_views import ParticipantViewSet, ParticipantViewList, AddParticipantViewSet
+from olymp.result_views import ResultViewSet, ResultViewList, AddResultViewSet
 from olymp.country_views import CountryViewSet, CountryViewList, AddCountryViewSet
 from rest_framework.authtoken import views
+
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 api = [
     path('employee', AddEmployeeViewSet.as_view()),
@@ -54,12 +59,21 @@ api = [
     path('adduser', AddUserViewSet.as_view()),
     path('getcountry/<int:id>', CountryViewSet.as_view()),
     path('getcountries', CountryViewList.as_view({'get': 'list'})),
-    path('country', AddCountryViewSet.as_view())
+    path('country', AddCountryViewSet.as_view()),
+    path('getparticipant/<int:id>', ParticipantViewSet.as_view()),
+    path('getparticipants', ParticipantViewList.as_view({'get': 'list'})),
+    path('participant', AddParticipantViewSet.as_view()),
+    path('getresult/<int:id>', ResultViewSet.as_view()),
+    path('getresults', ResultViewList.as_view({'get': 'list'})),
+    path('result', AddResultViewSet.as_view())
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include((api, 'olymp'), namespace='api')),
     path('api-token-auth/', views.obtain_auth_token),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     re_path(r'^upload/(?P<filename>[^/]+)$', FileUploadView.as_view()),
     re_path(r'^upload/participants/(?P<olymp_id>\d+)/(?P<filename>[^/]+)$', ApplicationUploadView.as_view()),
     re_path(r'^uploadsubdivision/(?P<filename>[^/]+)$', SubdivisionFileUploadView.as_view()),

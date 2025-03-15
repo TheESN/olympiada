@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Person, Employee, Student, Olympiada, Application, Subdivision, School, Country
+from .models import Person, Employee, Student, Olympiada, Application, Subdivision, School, Country, Participant, Result
 from django.contrib.auth.models import User
 
 
@@ -105,3 +105,20 @@ class CountrySerializer(serializers.ModelSerializer):
         model = Country
         fields = ['id', 'country_name']
 
+class ParticipantSerializer(serializers.ModelSerializer):
+    student = StudentSerializer(read_only=True)
+    student_id = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all(), source="student", write_only=True)
+    application = ApplicationSerializer(read_only=True)
+    application_id = serializers.PrimaryKeyRelatedField(queryset=Application.objects.all(), source="application", write_only=True)
+
+    class Meta:
+        model = Participant
+        fields = ['id', 'student', 'student_id', 'application', 'application_id']
+
+class ResultSerializer(serializers.ModelSerializer):
+    participant = ParticipantSerializer(read_only=True)
+    participant_id = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all(), source="student", write_only=True)
+
+    class Meta:
+        model = Result
+        fields = ['id', 'participant', 'participant_id', 'task_number', 'result_value']
