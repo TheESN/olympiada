@@ -81,3 +81,12 @@ class School(models.Model):
 
     def __str__(self):
         return self.school_name
+
+class Participant(models.Model):
+    student = models.ForeignKey("Student", verbose_name="Учащийся", on_delete=models.CASCADE, related_name='participant_students')
+    application = models.ForeignKey("Application", verbose_name="Заявка", on_delete=models.CASCADE, related_name='participant_applications')
+
+class Result(models.Model):
+    participant = models.ForeignKey("Participant", verbose_name="Участник", on_delete=models.CASCADE, related_name='result_students')
+    task_number = models.CharField("Номер задачи", max_length=1)
+    result_value = models.IntegerField(verbose_name="Балл", validators=[MinValueValidator(0), MaxValueValidator(100)])
