@@ -15,7 +15,7 @@ class ApplicationViewSet(APIView):
         application = get_object_or_404(Application, pk=id)
         ser = ApplicationSerializer(application)
         output = ser.data
-        output["Название"] = application.applied_olymp.olymp_name
+        output["Название"] = application.olymp.olymp_name
         return Response(output)
     def delete(self, request, id, format=None):
         output = {"valid": True, "message": ''}

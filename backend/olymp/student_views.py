@@ -1,6 +1,6 @@
 import os.path
 from django.shortcuts import get_object_or_404
-from .models import Student
+from .models import Student, Application
 from rest_framework import viewsets, status
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
@@ -17,3 +17,15 @@ class StudentViewSet(APIView):
 class StudentViewList(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+class StudentFromOlympViewList(ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def list(self, request, *args, **kwargs):
+        # self.queryset = self.queryset.filter(olymp_id = kwargs.get('olymp_id', 1))
+        # olymp = Olympiada.objects.filter(pk=kwargs.get('olymp_id', 1))
+        students = Student.objects.filter(id__in=Application.objects.filter(olymp__id=kwargs.get('olymp_id', 1)).values_list("student__id", flat=True)).distinct()
+        ser = StudentSerializer(students, many=True)
+        output = ser.data
+        return Response(output)

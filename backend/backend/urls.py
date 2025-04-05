@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from olymp.olymp_views import OlympViewSet, OlympViewList, AddOlympViewSet
 from olymp.employee_views import EmployeeViewSet, EmployeeViewList, AddEmployeeViewSet
-from olymp.student_views import StudentViewSet, StudentViewList
+from olymp.student_views import StudentViewSet, StudentViewList, StudentFromOlympViewList
 from olymp.views import UserViewList, GenderViewList, RoleViewList
 from olymp.views import UserViewSet, AddUserViewSet
 from olymp.school_views import SchoolViewList, SchoolViewSet, AddSchoolViewSet, FileUploadView
@@ -42,6 +42,7 @@ api = [
     path('getstudents', StudentViewList.as_view({'get': 'list'})),
     path('getapplication/<int:id>', ApplicationViewSet.as_view()),
     path('getapplications', ApplicationViewList.as_view({'get': 'list'})),
+    path('getstudentfromolymp/<int:olymp_id>', StudentFromOlympViewList.as_view({'get': 'list'})),
     path('application', AddApplicationViewSet.as_view()),
     path('applicationstatus/<int:id>', ChangeApplicationStatus.as_view()),
     path('applicationstatuses', ChangeApplicationStatusMultiple.as_view()),
