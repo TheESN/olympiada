@@ -31,7 +31,7 @@ class SchoolViewSet(APIView):
         output = {"valid": True, "message": ''}
         if request.method == "DELETE":
             school = get_object_or_404(School, pk=id)
-            apps = school.application_set.all()
+            apps = school.schools.all()
             try:
                 if (len(apps) != 0):
                     raise Exception
