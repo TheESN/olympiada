@@ -68,6 +68,8 @@ function Employee_list(id) {
     let v = findEmployeeById(id);
 
     setEditEmployee(v);
+    console.log(users[editEmployee.user].username)
+    console.log(editEmployee)
     setShowModalEditEmployee(true);
   };
 

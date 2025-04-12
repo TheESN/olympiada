@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Table, Form, Modal } from "react-bootstrap";
 import axios from "axios";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function JsonDataDisplay(id) {
   const [showModalEditOlymp, setShowModalEditOlymp] = useState(false);
@@ -45,6 +46,9 @@ function JsonDataDisplay(id) {
     id = event.target.id;
     let v = findOlympById(id);
     setInputAppData({ olymp_id: v.id });
+
+    console.log("emp select", employeesSelect)
+
     setShowModalRegister(true);
   };
 
@@ -73,7 +77,7 @@ function JsonDataDisplay(id) {
   useEffect(() => {
     axios.get("http://localhost:8000/api/getemployees").then((res) => {
       setEmployees(res.data);
-      console.log(res.data)
+      console.log("employess ", res.data)
     });
   }, []);
 
@@ -177,6 +181,7 @@ function JsonDataDisplay(id) {
     inputAppData["status"] = 0;
 
     var url = "http://localhost:8000/api/application";
+    console.log(employees)
 
     axios.post(url, inputAppData).then((res) => {
       if (res.data.valid === true) {
@@ -185,6 +190,7 @@ function JsonDataDisplay(id) {
       } else {
         alert(res.data.msg);
         console.log(inputAppData);
+        console.log("wqe = ", employeesSelect[0].value)
         console.log(res.data.valid);
       }
     });
@@ -203,9 +209,17 @@ function JsonDataDisplay(id) {
         <td>{olymp.olymp_date_start}</td>
         <td>{olymp.olymp_time}</td>
         <td>
-          <Button variant="primary" onClick={ShowModalRegister} id={olymp.id}>
-            Записаться
-          </Button>
+          <Dropdown>
+            <Dropdown.Toggle>
+              Actions
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Записаться</Dropdown.Item>
+              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Результаты</Dropdown.Item>
+              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Участники</Dropdown.Item>
+              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Заявки</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </td>
       </tr>
     );
@@ -414,7 +428,7 @@ function JsonDataDisplay(id) {
                 onChange={(e) =>
                   setInputAppData({
                     ...inputAppData,
-                    teacher: teachers[e.target.value].id,
+                    teacher: e.target.value,
                   })
                 }
               >
@@ -429,7 +443,7 @@ function JsonDataDisplay(id) {
                 onChange={(e) =>
                   setInputAppData({
                     ...inputAppData,
-                    employee: employees[e.target.value].id,
+                    employee: e.target.value,
                   })
                 }
               >

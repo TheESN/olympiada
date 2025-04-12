@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Table, Form, Modal } from "react-bootstrap";
 import axios from "axios";
+import FileUpload from "../FileUploadSchool";
 
 function JsonDataDisplay(id) {
   const [schools, setSchools] = useState([]);
@@ -11,6 +12,7 @@ function JsonDataDisplay(id) {
   const [showModalEditSchool, setShowModalEditSchool] = useState(false);
 
   const ShowWindAdd = () => setShowModal(true);
+  
   const ShowWindEdit = (event) => {
     event.preventDefault();
 
@@ -64,7 +66,7 @@ function JsonDataDisplay(id) {
     });
   }
 
-  function editSubmit(event){
+  function editSubmit(event) {
     event.preventDefault()
 
     var url = "http://localhost:8000/api/getschool/" + inputData.id.toString();
@@ -72,12 +74,12 @@ function JsonDataDisplay(id) {
     console.log("Edit clicked")
 
     axios.put(url, inputData).then((res) => {
-      if (res.data.valid === true){
+      if (res.data.valid === true) {
         alert("Данные обновлены");
         console.log(res.data);
         setShowModalEditSchool(false);
         Refresh();
-      }else {
+      } else {
         alert("Неправильно введены данные");
         console.log(res.data);
       }
@@ -193,17 +195,17 @@ function JsonDataDisplay(id) {
             <Form.Group>
               <Form.Label>Name</Form.Label>
               <Form.Control
-              type="text"
-              defaultValue={inputData.school_name}
-              onChange={(e) => setInputData({...inputData, school_name: e.target.value})}
+                type="text"
+                defaultValue={inputData.school_name}
+                onChange={(e) => setInputData({ ...inputData, school_name: e.target.value })}
               />
             </Form.Group>
             <Form.Group>
               <Form.Label>Subdivision school</Form.Label>
               <Form.Select
-              type="text"
-              defaultValue={inputData.school_subdivision}
-              onChange={(e) => setInputData({...inputData, school_subdivision: e.target.value})}
+                type="text"
+                defaultValue={inputData.school_subdivision}
+                onChange={(e) => setInputData({ ...inputData, school_subdivision: e.target.value })}
               >
                 {subdivisionsSelect}
               </Form.Select>
@@ -215,6 +217,10 @@ function JsonDataDisplay(id) {
           </Button>
         </Modal.Body>
       </Modal>
+
+      <div className="fileUploadField AddButton">
+        <FileUpload />
+      </div>
     </>
   );
 }
