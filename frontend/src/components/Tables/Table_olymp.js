@@ -7,6 +7,8 @@ function JsonDataDisplay(id) {
   const [showModalEditOlymp, setShowModalEditOlymp] = useState(false);
 
   const [showModalRegister, setShowModalRegister] = useState(false);
+  
+  const [olympStuds, setOlympStuds] = useState([]);
 
   const [olymps, setOlymps] = useState([]);
   const [students, setStudents] = useState([]);
@@ -36,6 +38,8 @@ function JsonDataDisplay(id) {
     id = event.target.id;
     let v = findOlympById(id);
     setEditOlymp(v);
+    console.log(editOlymp)
+
     setShowModalEditOlymp(true);
   };
 
@@ -160,6 +164,22 @@ function JsonDataDisplay(id) {
     });
   }
 
+  const getStudentFromOlymp = (event) => {
+    event.preventDefault();
+
+    id = event.target.id;
+    let v = findOlympById(id);
+
+    var url =
+      "http://localhost:8000/api/getstudentfromolymp/" + v['id'].toString();
+
+    axios.get(url).then((res) => {
+      setOlympStuds(res.data)
+      console.log("res ", res.data)
+      console.log("olymp studs ", olympStuds)
+    });
+  }
+
   //Удаление олимпиады
   function DeleteSubmit(event) {
     event.preventDefault();
@@ -201,11 +221,7 @@ function JsonDataDisplay(id) {
     return (
       <tr>
         <td>{index + 1}</td>
-        <td>
-          <a href="#" onClick={ShowWindEditOlymp} id={olymp.id}>
-            {olymp.olymp_name}
-          </a>
-        </td>
+        <td>{olymp.olymp_name}</td>
         <td>{olymp.olymp_date_start}</td>
         <td>{olymp.olymp_time}</td>
         <td>
@@ -215,8 +231,9 @@ function JsonDataDisplay(id) {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Записаться</Dropdown.Item>
+              <Dropdown.Item onClick={ShowWindEditOlymp} id={olymp.id}>Редактировать</Dropdown.Item>
               <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Результаты</Dropdown.Item>
-              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Участники</Dropdown.Item>
+              <Dropdown.Item onClick={getStudentFromOlymp} id={olymp.id}>Участники</Dropdown.Item>
               <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Заявки</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
