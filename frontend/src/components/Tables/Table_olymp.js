@@ -2,260 +2,142 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Table, Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import Dropdown from 'react-bootstrap/Dropdown';
+import { useNavigate } from 'react-router-dom'
 
-function JsonDataDisplay(id) {
+function JsonDataDisplay() {
   const [showModalEditOlymp, setShowModalEditOlymp] = useState(false);
-
   const [showModalRegister, setShowModalRegister] = useState(false);
-  
-  const [olympStuds, setOlympStuds] = useState([]);
-
   const [olymps, setOlymps] = useState([]);
   const [students, setStudents] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [schools, setSchools] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [subdivisions, setSubdivisions] = useState([]);
-
-  const [editOlymp, setEditOlymp] = useState({
-    id: -1,
-    olymp_name: "",
-    olymp_date_start: "",
-    olymp_time: "",
-  });
-
   const [showModal, setShowModal] = useState(false);
-
-  const ShowWind = () => setShowModal(true);
-
   const [inputData, setInputData] = useState({});
   const [inputAppData, setInputAppData] = useState({});
+  const navigate = useNavigate();
 
-  //Показ модальное окно редактирования
-  const ShowWindEditOlymp = (event) => {
-    event.preventDefault();
-
-    id = event.target.id;
-    let v = findOlympById(id);
-    setEditOlymp(v);
-    console.log(editOlymp)
-
-    setShowModalEditOlymp(true);
+  const handleOlympSelect = (id) => {
+    const olymp = olymps.find(o => o.id === id);
+    setInputData(olymp);
+    setInputAppData({ olymp_id: olymp.id });
   };
 
-  //Показ модальное окно записи
-  const ShowModalRegister = (event) => {
-    event.preventDefault();
-
-    id = event.target.id;
-    let v = findOlympById(id);
-    setInputAppData({ olymp_id: v.id });
-
-    console.log("emp select", employeesSelect)
-
-    setShowModalRegister(true);
+  const handleModalToggle = (modalType) => {
+    if (modalType === 'edit')
+      setShowModalEditOlymp(!showModalEditOlymp);
+    else if (modalType === 'register')
+      setShowModalRegister(!showModalRegister);
+    else setShowModal(!showModal);
   };
 
-  //Закрыть модальное окно
-  const CloseWind = () => {
-    setShowModalEditOlymp(false);
-    setShowModalRegister(false);
-    setShowModal(false);
+  // Запрос данных
+  useEffect(() => {
+    const fetchData = async () => {
+      const [olympRes, studentRes, employeeRes, schoolRes, subdivisionRes] = await Promise.all([
+        axios.get("http://localhost:8000/api/getolympiadas"),
+        axios.get("http://localhost:8000/api/getstudents"),
+        axios.get("http://localhost:8000/api/getemployees"),
+        axios.get("http://localhost:8000/api/getschools"),
+        axios.get("http://localhost:8000/api/getsubdivisions"),
+      ]);
+      setOlymps(olympRes.data);
+      setStudents(studentRes.data);
+      setEmployees(employeeRes.data);
+      setTeachers(employeeRes.data)
+      setSchools(schoolRes.data);
+      setSubdivisions(subdivisionRes.data);
+    };
+    fetchData();
+  }, []);
+
+  const renderSelectOptions = (data, key) => {
+    return data.map((item, index) => <option key={item.id} value={item.id}>{item[key]}</option>);
   };
 
-  //Запрос списка олимпиады
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getolympiadas").then((res) => {
-      setOlymps(res.data);
-    });
-  }, []);
-
-  //Запрос списка студентов
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getstudents").then((res) => {
-      setStudents(res.data);
-    });
-  }, []);
-
-  //Запрос списка ответственных
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getemployees").then((res) => {
-      setEmployees(res.data);
-      console.log("employess ", res.data)
-    });
-  }, []);
-
-  //Запрос списка школ
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getschools").then((res) => {
-      setSchools(res.data);
-    });
-  }, []);
-
-  //Запрос списка учителей
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getemployees").then((res) => {
-      setTeachers(res.data);
-    });
-  }, []);
-
-  //Запрос списка улусов
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getsubdivisions").then((res) => {
-      setSubdivisions(res.data);
-    });
-  }, []);
-
-  const studentsSelect = students.map((student, index) => {
-    return <option value={index}>{student.name}</option>;
-  });
-
-  const employeesSelect = employees.map((employee, index) => {
-    return <option value={employee.id}>{employee.name}</option>;
-  });
-
-  const schoolsSelect = schools.map((school, index) => {
-    return <option value={index}>{school.school_name}</option>;
-  });
-
-  const teachersSelect = teachers.map((teacher, index) => {
-    return <option value={teacher.id}>{teacher.name}</option>;
-  });
-
-  const subdivisionsSelect = subdivisions.map((subdivision, index) => {
-    return <option value={index}>{subdivision.subdivision_name}</option>;
-  });
-
-  //Добавление олимпиады
-  function handleSubmit(event) {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    axios.post("http://localhost:8000/api/olympiada", inputData).then((res) => {
-      if (res.data.valid === true) {
-        alert("Данные добавлены");
-        console.log(res.data.valid);
-        setShowModal(false);
-        Refresh();
-      } else {
-        alert("Неправильно введены данные");
-      }
-    });
-  }
-
-  //Редактирование олимпиады
-  function SubmitEdit(event) {
-    event.preventDefault();
-
-    console.log(editOlymp);
-
-    var url =
-      "http://localhost:8000/api/getolympiada/" + editOlymp.id.toString();
-
-    axios.put(url, editOlymp).then((res) => {
-      if (res.data.valid === true) {
-        alert("Данные обновлены");
-        console.log(res.data);
-        setShowModalEditOlymp(false);
-        Refresh();
-      } else {
-        alert("Неправильно введены данные");
-        console.log(res.data);
-      }
-    });
-  }
-
-  const getStudentFromOlymp = (event) => {
-    event.preventDefault();
-
-    id = event.target.id;
-    let v = findOlympById(id);
-
-    var url =
-      "http://localhost:8000/api/getstudentfromolymp/" + v['id'].toString();
-
-    axios.get(url).then((res) => {
-      setOlympStuds(res.data)
-      console.log("res ", res.data)
-      console.log("olymp studs ", olympStuds)
-    });
-  }
-
-  //Удаление олимпиады
-  function DeleteSubmit(event) {
-    event.preventDefault();
-
-    var url =
-      "http://localhost:8000/api/getolympiada/" + editOlymp.id.toString();
-
-    axios.delete(url).then(() => {
-      alert("Удалено");
-      setShowModalEditOlymp(false);
+    const res = await axios.post("http://localhost:8000/api/olympiada", inputData);
+    alert(res.data.valid ? "Данные добавлены" : "Неправильно введены данные");
+    if (res.data.valid) {
+      handleModalToggle();
       Refresh();
-    });
-  }
+    }
+  };
 
-  //Application register
-  function RegisterSubmit(event) {
+  const handleEditSubmit = async (event) => {
     event.preventDefault();
+    const res = await axios.put(`http://localhost:8000/api/getolympiada/${inputData.id}`, inputData);
+    alert(res.data.valid ? "Данные обновлены" : "Неправильно введены данные");
+    if (res.data.valid) {
+      handleModalToggle('edit');
+      Refresh();
+    }
+  };
 
-    inputAppData["status"] = 0;
+  const handleDelete = async (event) => {
+    event.preventDefault();
+    await axios.delete(`http://localhost:8000/api/getolympiada/${inputData.id}`);
+    alert("Удалено");
+    handleModalToggle('edit');
+    Refresh();
+  };
 
-    var url = "http://localhost:8000/api/application";
-    console.log(employees)
+  const fetchStudentFromOlymp = async (id) => {
+    try {
+      const url = "http://localhost:8000/api/getstudentfromolymp/" + id.toString();
+      const res = await axios.get(url);
 
-    axios.post(url, inputAppData).then((res) => {
-      if (res.data.valid === true) {
-        alert("Данные добавлены");
-        setShowModalRegister(false);
-      } else {
-        alert(res.data.msg);
-        console.log(inputAppData);
-        console.log("wqe = ", employeesSelect[0].value)
-        console.log(res.data.valid);
-      }
-    });
-  }
+      console.log("API response: ", res.data);
 
-  //Вывод таблицы
-  const DisplayData = olymps.map((olymp, index) => {
-    return (
-      <tr>
-        <td>{index + 1}</td>
-        <td>{olymp.olymp_name}</td>
-        <td>{olymp.olymp_date_start}</td>
-        <td>{olymp.olymp_time}</td>
-        <td>
-          <Dropdown>
-            <Dropdown.Toggle>
-              Actions
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Записаться</Dropdown.Item>
-              <Dropdown.Item onClick={ShowWindEditOlymp} id={olymp.id}>Редактировать</Dropdown.Item>
-              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Результаты</Dropdown.Item>
-              <Dropdown.Item onClick={getStudentFromOlymp} id={olymp.id}>Участники</Dropdown.Item>
-              <Dropdown.Item onClick={ShowModalRegister} id={olymp.id}>Заявки</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </td>
-      </tr>
-    );
-  });
-
-  //Поиск олимпиады по айди
-  function findOlympById(ID) {
-    for (var i = 0; i < olymps.length; i++) {
-      if (olymps[i].id == ID) {
-        return olymps[i];
-      }
+      navigate(`/participants/${id}`, {
+        state: {
+          data: res.data // Передаем данные в состояние
+        }
+      });
+    }
+    catch (error) {
+      console.error(error)
     }
   }
 
-  function Refresh() {
-    axios.get("http://localhost:8000/api/getolympiadas").then((res) => {
-      setOlymps(res.data);
-    });
-  }
+  const handleRegisterSubmit = async (event) => {
+    event.preventDefault();
+    inputAppData.status = 0;
+    const res = await axios.post("http://localhost:8000/api/application", inputAppData);
+    alert(res.data.valid ? "Данные добавлены" : res.data.msg);
+    if (res.data.valid) handleModalToggle('register');
+  };
+
+  //Вывод таблицы
+  const DisplayData = olymps.map((olymp, index) => (
+    <tr>
+      <td>{index + 1}</td>
+      <td>{olymp.olymp_name}</td>
+      <td>{olymp.olymp_date_start}</td>
+      <td>{olymp.olymp_time}</td>
+      <td>
+        <Dropdown>
+          <Dropdown.Toggle>
+            Actions
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => { handleOlympSelect(olymp.id); handleModalToggle('register') }}>Записаться</Dropdown.Item>
+            <Dropdown.Item onClick={() => { handleOlympSelect(olymp.id); handleModalToggle('edit'); }}>Редактировать</Dropdown.Item>
+            <Dropdown.Item>Результаты</Dropdown.Item>
+            <Dropdown.Item onClick={() => fetchStudentFromOlymp(olymp.id)}>Участники</Dropdown.Item>
+            <Dropdown.Item>Заявки</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </td>
+    </tr>
+  ));
+
+  const Refresh = async () => {
+    const res = await axios.get("http://localhost:8000/api/getolympiadas");
+    setOlymps(res.data);
+  };
 
   return (
     <>
@@ -275,13 +157,13 @@ function JsonDataDisplay(id) {
       </Container>
 
       <div className="AddButton">
-        <Button onClick={ShowWind} className="add_btn">
+        <Button onClick={() => handleModalToggle()}>
           Добавить
         </Button>
       </div>
 
       {/* модальное окно Добавление */}
-      <Modal show={showModal} onHide={CloseWind}>
+      <Modal show={showModal} onHide={() => handleModalToggle()}>
         <Modal.Header closeButton>
           <Modal.Title>Добавить олимпиаду</Modal.Title>
         </Modal.Header>
@@ -289,202 +171,91 @@ function JsonDataDisplay(id) {
           <Form onSubmit={handleSubmit}>
             <Form.Group>
               <Form.Label>Название</Form.Label>
-              <Form.Control
-                type="text"
-                name="olymp_name"
-                onChange={(e) =>
-                  setInputData({ ...inputData, olymp_name: e.target.value })
-                }
-                required
-              />
+              <Form.Control type="text" onChange={(e) => setInputData({ ...inputData, olymp_name: e.target.value })} required />
             </Form.Group>
             <Form.Group>
               <Form.Label>Дата начала</Form.Label>
-              <Form.Control
-                type="datefield"
-                name="olymp_date_start"
-                placeholder="ГГГГ-ММ-ДД"
-                onChange={(e) =>
-                  setInputData({
-                    ...inputData,
-                    olymp_date_start: e.target.value,
-                  })
-                }
-                required
-              />
+              <Form.Control type="date" onChange={(e) => setInputData({ ...inputData, olymp_date_start: e.target.value })} required />
             </Form.Group>
             <Form.Group>
               <Form.Label>Время начала</Form.Label>
-              <Form.Control
-                type="time"
-                name="olymp_time"
-                onChange={(e) =>
-                  setInputData({ ...inputData, olymp_time: e.target.value })
-                }
-                required
-              />
+              <Form.Control type="time" onChange={(e) => setInputData({ ...inputData, olymp_time: e.target.value })} required />
             </Form.Group>
-            <Button className="mt-3" type="submit">
-              Добавить
-            </Button>
+            <Button className="mt-3" type="submit">Добавить</Button>
           </Form>
         </Modal.Body>
       </Modal>
 
-      {/* Модальное окно редактирования олимпиады */}
-      <Modal show={showModalEditOlymp} onHide={CloseWind}>
+      <Modal show={showModalEditOlymp} onHide={() => handleModalToggle('edit')}>
         <Modal.Header closeButton>
           <Modal.Title>Изменить олимпиаду</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={handleEditSubmit}>
             <Form.Group>
               <Form.Label>Название</Form.Label>
-              <Form.Control
-                type="text"
-                name="olymp_name"
-                defaultValue={editOlymp.olymp_name}
-                onChange={(e) =>
-                  setEditOlymp({ ...editOlymp, olymp_name: e.target.value })
-                }
-                required
-              />
+              <Form.Control type="text" defaultValue={inputData.olymp_name} onChange={(e) => setInputData({ ...inputData, olymp_name: e.target.value })} required />
             </Form.Group>
             <Form.Group>
               <Form.Label>Дата начала</Form.Label>
-              <Form.Control
-                type="datefield"
-                name="olymp_date_start"
-                defaultValue={editOlymp.olymp_date_start}
-                onChange={(e) =>
-                  setEditOlymp({
-                    ...editOlymp,
-                    olymp_date_start: e.target.value,
-                  })
-                }
-                required
-              />
+              <Form.Control type="date" defaultValue={inputData.olymp_date_start} onChange={(e) => setInputData({ ...inputData, olymp_date_start: e.target.value })} required />
             </Form.Group>
             <Form.Group>
               <Form.Label>Длительность</Form.Label>
-              <Form.Control
-                type="time"
-                name="olymp_time"
-                defaultValue={editOlymp.olymp_time}
-                onChange={(e) =>
-                  setEditOlymp({ ...editOlymp, olymp_time: e.target.value })
-                }
-                required
-              />
+              <Form.Control type="time" defaultValue={inputData.olymp_time} onChange={(e) => setInputData({ ...inputData, olymp_time: e.target.value })} required />
             </Form.Group>
-            <Button className="mt-3" type="submit" onClick={SubmitEdit}>
-              Обновить
-            </Button>
-            <Button className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>
-              Удалить
-            </Button>
+            <Button className="mt-3" type="submit">Обновить</Button>
+            <Button className="ms-2 mt-3" onClick={handleDelete}>Удалить</Button>
           </Form>
         </Modal.Body>
       </Modal>
 
-      {/* Модальное окно записи */}
-      <Modal show={showModalRegister} onHide={CloseWind}>
+      <Modal show={showModalRegister} onHide={() => handleModalToggle('register')}>
         <Modal.Header closeButton>
           <Modal.Title>Подать заявку</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={RegisterSubmit}>
+          <Form onSubmit={handleRegisterSubmit}>
             <Form.Group>
               <Form.Label>Student</Form.Label>
-              <Form.Select
-                onChange={(e) =>
-                  setInputAppData({
-                    ...inputAppData,
-                    student_id: students[e.target.value].id,
-                  })
-                }
-              >
+              <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, student_id: e.target.value })}>
                 <option>Select a student</option>
-                {studentsSelect}
+                {renderSelectOptions(students, 'name')}
               </Form.Select>
             </Form.Group>
-
             <Form.Group>
               <Form.Label>School</Form.Label>
-              <Form.Select
-                onChange={(e) =>
-                  setInputAppData({
-                    ...inputAppData,
-                    school_id: schools[e.target.value].id,
-                  })
-                }
-              >
+              <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, school_id: e.target.value })}>
                 <option>Select a school</option>
-                {schoolsSelect}
+                {renderSelectOptions(schools, 'school_name')}
               </Form.Select>
             </Form.Group>
-
             <Form.Group>
               <Form.Label>Subdivision</Form.Label>
-              <Form.Select
-                onChange={(e) =>
-                  setInputAppData({
-                    ...inputAppData,
-                    subdivision_id: subdivisions[e.target.value].id,
-                  })
-                }
-              >
+              <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, subdivision_id: e.target.value })}>
                 <option>Select a subdivision</option>
-                {subdivisionsSelect}
+                {renderSelectOptions(subdivisions, 'subdivision_name')}
               </Form.Select>
             </Form.Group>
-
             <Form.Group>
               <Form.Label>Teacher</Form.Label>
-              <Form.Select
-                onChange={(e) =>
-                  setInputAppData({
-                    ...inputAppData,
-                    teacher: e.target.value,
-                  })
-                }
-              >
+              <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, teacher: e.target.value })}>
                 <option>Select a teacher</option>
-                {teachersSelect}
+                {renderSelectOptions(teachers, 'name')}
               </Form.Select>
             </Form.Group>
-
             <Form.Group>
               <Form.Label>Employee</Form.Label>
-              <Form.Select
-                onChange={(e) =>
-                  setInputAppData({
-                    ...inputAppData,
-                    employee: e.target.value,
-                  })
-                }
-              >
+              <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, employee: e.target.value })}>
                 <option>Select an employee</option>
-                {employeesSelect}
+                {renderSelectOptions(employees, 'name')}
               </Form.Select>
             </Form.Group>
-
             <Form.Group>
               <Form.Label>Participate</Form.Label>
-              <Form.Control
-                type="number"
-                onChange={(e) =>
-                  setInputAppData({
-                    ...inputAppData,
-                    participate: e.target.value,
-                  })
-                }
-              />
+              <Form.Control type="number" onChange={(e) => setInputAppData({ ...inputAppData, participate: e.target.value })} />
             </Form.Group>
-
-            <Button className="mt-3" type="submit">
-              Записаться
-            </Button>
+            <Button className="mt-3" type="submit">Записаться</Button>
           </Form>
         </Modal.Body>
       </Modal>

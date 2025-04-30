@@ -4,26 +4,23 @@ import axios from "axios"
 
 function JsonDataDisplay(id) {
     const [showModalEditStud, setShowModalEditStud] = useState(false);
-
     const [students, setStudents] = useState([])
-    
     const [genders, setGenders] = useState([]);
-    const genderSelect = Object.entries(genders).map(([key, value]) => {
-        return <option value={key}>{value}</option>;
-    });
-
     const [specNeeds] = useState(
         {
             "true": "Есть",
             "false": "Нет"
         }
     )
+    const specN = ["yes", "no"]
 
-    const specN = [ "yes", "no"]
+    const genderSelect = Object.entries(genders).map(([key, value]) => {
+        return <option value={key}>{value}</option>;
+    });
+
     const specNeedsSelect = Object.entries(specNeeds).map(([key, value]) => {
         return <option value={key}>{value}</option>;
     });
- 
 
     const [editStudent, setEditStudent] = useState({
         "id": -1,
@@ -53,29 +50,36 @@ function JsonDataDisplay(id) {
         setShowModalEditStud(true)
     }
 
+    const handleModalToggle = (modalType) => {
+        if (modalType === 'edit')
+            setShowModalEditStud(!showModalEditStud);
+
+        else setShowModal(!showModal);
+        console.log(inputData)
+    };
+
+    const handleStudentSelect = (id) => {
+        const student = students.find(o => o.id === id);
+        setInputData(student)
+    };
+
     //Закрыть модальное окно
     const CloseWind = () => {
         setShowModalEditStud(false)
         setShowModal(false)
     }
-    
-    //Запрос списка олимпиады
+
     useEffect(() => {
-        axios.get('http://localhost:8000/api/getstudents')
-        .then(res => {
-            setStudents(res.data)
-        })
+        const fetchData = async () => {
+            const [studentRes, gednersRes] = await Promise.all([
+                axios.get('http://localhost:8000/api/getstudents'),
+                axios.get("http://localhost:8000/api/getgenders")
+            ])
+            setStudents(studentRes.data)
+            setGenders(gednersRes.data)
+        }
+        fetchData()
     }, [])
-
-    console.log(specNeeds)
-
-    //get genders
-    useEffect(() => {
-        axios.get("http://localhost:8000/api/getgenders").then((res) => {
-          setGenders(res.data);
-          
-        });
-    }, []);
 
     //Добавление
     function handleSubmit(event) {
@@ -92,22 +96,20 @@ function JsonDataDisplay(id) {
                 }
             })
     }
-
+    console.log(specNeeds['false'])
     //Вывод таблицы
-    const DisplayData = students.map((stud, index) => {
-        return (
-            <tr>
-                <td>{index + 1}</td>
-                <td><a href='#' onClick={ShowWindEditStud} id={stud.if}>{stud.name}</a></td>
-                <td>{stud.birthday}</td>
-                <td>{stud.course_study}</td>
-                <td>{specN[index]}</td>
-                <td>{stud.contact_phone}</td>
-                <td>{genders[index]}</td>
-                <td>{stud.country}</td>
-            </tr>
-        )
-    })
+    const DisplayData = students.map((stud, index) => (
+        <tr>
+            <td>{index + 1}</td>
+            <td><a href='#' onClick={() => { handleStudentSelect(stud.id); handleModalToggle('edit') }}>{stud.name}</a></td>
+            <td>{stud.birthday}</td>
+            <td>{stud.course_study}</td>
+            <td>{specN[index]}</td>
+            <td>{stud.contact_phone}</td>
+            <td>{genders[index]}</td>
+            <td>{stud.country}</td>
+        </tr>
+    ))
 
     //Поиск олимпиады по айди
     function findStudById(ID) {
@@ -153,15 +155,15 @@ function JsonDataDisplay(id) {
                         <Form.Group>
                             <Form.Label>Name</Form.Label>
                             <Form.Control type='text'
-                            onChange={e => setInputData({...inputData, name: e.target.value})}
-                            required/>
+                                onChange={e => setInputData({ ...inputData, name: e.target.value })}
+                                required />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Birthday</Form.Label>
                             <Form.Control type='date' placeholder='YYYY-MM-DD'
-                                onChange={e => setInputData({...inputData, birthday: e.target.value})}
-                                required/>
+                                onChange={e => setInputData({ ...inputData, birthday: e.target.value })}
+                                required />
                         </Form.Group>
 
                         <Form.Group>
@@ -175,7 +177,7 @@ function JsonDataDisplay(id) {
                         <Form.Group>
                             <Form.Label>course_study</Form.Label>
                             <Form.Control type='number'
-                                onChange={e => setInputData({...inputData, course_study: e.target.value})}
+                                onChange={e => setInputData({ ...inputData, course_study: e.target.value })}
                                 required />
                         </Form.Group>
 
@@ -190,13 +192,13 @@ function JsonDataDisplay(id) {
                         <Form.Group>
                             <Form.Label>Phone number</Form.Label>
                             <Form.Control type='number'
-                                onChange={e => setInputData({...inputData, contact_phone: e.target.value})}
+                                onChange={e => setInputData({ ...inputData, contact_phone: e.target.value })}
                                 required />
                         </Form.Group>
                         <Button className='mt-3' type='submit'>
                             Save
                         </Button>
-                        
+
                     </Form>
                 </Modal.Body>
             </Modal>
@@ -210,20 +212,23 @@ function JsonDataDisplay(id) {
                         <Form.Group>
                             <Form.Label>Name</Form.Label>
                             <Form.Control type='text'
-                            onChange={e => setInputData({...inputData, name: e.target.value})}
-                            required/>
+                                defaultValue={inputData.name}
+                                onChange={e => setInputData({ ...inputData, name: e.target.value })}
+                                required />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Birthday</Form.Label>
                             <Form.Control type='date' placeholder='YYYY-MM-DD'
-                                onChange={e => setInputData({...inputData, birthday: e.target.value})}
-                                required/>
+                                onChange={e => setInputData({ ...inputData, birthday: e.target.value })}
+                                required />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Gender</Form.Label>
-                            <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
+                            <Form.Select
+                                defaultValue={inputData.sex}
+                                onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
                                 <option>Выберите пол</option>
                                 {genderSelect}
                             </Form.Select>
@@ -232,14 +237,18 @@ function JsonDataDisplay(id) {
                         <Form.Group>
                             <Form.Label>course_study</Form.Label>
                             <Form.Control type='number'
-                                onChange={e => setInputData({...inputData, course_study: e.target.value})}
+                                defaultValue={inputData.course_study}
+                                onChange={e => setInputData({ ...inputData, course_study: e.target.value })}
                                 required />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Special needs</Form.Label>
-                            <Form.Select onChange={(e) => setInputData({ ...inputData, sex: e.target.value })}>
-                                <option>Выберите пол</option>
+                            <Form.Select
+                                defaultValue={
+                                    specNeeds[inputData.special_needs]}
+                                onChange={(e) => setInputData({ ...inputData, special_needs: e.target.value })}>
+                                <option>Ограниченные возможности</option>
                                 {specNeedsSelect}
                             </Form.Select>
                         </Form.Group>
@@ -247,13 +256,14 @@ function JsonDataDisplay(id) {
                         <Form.Group>
                             <Form.Label>Phone number</Form.Label>
                             <Form.Control type='number'
-                                onChange={e => setInputData({...inputData, contact_phone: e.target.value})}
+                                defaultValue={inputData.contact_phone}
+                                onChange={e => setInputData({ ...inputData, contact_phone: e.target.value })}
                                 required />
                         </Form.Group>
                         <Button className='mt-3' type='submit'>
                             Save
                         </Button>
-                        
+
                     </Form>
                 </Modal.Body>
             </Modal>

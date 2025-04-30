@@ -176,25 +176,18 @@ function Employee_list(id) {
     });
   }
 
-  //Запрос списка ответственного
   useEffect(() => {
-    axios.get("http://localhost:8000/api/getemployees").then((res) => {
-      setEmployees(res.data);
-    });
-  }, []);
-
-  //Запрос списка ролей
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getroles").then((res) => {
-      setRoles(res.data);
-    });
-  }, []);
-
-  //Запрос списка user
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/getusers").then((res) => {
-      setUsers(res.data);
-    });
+    const fetchData = async () => {
+      const [employeeRes, roleRes, userRes] = await Promise.all([
+        axios.get("http://localhost:8000/api/getemployees"),
+        axios.get("http://localhost:8000/api/getroles"),
+        axios.get("http://localhost:8000/api/getusers"),
+      ]);
+      setEmployees(employeeRes.data);
+      setRoles(roleRes.data)
+      setUsers(userRes.data);
+    };
+    fetchData();
   }, []);
 
   //Вывод таблицы
@@ -205,11 +198,7 @@ function Employee_list(id) {
         <td>{emp.name}</td>
         <td>{roles[emp.role]}</td>
         <td>
-          <Button
-            variant="primary"
-            onClick={ShowWindEditEmployeeOlymp}
-            id={emp.id}
-          >
+          <Button variant="primary" onClick={ShowWindEditEmployeeOlymp} id={emp.id}>
             Изменить
           </Button>
         </td>

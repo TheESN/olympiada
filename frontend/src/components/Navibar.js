@@ -26,7 +26,7 @@ export default function NaviBar(){
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto fon" variant="underline">
                     <Nav.Link href="/" className='text-light'>Список олимпиад</Nav.Link>
-                    <Nav.Link href="/application" className='text-light'>Список заявок</Nav.Link>
+                    <Nav.Link href="/application" className='text-light'>Список заявок (Убрать)</Nav.Link>
                     <Nav.Link href="/employees" className='text-light'>Список ответсвенных</Nav.Link>
                     <Nav.Link href="/students" className='text-light'>Список students</Nav.Link>
                     <Nav.Link href="/schools" className='text-light'>Список schools</Nav.Link>

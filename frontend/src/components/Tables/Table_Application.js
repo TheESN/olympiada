@@ -6,19 +6,16 @@ function Appli_list(id) {
 	const [applications, setApplications] = useState([])
 	const [employees, setEmployees] = useState([])
 	const [schools, setSchools] = useState([])
-
-	const [editAppli, setEditAppli] = useState({
-		"id": -1,
-		"application_status": -1,
-		"participate": -1
-
-	})
-
-	const appli_statuses = [
-		"В ожидании", "Принято", "Отказано"
-	]
-
+	const [editAppli, setEditAppli] = useState({ id: -1, application_status: -1, participate: -1 })
+	const appli_statuses = ["В ожидании", "Принято", "Отказано"]
 	const [showModalEditAppli, setShowModalEditAppli] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+
+	const handleModalToggle = (modalType) => {
+		if (modalType === 'edit')
+			setShowModalEditAppli(!showModalEditAppli);
+		else setShowModal(!showModal);
+	};
 
 	function Refresh() {
 		axios.get('http://localhost:8000/api/getapplications')
@@ -27,71 +24,55 @@ function Appli_list(id) {
 			})
 	}
 
-
-	//Запрос списка заявок
+	//Запрос списков
 	useEffect(() => {
-		axios.get('http://localhost:8000/api/getapplications')
-			.then(res => {
-				setApplications(res.data)
-			})
-	}, [])
+		const fetchData = async () => {
+			const [appliRes, schoolRes, employeeRes] = await Promise.all([
+				axios.get("http://localhost:8000/api/getapplications"),
+				axios.get("http://localhost:8000/api/getschools"),
+				axios.get("http://localhost:8000/api/getemployees"),
+			])
+			setApplications(appliRes.data);
+			setSchools(schoolRes.data);
+			setEmployees(employeeRes.data);
+		};
+		fetchData();
+	}, []);
 
-	const CloseWind = () => {
-		setShowModalEditAppli(false)
-	}
+	// const CloseWind = () => {
+	// 	setShowModalEditAppli(false)
+	// }
 
-	//Редактирование status олимпиады
-	function statusAccept(event) {
+	const handleStatusEditSubmit = async (event) => {
 		event.preventDefault()
 
-		editAppli["id"] = event.target.id
+		editAppli.id = event.target.id
+		editAppli.status = event.target.value
 
-		editAppli["status"] = event.target.value
+		const res = await axios.put(`http://localhost:8000/api/applicationstatus/${editAppli.id}`, editAppli)
 
-		console.log(editAppli, event.target.value)
-
-		var url = "http://localhost:8000/api/applicationstatus/" + editAppli.id.toString()
-
-		axios.put(url, editAppli)
-			.then(res => {
-				alert("Статус изменён");
-				Refresh();
-				setShowModalEditAppli(false)
-			})
+		alert("Статус изменён");
+		Refresh()
 	}
 
 	//Редактирование олимпиады
-	function SubmitEdit(event) {
+	const handleEditSubmit = async (event) => {
 		event.preventDefault();
+		const res = await axios.put(`http://localhost:8000/api/getapplication/${editAppli.id}`, editAppli);
+		alert(res.data.valid ? "Данные обновлены" : "Неправильно введены данные");
+		if (res.data.valid) {
+			handleModalToggle('edit');
+			Refresh();
+		}
+	};
 
-		var url =
-			"http://localhost:8000/api/getapplication/" + editAppli.id.toString();
-
-		console.log("application edit - ", editAppli)
-
-		axios.put(url, editAppli).then((res) => {
-			if (res.data.valid === true) {
-				alert("Данные обновлены");
-				console.log("after update - ", editAppli);
-
-				Refresh();
-			} else {
-				alert("Неправильно введены данные");
-			}
-		});
-	}
-
-	function DeleteApp(event) {
-		event.preventDefault()
-
-		var url = "http://localhost:8000/api/getapplication/" + editAppli.id.toString()
-
-		axios.delete(url).then((res) => {
-			setShowModalEditAppli(false);
-			Refresh()
-			alert("Удалено");
-		});
-	}
+	const handleDelete = async (event) => {
+		event.preventDefault();
+		await axios.delete(`http://localhost:8000/api/getapplication/${editAppli.id}`);
+		alert("Удалено");
+		handleModalToggle('edit');
+		Refresh();
+	};
 
 	//Поиск заявки по айди
 	function findAppliById(ID) {
@@ -105,8 +86,6 @@ function Appli_list(id) {
 	const ShowWindEditAppli = (event) => {
 		event.preventDefault();
 
-		console.log()
-
 		id = event.target.id;
 		let v = findAppliById(id);
 
@@ -114,21 +93,8 @@ function Appli_list(id) {
 		setShowModalEditAppli(true);
 	}
 
-	//Запрос списка школ
-	useEffect(() => {
-		axios.get("http://localhost:8000/api/getschools").then((res) => {
-			setSchools(res.data);
-		});
-	}, []);
-
-	//Запрос списка учителей
-	useEffect(() => {
-		axios.get("http://localhost:8000/api/getemployees").then((res) => {
-			setEmployees(res.data);
-		});
-	}, []);
-
-	const employeesSelect = employees.map((employee, index) => {
+	
+	const employeesSelect = employees.map((employee) => {
 		return <option value={employee.id}>{employee.name}</option>;
 	});
 
@@ -136,36 +102,38 @@ function Appli_list(id) {
 		return <option value={index}>{school.school_name}</option>;
 	});
 
+	console.log("emp select", employeesSelect)
+
 	//Вывод таблицы
-	const DisplayData = applications.map((app, index) => {
-		return (
-			<tr>
-				<td>{index + 1}</td>
-				<td>
-					<a href="#" onClick={ShowWindEditAppli} id={app.id}>
-						{app.student.name}
-					</a>
-				</td>
-				<td>{app.olymp.olymp_name}</td>
-				<td>{app.date}</td>
-				{/* организатор / админ */}
-				<td>{app.employee}</td>
-				<td>{appli_statuses[app.status]}</td>
-				<td>{app.participate}</td>
-				<td>{app.school.school_name}</td>
-				{/* учит ребёнка */}
-				<td>{app.teacher}</td>
-				<td>{app.subdivision.subdivision_name}</td>
-				<td><Button value={1} id = {app.id} onClick={statusAccept}>Принять</Button></td>
-				<td><Button value={2} id = {app.id} onClick={statusAccept}>Отказать</Button></td>
-			</tr>
-		)
-	})
+	const DisplayData = applications.map((app, index) => (
+		<tr>
+			<td>{index + 1}</td>
+			<td>
+				<a href="#" onClick={ShowWindEditAppli} id={app.id}>
+					{app.student.name}
+				</a>
+			</td>
+			<td>{app.olymp.olymp_name}</td>
+			<td>{app.date}</td>
+			{/* организатор / админ */}
+			<td>{app.employee}</td>
+			<td>{appli_statuses[app.status]}</td>
+			<td>{app.participate}</td>
+			<td>{app.school.school_name}</td>
+			{/* учит ребёнка */}
+			<td>{app.teacher}</td>
+			<td>{app.subdivision.subdivision_name}</td>
+			<td><Button value={1} id={app.id} onClick={handleStatusEditSubmit}>Принять</Button></td>
+			<td><Button value={2} id={app.id} onClick={handleStatusEditSubmit}>Отказать</Button></td>
+		</tr>
+	))
+
+	console.log(employees)
 
 	return (
 		<>
 			<Container>
-				<Table striped>
+				<Table striped className="mt-3 table-borderless">
 					<thead>
 						<tr>
 							<th>#</th>
@@ -180,18 +148,16 @@ function Appli_list(id) {
 							<th>Subdivision</th>
 						</tr>
 					</thead>
-					<tbody>
-						{DisplayData}
-					</tbody>
+					<tbody>{DisplayData}</tbody>
 				</Table>
 			</Container>
 
-			<Modal show={showModalEditAppli} onHide={CloseWind}>
+			<Modal show={showModalEditAppli} onHide={() => handleModalToggle('edit')}>
 				<Modal.Header closeButton>
 					<Modal.Title>Изменить олимпиаду</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form>
+					<Form onSubmit={handleEditSubmit}>
 						<Form.Group>
 							<Form.Label>Employee</Form.Label>
 							<Form.Select
@@ -232,13 +198,11 @@ function Appli_list(id) {
 								{schoolsSelect}
 							</Form.Select>
 						</Form.Group>
-
-						<Button className='mt-3 ms-2' variant='success' type="submit" onClick={SubmitEdit}>Обновить</Button>
-						<Button className='mt-3 ms-2' variant='danger' type='submit' onClick={DeleteApp}>Delete</Button>
+						<Button className='mt-3 ms-2' variant='success' type="submit">Обновить</Button>
+						<Button className='mt-3 ms-2' variant='danger' onClick={handleDelete}>Delete</Button>
 					</Form>
 				</Modal.Body>
 			</Modal>
-
 		</>
 	)
 }
