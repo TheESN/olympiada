@@ -9,12 +9,9 @@ function JsonDataDisplay(id) {
 	useEffect(() => {
 		axios.get('http://localhost:8000/api/getcountries')
 			.then(res => {
-
 				setCountries(res.data)
 			})
 	}, [])
-
-
 
 	//Вывод таблицы
 	const DisplayData = countries.map((countrie, index) => {

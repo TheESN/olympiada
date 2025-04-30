@@ -17,12 +17,15 @@ function Appli_list(id) {
 		else setShowModal(!showModal);
 	};
 
-	function Refresh() {
-		axios.get('http://localhost:8000/api/getapplications')
-			.then(res => {
-				setApplications(res.data)
-			})
-	}
+	const handleAppliSelect = (id) => {
+		const application = applications.find(o => o.id === id);
+		setEditAppli(application);
+	  };
+
+	const Refresh = async () => {
+		const res = await axios.get("http://localhost:8000/api/getapplications");
+		setApplications(res.data);
+	  };
 
 	//Запрос списков
 	useEffect(() => {
@@ -38,10 +41,6 @@ function Appli_list(id) {
 		};
 		fetchData();
 	}, []);
-
-	// const CloseWind = () => {
-	// 	setShowModalEditAppli(false)
-	// }
 
 	const handleStatusEditSubmit = async (event) => {
 		event.preventDefault()
@@ -73,26 +72,6 @@ function Appli_list(id) {
 		handleModalToggle('edit');
 		Refresh();
 	};
-
-	//Поиск заявки по айди
-	function findAppliById(ID) {
-		for (var i = 0; i < applications.length; i++) {
-			if (applications[i].id == ID) {
-				return applications[i]
-			}
-		}
-	}
-
-	const ShowWindEditAppli = (event) => {
-		event.preventDefault();
-
-		id = event.target.id;
-		let v = findAppliById(id);
-
-		setEditAppli(v);
-		setShowModalEditAppli(true);
-	}
-
 	
 	const employeesSelect = employees.map((employee) => {
 		return <option value={employee.id}>{employee.name}</option>;
@@ -109,7 +88,7 @@ function Appli_list(id) {
 		<tr>
 			<td>{index + 1}</td>
 			<td>
-				<a href="#" onClick={ShowWindEditAppli} id={app.id}>
+				<a href="#" onClick={() => {handleAppliSelect(app.id); handleModalToggle('edit')}}>
 					{app.student.name}
 				</a>
 			</td>
