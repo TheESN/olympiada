@@ -39,10 +39,10 @@ class EmployeeViewSet(APIView):
         return Response(output)
 
 class AddEmployeeViewSet(APIView):
-    @extend_schema(
-        request=EmployeeSerializer
-    )
-    @api_view(["POST"])
+    # @extend_schema(
+    #     request=EmployeeSerializer
+    # )
+    # @api_view(["POST"])
     def post(self, request):
         output = {"valid": False}
         # ser = EmployeeSerializer(olympiada, request.data)
