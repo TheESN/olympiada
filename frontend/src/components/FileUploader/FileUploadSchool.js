@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState, axios, Button } from '../container/imports.js';
 
 const FileUpload = () => {
     const [file, setFile] = useState(null);
@@ -23,7 +22,7 @@ const FileUpload = () => {
         console.log(file['name'])
 
         try {
-            const response = await axios.put('http://localhost:8000/uploadsubdivision/' + file['name'], formData, {
+            const response = await axios.put('http://localhost:8000/upload/' + file['name'], formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -37,7 +36,7 @@ const FileUpload = () => {
     return (
         <form onSubmit={handleSubmit}>
             <input type="file" onChange={handleFileChange} />
-            <button type="submit">Upload</button>
+            <Button type="submit">Загрузить</Button>
         </form>
     );
 };

@@ -1,47 +1,59 @@
 .bg-fon {
-  /* background-color: #a1c9fd #00b8ff */
-
   background-color: #273267;
 }
 
-.olemplist{
+.olemplist {
   text-align: center;
   margin-top: 20px;
 }
 
-/* Buttons */
-button{
+button {
   background-color: #e7af5a !important;
   border-color: #e7af5a !important;
 }
 
-.TabList{
+.AddButton {
+  margin-left: 15%;
+  margin-top: 2rem;
+}
+
+.btnn {
+  margin-right: 15%;
+}
+
+.TabList {
   background-color: rgb(255, 255, 255);
 }
 
-/* Расположение кнопки добавить */
-.AddButton{
-  text-align: end;
-  margin-right: 15%;
-}
-
-/* Поле для добавления файла */
-.fileUploadField{
-  margin-left: 65%;
-}
-
-.btnn{
-  margin-right: 15%;
-}
-
 .table tbody tr td:first-child {
-	border-radius: 8px 0 0 8px;
-}
-.table tbody tr td:last-child {
-	border-radius: 0 8px 8px 0;
+  border-radius: 8px 0 0 8px;
 }
 
-.table-striped>tbody>tr:nth-child(odd)>td, 
+.table tbody tr td:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td,
 .table-striped>tbody>tr:nth-child(odd)>th {
-   background-color: #fafcfd;
- }
+  background-color: #f1f2f5;
+}
+
+.table-main {
+  border-collapse: collapse;
+  margin-top: 1rem;
+  width: 100%;
+
+}
+
+tbody.tbody-td td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+tbody td:not(:first-child) {
+  border-left: 1px solid #a6a8b3;
+}
+
+tr.table-body-td>td:nth-child(1) {
+  width: 4%;
+}

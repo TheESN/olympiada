@@ -1,14 +1,10 @@
-import { useLocation } from 'react-router-dom';
-import React, { useEffect, useState } from 'react'
-import { Container, Table } from 'react-bootstrap'
-import axios from "axios"
+import { useState, axios, Container, Table, useEffect, useLocation} from '../container/imports.js';
+
 
 const ParticipantsData = () => {
     const location = useLocation();
-    // const { studentData } = location.state || { studentData: null }; // Получаем данные из состояния
     const studentData = location.state?.data;
 
-    //get genders
     useEffect(() => {
         axios.get("http://localhost:8000/api/getgenders").then((res) => {
             setGenders(res.data);
@@ -47,7 +43,7 @@ const ParticipantsData = () => {
                             <th>Имя</th>
                             <th>Дата рождения</th>
                             <th>Класс обучения</th>
-                            <th>Special needs</th>
+                            <th>Огрпниченные возможности</th>
                             <th>Телефон</th>
                             <th>Пол</th>
                             <th>Гражданство</th>

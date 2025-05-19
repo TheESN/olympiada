@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Button, Container, Table, Form, Modal } from "react-bootstrap";
-import axios from "axios";
+import { useState, axios, Button, Container, Table, Form, Modal, useEffect } from '../container/imports.js';
 
-function Employee_list(id) {
+
+function Employee_list() {
   const [employees, setEmployees] = useState([]);
   const [roles, setRoles] = useState([]);
   const [users, setUsers] = useState([]);
@@ -11,45 +10,53 @@ function Employee_list(id) {
   const [showModalAddEmployee, setShowModalAddEmployee] = useState(false);
   const [showModalEditEmployee, setShowModalEditEmployee] = useState(false);
   const [showModalEditUser, setShowModalEditUser] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const [editEmployee, setEditEmployee] = useState({
-    id: -1,
-    name: "a",
-    sex: -1,
-    role: -1,
-    user: -1,
-  });
+  // const [editUser, setEditUser] = useState({
+  //   id: -1,
+  //   username: "",
+  //   email: "",
+  // });
 
-  const [editUser, setEditUser] = useState({
-    id: -1,
-    username: "",
-    email: "",
-  });
+  // function findUserById(ID) {
+  //   for (var i = 0; i < users.length; i++) {
+  //     if (users[i].id == ID) {
+  //       return users[i];
+  //     }
+  //   }
+  // }
 
-  function findEmployeeById(ID) {
-    for (var i = 0; i < employees.length; i++) {
-      if (employees[i].id == ID) {
-        return employees[i];
-      }
+  const handleModalToggle = (modalType) => {
+    if (modalType === 'edit')
+      setShowModalEditEmployee(!showModalEditEmployee);
+    else if (modalType === 'editUser') {
+      setShowModalEditUser(!showModalEditUser);
+      setShowModalEditEmployee(!showModalEditEmployee);
     }
+    else setShowModal(!showModal);
+  };
+
+  const handleEmployeeSelect = (id) => {
+    const emp = employees.find(o => o.id === id)
+    const user = users.find(o => o.id === emp.user)
+    emp['username'] = user.username
+    emp['email'] = user.email
+    console.log(emp)
+    setInputData(emp)
   }
 
-  function findUserById(ID) {
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].id == ID) {
-        return users[i];
-      }
-    }
+  const handleUserSelect = (id) => {
+    const user = users.find(o => o.id === id)
+    console.log(user)
+    setInputData(user)
   }
 
-  //Показ модальное окно добавления
   const ShowModalAddEmployee = (event) => {
     event.preventDefault();
 
     setShowModalAddEmployee(true);
   };
 
-  //Закрыть модальное окно
   const CloseWind = () => {
     setShowModalAddEmployee(false);
     setShowModalEditEmployee(false);
@@ -60,109 +67,52 @@ function Employee_list(id) {
     setShowModalEditUser(false);
   };
 
-  //Показ модальное окно редактирования
-  const ShowWindEditEmployeeOlymp = (event) => {
-    event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault()
 
-    id = event.target.id;
-    let v = findEmployeeById(id);
+    const res = axios.post("http://localhost:8000/api/adduser", inputData)
+    if (res.data.valid === true) {
+      alert("Юзер добавлен");
 
-    setEditEmployee(v);
-    console.log(users[editEmployee.user].username)
-    console.log(editEmployee)
-    setShowModalEditEmployee(true);
-  };
+      inputData["user"] = res.data.user_id;
 
-  //Показ модальное окно редактирования user
-  const ShowWindEditUserOlymp = (event) => {
-    event.preventDefault();
-
-    id = event.target.id;
-    let v = findUserById(id);
-
-    console.log("after search function - ", v);
-
-    setEditUser(v);
-    setShowModalEditEmployee(false);
-    setShowModalEditUser(true);
-  };
-
-  //Добавление
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    console.log(inputData);
-
-    axios.post("http://localhost:8000/api/adduser", inputData).then((res) => {
-      if (res.data.valid === true) {
-        alert("Юзер добавлен");
-        console.log(res.data);
-
-        inputData["user"] = res.data.user_id;
-
-        axios
-          .post("http://localhost:8000/api/employee", inputData)
-          .then((res) => {
-            if (res.data.valid === true) {
-              alert("Ответсвенный добавлен");
-              console.log(res.data);
-              setShowModalAddEmployee(false);
-              Refresh();
-            } else {
-              alert("Ответсвенный не добавлен");
-            }
-          });
-      } else {
-        alert("Юзер не добавлен");
-      }
-    });
-  }
-
-  //Редактирование ответсвенного
-  function SubmitEmployeeEdit(event) {
-    event.preventDefault();
-
-    var url =
-      "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
-
-    console.log("avaible roles - ", roles);
-
-    axios.put(url, editEmployee).then((res) => {
-      if (res.data.valid === true) {
-        alert("Данные обновлены");
-        console.log("after update - ", editEmployee);
-
+      const res = axios.post("http://localhost:8000/api/employee", inputData)
+      console.log(inputData)
+      alert(res.data.valid ? "Ответсвенный добавлен" : "Неправильно введены данные");
+      if (res.data.valid) {
+        handleModalToggle();
         Refresh();
-      } else {
-        alert("Неправильно введены данные");
       }
-    });
+    } else {
+      alert("Юзер не добавлен");
+    }
   }
 
-  //User edit
-  function SubmitUserEdit(event) {
+  const handleEditEmployeeSubmit = async (event) => {
+    event.preventDefault()
+    const res = await axios.put(`http://localhost:8000/api/getemployee/${inputData.id}`, inputData)
+    alert(res.data.valid ? "Данные добавлены" : "Неправильно введены данные");
+    if (res.data.valid) {
+      handleModalToggle('edit');
+      Refresh();
+    }
+  }
+
+  const SubmitUserEdit = async (event) => {
     event.preventDefault();
-
-    var url = "http://localhost:8000/api/getuser/" + editUser.id.toString();
-
-    axios.put(url, editUser).then((res) => {
-      if (res.data.valid === true) {
-        alert("Данные обновлены");
-        console.log("after update - ", editUser);
-
-        Refresh();
-      } else {
-        alert("Неправильно введены данные");
-      }
-    });
+    const res = await axios.put(`http://localhost:8000/api/getuser/${inputData.id}`, inputData)
+    alert(res.data.valid ? "Данные добавлены" : "Неправильно введены данные");
+    if (res.data.valid) {
+      handleModalToggle('edit');
+      Refresh();
+    }
   }
 
-  //Удаление ответственного
   function DeleteSubmit(event) {
     event.preventDefault();
 
     var url =
-      "http://localhost:8000/api/getemployee/" + editEmployee.id.toString();
+      "http://localhost:8000/api/getemployee/" + inputData.id.toString();
 
     axios.delete(url).then((res) => {
       setShowModalEditEmployee(false);
@@ -198,7 +148,7 @@ function Employee_list(id) {
         <td>{emp.name}</td>
         <td>{roles[emp.role]}</td>
         <td>
-          <Button variant="primary" onClick={ShowWindEditEmployeeOlymp} id={emp.id}>
+          <Button variant="primary" onClick={() => { handleEmployeeSelect(emp.id); handleModalToggle('edit') }}>
             Изменить
           </Button>
         </td>
@@ -213,7 +163,7 @@ function Employee_list(id) {
   return (
     <>
       <Container>
-        <Table striped>
+        <Table striped className="mt-3 table-borderless">
           <thead>
             <tr>
               <th>#</th>
@@ -229,7 +179,6 @@ function Employee_list(id) {
         <Button onClick={ShowModalAddEmployee}>Добавить</Button>
       </div>
 
-      {/* Модальное окно добваления ответственных */}
       <Modal show={showModalAddEmployee} onHide={CloseWind}>
         <Modal.Header closeButton>
           <Modal.Title>Добавить ответсвенного</Modal.Title>
@@ -240,18 +189,15 @@ function Employee_list(id) {
               <Form.Label>ФИО</Form.Label>
               <Form.Control
                 type="text"
-                name="name"
                 onChange={(e) =>
-                  setInputData({ ...inputData, name: e.target.value })
-                }
+                  setInputData({ ...inputData, name: e.target.value })}
               />
             </Form.Group>
             <Form.Group>
               <Form.Label>Роль</Form.Label>
               <Form.Select
                 onChange={(e) =>
-                  setInputData({ ...inputData, role: e.target.value })
-                }
+                  setInputData({ ...inputData, role: e.target.value })}
               >
                 <option>Выберите роль</option>
                 {rolesSelect}
@@ -259,34 +205,28 @@ function Employee_list(id) {
             </Form.Group>
 
             <Form.Group>
-              <Form.Label>Username</Form.Label>
+              <Form.Label>Имя пользователя</Form.Label>
               <Form.Control
                 type="text"
-                name="name"
                 onChange={(e) =>
-                  setInputData({ ...inputData, username: e.target.value })
-                }
+                  setInputData({ ...inputData, username: e.target.value })}
               />
             </Form.Group>
 
             <Form.Group>
-              <Form.Label>Password</Form.Label>
+              <Form.Label>Пароль</Form.Label>
               <Form.Control
                 type="text"
-                name="name"
                 onChange={(e) =>
-                  setInputData({ ...inputData, password: e.target.value })
-                }
+                  setInputData({ ...inputData, password: e.target.value })}
               />
             </Form.Group>
 
-            <Form.Label>email</Form.Label>
+            <Form.Label>Эл/почта</Form.Label>
             <Form.Control
               type="text"
-              name="name"
               onChange={(e) =>
-                setInputData({ ...inputData, email: e.target.value })
-              }
+                setInputData({ ...inputData, email: e.target.value })}
             />
 
             <Button className="mt-3" type="submit">
@@ -296,33 +236,27 @@ function Employee_list(id) {
         </Modal.Body>
       </Modal>
 
-      {/* Модальное окно редактриованния ответственных */}
       <Modal show={showModalEditEmployee} onHide={CloseWind}>
         <Modal.Header closeButton>
           <Modal.Title>Изменить ответсвенного</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={handleEditEmployeeSubmit}>
             <Form.Group>
               <Form.Label>ФИО</Form.Label>
               <Form.Control
-                type="text"
-                name="name"
-                defaultValue={editEmployee.name}
+                type="text" defaultValue={inputData.name}
                 onChange={(e) =>
-                  setEditEmployee({ ...editEmployee, name: e.target.value })
-                }
-                required
+                  setInputData({ ...inputData, name: e.target.value })} required
               />
             </Form.Group>
 
             <Form.Group>
               <Form.Label>Роль</Form.Label>
               <Form.Select
-                defaultValue={editEmployee.role}
+                defaultValue={inputData.role}
                 onChange={(e) =>
-                  setEditEmployee({ ...editEmployee, role: e.target.value })
-                }
+                  setInputData({ ...inputData, role: e.target.value })}
               >
                 <option>Выберите роль</option>
                 {rolesSelect}
@@ -330,31 +264,19 @@ function Employee_list(id) {
             </Form.Group>
 
             <Form.Group>
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                defaultValue={editEmployee.user}
-                onChange={(e) =>
-                  setInputData({ ...inputData, username: e.target.value })
-                }
-              />
+              <Form.Label>Имя пользователя</Form.Label>
+              <p className="ms-2">{inputData.username}</p>
 
               <Button
                 className="mt-2"
-                onClick={ShowWindEditUserOlymp}
-                id={editEmployee.user}
+                onClick={() => { handleUserSelect(inputData.user); handleModalToggle('editUser') }}
               >
-                Edit user
+                Редактировать пользователя
               </Button>
             </Form.Group>
 
-            <Button className="mt-3" type="submit" onClick={SubmitEmployeeEdit}>
-              Обновить
-            </Button>
-            <Button className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>
-              Удалить
-            </Button>
+            <Button className="mt-3" type="submit">Обновить</Button>
+            <Button className="ms-2 mt-3" type="submit" onClick={DeleteSubmit}>Удалить</Button>
           </Form>
         </Modal.Body>
       </Modal>
@@ -369,10 +291,9 @@ function Employee_list(id) {
             <Form.Group>
               <Form.Label>Username</Form.Label>
               <Form.Control
-                type="text"
-                defaultValue={editUser.username}
+                type="text" defaultValue={inputData.username}
                 onChange={(e) =>
-                  setEditUser({ ...editUser, username: e.target.value })
+                  setInputData({ ...inputData, username: e.target.value })
                 }
                 required
               />
@@ -381,18 +302,15 @@ function Employee_list(id) {
             <Form.Group>
               <Form.Label>Email</Form.Label>
               <Form.Control
-                type="text"
-                defaultValue={editUser.email}
+                type="text" defaultValue={inputData.email}
                 onChange={(e) =>
-                  setEditUser({ ...editUser, email: e.target.value })
+                  setInputData({ ...inputData, email: e.target.value })
                 }
                 required
               />
             </Form.Group>
 
-            <Button className="mt-3" type="submit" onClick={SubmitUserEdit}>
-              Обновить
-            </Button>
+            <Button className="mt-3" type="submit" onClick={SubmitUserEdit}>Обновить</Button>
           </Form>
         </Modal.Body>
       </Modal>

@@ -28,10 +28,10 @@ export default function NaviBar(){
                     <Nav.Link href="/" className='text-light'>Список олимпиад</Nav.Link>
                     <Nav.Link href="/application" className='text-light'>Список заявок (Убрать)</Nav.Link>
                     <Nav.Link href="/employees" className='text-light'>Список ответсвенных</Nav.Link>
-                    <Nav.Link href="/students" className='text-light'>Список students</Nav.Link>
-                    <Nav.Link href="/schools" className='text-light'>Список schools</Nav.Link>
-                    <Nav.Link href="/subdivisions" className='text-light'>Список subdivision</Nav.Link>
-                    <Nav.Link href="/countries" className='text-light'>Список countries</Nav.Link>
+                    <Nav.Link href="/students" className='text-light'>Список учеников</Nav.Link>
+                    <Nav.Link href="/schools" className='text-light'>Список школ</Nav.Link>
+                    <Nav.Link href="/subdivisions" className='text-light'>Список районов(улусов)</Nav.Link>
+                    <Nav.Link href="/countries" className='text-light'>Список государств</Nav.Link>
                 </Nav>
                 <Nav>
                     <Button variant='light' className='me-2' onClick={handleShowLogin}>Войти</Button>

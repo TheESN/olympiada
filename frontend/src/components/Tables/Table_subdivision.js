@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import {Container, Table } from "react-bootstrap";
-import axios from "axios";
-import FileUpload from "../FileUploadSubDivision";
+import FileUploadSubDivision from "../FileUploader/FileUploadSubDivision";
+import { useState, axios, Container, Table, useEffect } from '../container/imports.js';
+
 
 
 function JsonDataDisplay(id) {
@@ -36,11 +35,10 @@ function JsonDataDisplay(id) {
           </thead>
           <tbody>{DisplayData}</tbody>
         </Table>
-
       </Container>
 
       <div className="fileUploadField AddButton">
-        <FileUpload />
+        <FileUploadSubDivision />
       </div>
     </>
   );

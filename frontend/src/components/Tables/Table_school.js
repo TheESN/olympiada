@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button, Container, Table, Form, Modal } from "react-bootstrap";
-import axios from "axios";
-import FileUpload from "../FileUploadSchool";
+import { useState, axios, Container, Table, useEffect, Form, Modal, Button } from '../container/imports.js';
+import FileUpload from "../FileUploader/FileUploadSchool";
 
 function JsonDataDisplay(id) {
   const [schools, setSchools] = useState([]);
@@ -80,7 +78,7 @@ function JsonDataDisplay(id) {
       <td>{school.school_name}</td>
       <td>{subdivisionsSelect[school.school_subdivision - 1]}</td>
       <td>
-        <Button variant="primary" onClick={() => {handleSchoolSelect(school.id); handleModalToggle('edit');}} >Edit</Button>
+        <Button variant="primary" onClick={() => {handleSchoolSelect(school.id); handleModalToggle('edit');}} >Редактировать</Button>
       </td>
     </tr>
   ));
@@ -93,7 +91,7 @@ function JsonDataDisplay(id) {
             <tr>
               <th>#</th>
               <th>Название</th>
-              <th>subdivision</th>
+              <th>Район</th>
             </tr>
           </thead>
           <tbody>{DisplayData}</tbody>
@@ -106,12 +104,12 @@ function JsonDataDisplay(id) {
 
       <Modal show={showModal} onHide={() => handleModalToggle()}>
         <Modal.Header closeButton>
-          <Modal.Title>Add school</Modal.Title>
+          <Modal.Title>Добавить школу</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group>
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Название</Form.Label>
               <Form.Control
                 type="text"
                 onChange={(e) =>
@@ -122,7 +120,7 @@ function JsonDataDisplay(id) {
             </Form.Group>
 
             <Form.Group>
-              <Form.Label>Subdivision</Form.Label>
+              <Form.Label>Район</Form.Label>
               <Form.Select
                 onChange={(e) =>
                   setInputData({
@@ -131,13 +129,13 @@ function JsonDataDisplay(id) {
                   })
                 }
               >
-                <option>Select a subdivision</option>
+                <option>Выберите район</option>
                 {subdivisionsSelect}
               </Form.Select>
             </Form.Group>
 
             <Button onClick={handleSubmit} className="mt-3">
-              Add
+              Добавить
             </Button>
           </Form>
         </Modal.Body>
@@ -145,12 +143,12 @@ function JsonDataDisplay(id) {
 
       <Modal show={showModalEditSchool} onHide={() => handleModalToggle('edit')}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit</Modal.Title>
+          <Modal.Title>Редактировать школу</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleEditSubmit}>
             <Form.Group>
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Название</Form.Label>
               <Form.Control
                 type="text"
                 defaultValue={inputData.school_name}
@@ -158,7 +156,7 @@ function JsonDataDisplay(id) {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Subdivision school</Form.Label>
+              <Form.Label>Район школы</Form.Label>
               <Form.Select
                 type="text"
                 defaultValue={inputData.school_subdivision}
@@ -168,10 +166,8 @@ function JsonDataDisplay(id) {
               </Form.Select>
             </Form.Group>
           </Form>
-          <Button className="mt-3" type="submit">Edit</Button>
-          <Button type="submit" onClick={handleDelete} className="ms-2 mt-3">
-            Delete
-          </Button>
+          <Button className="mt-3" type="submit">Редактировать</Button>
+          <Button type="submit" onClick={handleDelete} className="ms-2 mt-3">Удалить</Button>
         </Modal.Body>
       </Modal>
 

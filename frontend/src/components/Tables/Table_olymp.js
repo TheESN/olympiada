@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Button, Container, Table, Form, Modal } from "react-bootstrap";
-import axios from "axios";
-import Dropdown from 'react-bootstrap/Dropdown';
-import { useNavigate } from 'react-router-dom'
+import { useState, axios, Button, Container, Table, Form, Modal, useEffect, useNavigate, Dropdown} from '../container/imports.js';
 
 function JsonDataDisplay() {
   const [showModalEditOlymp, setShowModalEditOlymp] = useState(false);
@@ -43,6 +39,7 @@ function JsonDataDisplay() {
         axios.get("http://localhost:8000/api/getsubdivisions"),
       ]);
       setOlymps(olympRes.data);
+      console.log(olympRes.data)
       setStudents(studentRes.data);
       setEmployees(employeeRes.data);
       setTeachers(employeeRes.data)
@@ -70,6 +67,7 @@ function JsonDataDisplay() {
     event.preventDefault();
     const res = await axios.put(`http://localhost:8000/api/getolympiada/${inputData.id}`, inputData);
     alert(res.data.valid ? "Данные обновлены" : "Неправильно введены данные");
+    console.log("res data", res.data)
     if (res.data.valid) {
       handleModalToggle('edit');
       Refresh();
@@ -102,6 +100,16 @@ function JsonDataDisplay() {
     }
   }
 
+  const exportApplications = async (id) => {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/getapplicationexcel/${id}`);
+      console.log("API response: ", res.data);
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+
   const handleRegisterSubmit = async (event) => {
     event.preventDefault();
     inputAppData.status = 0;
@@ -112,22 +120,22 @@ function JsonDataDisplay() {
 
   //Вывод таблицы
   const DisplayData = olymps.map((olymp, index) => (
-    <tr>
+    <tr className="table-body-td">
       <td>{index + 1}</td>
       <td>{olymp.olymp_name}</td>
       <td>{olymp.olymp_date_start}</td>
       <td>{olymp.olymp_time}</td>
-      <td>
+      <td className>
         <Dropdown>
           <Dropdown.Toggle>
-            Actions
+            Дейтсвия
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => { handleOlympSelect(olymp.id); handleModalToggle('register') }}>Записаться</Dropdown.Item>
             <Dropdown.Item onClick={() => { handleOlympSelect(olymp.id); handleModalToggle('edit'); }}>Редактировать</Dropdown.Item>
             <Dropdown.Item>Результаты</Dropdown.Item>
             <Dropdown.Item onClick={() => fetchStudentFromOlymp(olymp.id)}>Участники</Dropdown.Item>
-            <Dropdown.Item>Заявки</Dropdown.Item>
+            <Dropdown.Item onClick={() => exportApplications(olymp.id)}>Заявки</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </td>
@@ -145,14 +153,14 @@ function JsonDataDisplay() {
         <Table striped className="mt-3 table-borderless">
           <thead>
             <tr>
-              <th>#</th>
+              <th>№</th>
               <th>Название</th>
               <th>Дата проведения</th>
               <th>Время начала</th>
               <th></th>
             </tr>
           </thead>
-          <tbody>{DisplayData}</tbody>
+          <tbody className='tbody-td'>{DisplayData}</tbody>
         </Table>
       </Container>
 
@@ -217,42 +225,42 @@ function JsonDataDisplay() {
         <Modal.Body>
           <Form onSubmit={handleRegisterSubmit}>
             <Form.Group>
-              <Form.Label>Student</Form.Label>
+              <Form.Label>Ученик</Form.Label>
               <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, student_id: e.target.value })}>
-                <option>Select a student</option>
+                <option>Выбериту ученика</option>
                 {renderSelectOptions(students, 'name')}
               </Form.Select>
             </Form.Group>
             <Form.Group>
-              <Form.Label>School</Form.Label>
+              <Form.Label>Школа</Form.Label>
               <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, school_id: e.target.value })}>
-                <option>Select a school</option>
+                <option>Выберите школу</option>
                 {renderSelectOptions(schools, 'school_name')}
               </Form.Select>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Subdivision</Form.Label>
+              <Form.Label>Район</Form.Label>
               <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, subdivision_id: e.target.value })}>
-                <option>Select a subdivision</option>
+                <option>Выберите район</option>
                 {renderSelectOptions(subdivisions, 'subdivision_name')}
               </Form.Select>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Teacher</Form.Label>
+              <Form.Label>Учитель</Form.Label>
               <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, teacher: e.target.value })}>
-                <option>Select a teacher</option>
+                <option>Выберите учителя</option>
                 {renderSelectOptions(teachers, 'name')}
               </Form.Select>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Employee</Form.Label>
+              <Form.Label>Ответсвенный</Form.Label>
               <Form.Select onChange={(e) => setInputAppData({ ...inputAppData, employee: e.target.value })}>
-                <option>Select an employee</option>
+                <option>Выберите ответсвенного</option>
                 {renderSelectOptions(employees, 'name')}
               </Form.Select>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Participate</Form.Label>
+              <Form.Label>Класс участия</Form.Label>
               <Form.Control type="number" onChange={(e) => setInputAppData({ ...inputAppData, participate: e.target.value })} />
             </Form.Group>
             <Button className="mt-3" type="submit">Записаться</Button>

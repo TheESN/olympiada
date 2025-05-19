@@ -1,8 +1,7 @@
 import './components/Design.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import  NaviBar  from './components/Navibar';
-import React from 'react';
-import { Router, Route, Routes, BrowserRouter } from 'react-router-dom';
+import {Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import JsonDataDisplay from './components/Tables/Table_olymp';
 import AppliList from './components/Tables/Table_Application';

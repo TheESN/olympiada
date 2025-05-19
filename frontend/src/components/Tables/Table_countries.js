@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Container, Table, Form } from 'react-bootstrap'
-import axios from "axios"
+import { useState, axios, Button, Container, Table, Form, useEffect } from '../container/imports.js';
 
 function JsonDataDisplay(id) {
 	const [countries, setCountries] = useState([])

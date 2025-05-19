@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Container, Table, Form, Modal } from 'react-bootstrap'
-import axios from "axios"
+import { useState, axios, Button, Container, Table, Form, Modal, useEffect } from '../container/imports.js';
 
-function Appli_list(id) {
+function Appli_list() {
 	const [applications, setApplications] = useState([])
 	const [employees, setEmployees] = useState([])
 	const [schools, setSchools] = useState([])
@@ -10,6 +8,7 @@ function Appli_list(id) {
 	const appli_statuses = ["В ожидании", "Принято", "Отказано"]
 	const [showModalEditAppli, setShowModalEditAppli] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const [subdivisions, setSubdivisions] = useState([]);
 
 	const handleModalToggle = (modalType) => {
 		if (modalType === 'edit')
@@ -19,25 +18,36 @@ function Appli_list(id) {
 
 	const handleAppliSelect = (id) => {
 		const application = applications.find(o => o.id === id);
-		setEditAppli(application);
-	  };
+		const res = []
+		res["participate"] = application.participate
+		res["id"] = application.id
+		res["student_id"] = application.student.id
+		res["olymp_id"] = application.olymp.id
+		res["school_id"] = application.school.id
+		res["subdivision_id"] = application.subdivision.id
+		setEditAppli(res);
+		console.log(application)
+	};
+
 
 	const Refresh = async () => {
 		const res = await axios.get("http://localhost:8000/api/getapplications");
 		setApplications(res.data);
-	  };
+	};
 
 	//Запрос списков
 	useEffect(() => {
 		const fetchData = async () => {
-			const [appliRes, schoolRes, employeeRes] = await Promise.all([
+			const [appliRes, schoolRes, employeeRes, subdRes] = await Promise.all([
 				axios.get("http://localhost:8000/api/getapplications"),
 				axios.get("http://localhost:8000/api/getschools"),
 				axios.get("http://localhost:8000/api/getemployees"),
+				axios.get("http://localhost:8000/api/getsubdivisions"),
 			])
 			setApplications(appliRes.data);
 			setSchools(schoolRes.data);
 			setEmployees(employeeRes.data);
+			setSubdivisions(subdRes.data)
 		};
 		fetchData();
 	}, []);
@@ -54,10 +64,13 @@ function Appli_list(id) {
 		Refresh()
 	}
 
-	//Редактирование олимпиады
+	//Редактирование
 	const handleEditSubmit = async (event) => {
+		console.log("input data: ", editAppli)
 		event.preventDefault();
 		const res = await axios.put(`http://localhost:8000/api/getapplication/${editAppli.id}`, editAppli);
+		console.log("input data: ", editAppli)
+		console.log("res data", res.data)
 		alert(res.data.valid ? "Данные обновлены" : "Неправильно введены данные");
 		if (res.data.valid) {
 			handleModalToggle('edit');
@@ -72,7 +85,7 @@ function Appli_list(id) {
 		handleModalToggle('edit');
 		Refresh();
 	};
-	
+
 	const employeesSelect = employees.map((employee) => {
 		return <option value={employee.id}>{employee.name}</option>;
 	});
@@ -81,14 +94,16 @@ function Appli_list(id) {
 		return <option value={index}>{school.school_name}</option>;
 	});
 
-	console.log("emp select", employeesSelect)
+	const subdivisionSelect = subdivisions.map((subd, index) => {
+		return <option value={index}>{subd.subdivision_name}</option>;
+	});
 
 	//Вывод таблицы
 	const DisplayData = applications.map((app, index) => (
 		<tr>
 			<td>{index + 1}</td>
 			<td>
-				<a href="#" onClick={() => {handleAppliSelect(app.id); handleModalToggle('edit')}}>
+				<a href="#" onClick={() => { handleAppliSelect(app.id); handleModalToggle('edit') }}>
 					{app.student.name}
 				</a>
 			</td>
@@ -107,8 +122,6 @@ function Appli_list(id) {
 		</tr>
 	))
 
-	console.log(employees)
-
 	return (
 		<>
 			<Container>
@@ -119,12 +132,12 @@ function Appli_list(id) {
 							<th>ФИО</th>
 							<th>Олимпиада</th>
 							<th>Дата заявки</th>
-							<th>Оргнизатор</th>
-							<th>Application status</th>
-							<th>participate</th>
-							<th>School</th>
-							<th>teacher</th>
-							<th>Subdivision</th>
+							<th>Организатор</th>
+							<th>Статус заявки</th>
+							<th>Класс участия</th>
+							<th>Школа</th>
+							<th>Учитель</th>
+							<th>Район</th>
 						</tr>
 					</thead>
 					<tbody>{DisplayData}</tbody>
@@ -133,27 +146,27 @@ function Appli_list(id) {
 
 			<Modal show={showModalEditAppli} onHide={() => handleModalToggle('edit')}>
 				<Modal.Header closeButton>
-					<Modal.Title>Изменить олимпиаду</Modal.Title>
+					<Modal.Title>Редактировать заявку</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form onSubmit={handleEditSubmit}>
 						<Form.Group>
-							<Form.Label>Employee</Form.Label>
+							<Form.Label>Ответсвенный</Form.Label>
 							<Form.Select
 								onChange={(e) =>
 									setEditAppli({
 										...editAppli,
-										employee: employees[e.target.value].id,
+										employee: e.target.value,
 									})
 								}
 							>
-								<option>Select an employee</option>
+								<option>Выберите ответсвенного</option>
 								{employeesSelect}
 							</Form.Select>
 						</Form.Group>
 
 						<Form.Group>
-							<Form.Label>participate</Form.Label>
+							<Form.Label>Класс участия</Form.Label>
 							<Form.Control type='text'
 								defaultValue={editAppli.participate}
 								onChange={(e) =>
@@ -164,21 +177,36 @@ function Appli_list(id) {
 						</Form.Group>
 
 						<Form.Group>
-							<Form.Label>School</Form.Label>
+							<Form.Label>Школа</Form.Label>
 							<Form.Select
 								onChange={(e) =>
 									setEditAppli({
 										...editAppli,
-										school_id: employees[e.target.value].id,
+										school_id: schools[e.target.value].id,
 									})
 								}
 							>
-								<option>Select a school</option>
+								<option>Выберите школу</option>
 								{schoolsSelect}
 							</Form.Select>
 						</Form.Group>
+
+						<Form.Group>
+							<Form.Label>Район</Form.Label>
+							<Form.Select
+								onChange={(e) =>
+									setEditAppli({
+										...editAppli,
+										subdivision_id: subdivisions[e.target.value].id,
+									})
+								}
+							>
+								<option>Выберите район</option>
+								{subdivisionSelect}
+							</Form.Select>
+						</Form.Group>
 						<Button className='mt-3 ms-2' variant='success' type="submit">Обновить</Button>
-						<Button className='mt-3 ms-2' variant='danger' onClick={handleDelete}>Delete</Button>
+						<Button className='mt-3 ms-2' variant='danger' onClick={handleDelete}>Удалить</Button>
 					</Form>
 				</Modal.Body>
 			</Modal>
