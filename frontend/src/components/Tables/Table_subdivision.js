@@ -1,8 +1,6 @@
 import FileUploadSubDivision from "../FileUploader/FileUploadSubDivision";
 import { useState, axios, Container, Table, useEffect } from '../container/imports.js';
 
-
-
 function JsonDataDisplay(id) {
   const [subdivisions, setSubdivisions] = useState([]);
 
