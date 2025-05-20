@@ -1,9 +1,8 @@
-import { useState, axios, Button, Container, Table, Form, useEffect } from '../container/imports.js';
+import { useState, axios, Container, Table, useEffect } from '../container/imports.js';
 
 function JsonDataDisplay(id) {
 	const [countries, setCountries] = useState([])
 
-	//Запрос списка олимпиады
 	useEffect(() => {
 		axios.get('http://localhost:8000/api/getcountries')
 			.then(res => {
@@ -11,7 +10,6 @@ function JsonDataDisplay(id) {
 			})
 	}, [])
 
-	//Вывод таблицы
 	const DisplayData = countries.map((countrie, index) => {
 		return (
 			<tr>
@@ -37,10 +35,7 @@ function JsonDataDisplay(id) {
 				</Table>
 			</Container>
 
-			<div className="fileUploadField AddButton">
-				<Form.Control type="file" />
-				<Button className="mt-3">Загрузить</Button>
-			</div>
+			{/* Добавить загрузчик файла */}
 		</>
 	)
 }

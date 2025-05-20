@@ -1,6 +1,6 @@
 import { useState, axios, Button, Container, Table, Form, Modal, useEffect } from '../container/imports.js';
 
-function JsonDataDisplay(id) {
+function JsonDataDisplay() {
     const [showModalEditStud, setShowModalEditStud] = useState(false);
     const [students, setStudents] = useState([])
     const [genders, setGenders] = useState([]);
@@ -50,7 +50,6 @@ function JsonDataDisplay(id) {
         }
       };
 
-
     useEffect(() => {
         const fetchData = async () => {
             const [studentRes, gednersRes] = await Promise.all([
@@ -62,7 +61,6 @@ function JsonDataDisplay(id) {
         }
         fetchData()
     }, [])
-
 
     const DisplayData = students.map((stud, index) => (
         <tr>
@@ -76,7 +74,7 @@ function JsonDataDisplay(id) {
             <td>{stud.country}</td>
         </tr>
     ))
-    console.log(genders)
+    
     return (
         <>
             <Container>
@@ -209,10 +207,7 @@ function JsonDataDisplay(id) {
                                 onChange={e => setInputData({ ...inputData, contact_phone: e.target.value })}
                                 required />
                         </Form.Group>
-                        <Button className='mt-3' type='submit'>
-                            Сохранить
-                        </Button>
-
+                        <Button className='mt-3' type='submit'>Сохранить</Button>
                     </Form>
                 </Modal.Body>
             </Modal>

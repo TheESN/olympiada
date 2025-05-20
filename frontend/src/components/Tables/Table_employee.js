@@ -1,30 +1,14 @@
 import { useState, axios, Button, Container, Table, Form, Modal, useEffect } from '../container/imports.js';
 
-
 function Employee_list() {
   const [employees, setEmployees] = useState([]);
   const [roles, setRoles] = useState([]);
   const [users, setUsers] = useState([]);
   const [inputData, setInputData] = useState({});
-
   const [showModalAddEmployee, setShowModalAddEmployee] = useState(false);
   const [showModalEditEmployee, setShowModalEditEmployee] = useState(false);
   const [showModalEditUser, setShowModalEditUser] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
-  // const [editUser, setEditUser] = useState({
-  //   id: -1,
-  //   username: "",
-  //   email: "",
-  // });
-
-  // function findUserById(ID) {
-  //   for (var i = 0; i < users.length; i++) {
-  //     if (users[i].id == ID) {
-  //       return users[i];
-  //     }
-  //   }
-  // }
 
   const handleModalToggle = (modalType) => {
     if (modalType === 'edit')
@@ -55,16 +39,6 @@ function Employee_list() {
     event.preventDefault();
 
     setShowModalAddEmployee(true);
-  };
-
-  const CloseWind = () => {
-    setShowModalAddEmployee(false);
-    setShowModalEditEmployee(false);
-  };
-
-  const BackToEmployee = () => {
-    setShowModalEditEmployee(true);
-    setShowModalEditUser(false);
   };
 
   const handleSubmit = async (event) => {
@@ -140,7 +114,6 @@ function Employee_list() {
     fetchData();
   }, []);
 
-  //Вывод таблицы
   const DisplayData = employees.map((emp, index) => {
     return (
       <tr>
@@ -179,7 +152,7 @@ function Employee_list() {
         <Button onClick={ShowModalAddEmployee}>Добавить</Button>
       </div>
 
-      <Modal show={showModalAddEmployee} onHide={CloseWind}>
+      <Modal show={showModalAddEmployee} onHide={() => handleModalToggle()}>
         <Modal.Header closeButton>
           <Modal.Title>Добавить ответсвенного</Modal.Title>
         </Modal.Header>
@@ -228,15 +201,12 @@ function Employee_list() {
               onChange={(e) =>
                 setInputData({ ...inputData, email: e.target.value })}
             />
-
-            <Button className="mt-3" type="submit">
-              Добавить
-            </Button>
+            <Button className="mt-3" type="submit">Добавить</Button>
           </Form>
         </Modal.Body>
       </Modal>
 
-      <Modal show={showModalEditEmployee} onHide={CloseWind}>
+      <Modal show={showModalEditEmployee} onHide={() => handleModalToggle('edit')}>
         <Modal.Header closeButton>
           <Modal.Title>Изменить ответсвенного</Modal.Title>
         </Modal.Header>
@@ -266,7 +236,6 @@ function Employee_list() {
             <Form.Group>
               <Form.Label>Имя пользователя</Form.Label>
               <p className="ms-2">{inputData.username}</p>
-
               <Button
                 className="mt-2"
                 onClick={() => { handleUserSelect(inputData.user); handleModalToggle('editUser') }}
@@ -281,8 +250,7 @@ function Employee_list() {
         </Modal.Body>
       </Modal>
 
-      {/* Модальное окно редактриованния user */}
-      <Modal show={showModalEditUser} onHide={BackToEmployee}>
+      <Modal show={showModalEditUser} onHide={() => handleModalToggle('editUser')}>
         <Modal.Header closeButton>
           <Modal.Title>Изменить ответсвенного</Modal.Title>
         </Modal.Header>
@@ -309,7 +277,6 @@ function Employee_list() {
                 required
               />
             </Form.Group>
-
             <Button className="mt-3" type="submit" onClick={SubmitUserEdit}>Обновить</Button>
           </Form>
         </Modal.Body>

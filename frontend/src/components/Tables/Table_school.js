@@ -123,9 +123,7 @@ function JsonDataDisplay(id) {
               <Form.Label>Район</Form.Label>
               <Form.Select
                 onChange={(e) =>
-                  setInputData({
-                    ...inputData,
-                    school_subdivision: e.target.value,
+                  setInputData({...inputData, school_subdivision: e.target.value,
                   })
                 }
               >

@@ -1,4 +1,4 @@
-import './components/Design.css';
+import './components/container/Design.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import  NaviBar  from './components/Navibar';
 import {Route, Routes, BrowserRouter } from 'react-router-dom';

@@ -28,7 +28,6 @@ function JsonDataDisplay() {
     else setShowModal(!showModal);
   };
 
-  // Запрос данных
   useEffect(() => {
     const fetchData = async () => {
       const [olympRes, studentRes, employeeRes, schoolRes, subdivisionRes] = await Promise.all([
@@ -118,7 +117,6 @@ function JsonDataDisplay() {
     if (res.data.valid) handleModalToggle('register');
   };
 
-  //Вывод таблицы
   const DisplayData = olymps.map((olymp, index) => (
     <tr className="table-body-td">
       <td>{index + 1}</td>
@@ -127,9 +125,7 @@ function JsonDataDisplay() {
       <td>{olymp.olymp_time}</td>
       <td className>
         <Dropdown>
-          <Dropdown.Toggle>
-            Дейтсвия
-          </Dropdown.Toggle>
+          <Dropdown.Toggle>Действия</Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => { handleOlympSelect(olymp.id); handleModalToggle('register') }}>Записаться</Dropdown.Item>
             <Dropdown.Item onClick={() => { handleOlympSelect(olymp.id); handleModalToggle('edit'); }}>Редактировать</Dropdown.Item>
@@ -170,7 +166,6 @@ function JsonDataDisplay() {
         </Button>
       </div>
 
-      {/* модальное окно Добавление */}
       <Modal show={showModal} onHide={() => handleModalToggle()}>
         <Modal.Header closeButton>
           <Modal.Title>Добавить олимпиаду</Modal.Title>

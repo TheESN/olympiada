@@ -154,11 +154,8 @@ function Appli_list() {
 							<Form.Label>Ответсвенный</Form.Label>
 							<Form.Select
 								onChange={(e) =>
-									setEditAppli({
-										...editAppli,
-										employee: e.target.value,
-									})
-								}
+									setEditAppli({...editAppli, employee: e.target.value
+									})}
 							>
 								<option>Выберите ответсвенного</option>
 								{employeesSelect}
@@ -180,9 +177,7 @@ function Appli_list() {
 							<Form.Label>Школа</Form.Label>
 							<Form.Select
 								onChange={(e) =>
-									setEditAppli({
-										...editAppli,
-										school_id: schools[e.target.value].id,
+									setEditAppli({...editAppli, school_id: schools[e.target.value].id,
 									})
 								}
 							>
@@ -195,9 +190,7 @@ function Appli_list() {
 							<Form.Label>Район</Form.Label>
 							<Form.Select
 								onChange={(e) =>
-									setEditAppli({
-										...editAppli,
-										subdivision_id: subdivisions[e.target.value].id,
+									setEditAppli({...editAppli, subdivision_id: subdivisions[e.target.value].id,
 									})
 								}
 							>

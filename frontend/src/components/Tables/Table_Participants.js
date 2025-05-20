@@ -1,6 +1,5 @@
 import { useState, axios, Container, Table, useEffect, useLocation} from '../container/imports.js';
 
-
 const ParticipantsData = () => {
     const location = useLocation();
     const studentData = location.state?.data;
@@ -17,7 +16,6 @@ const ParticipantsData = () => {
 
     const specN = ["yes", "no"]
 
-    //Вывод таблицы
     const DisplayData = studentData.map((part, index) => {
         return (
             <tr>
