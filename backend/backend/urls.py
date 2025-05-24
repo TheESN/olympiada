@@ -28,6 +28,7 @@ from olymp.participant_views import ParticipantViewSet, ParticipantViewList, Add
 from olymp.result_views import ResultViewSet, ResultViewList, AddResultViewSet
 from olymp.country_views import CountryViewSet, CountryViewList, AddCountryViewSet
 from olymp.application_gen_views import ApplicationGenView
+from olymp.protocol_gen_views import ProtocolGenView
 from rest_framework.authtoken import views
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
@@ -68,7 +69,8 @@ api = [
     path('participant', AddParticipantViewSet.as_view()),
     path('getresult/<int:id>', ResultViewSet.as_view()),
     path('getresults', ResultViewList.as_view({'get': 'list'})),
-    path('result', AddResultViewSet.as_view())
+    path('result', AddResultViewSet.as_view()),
+    path('getprotocolexcel/<int:olymp_id>', ProtocolGenView.as_view())
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),
