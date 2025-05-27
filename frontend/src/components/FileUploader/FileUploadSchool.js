@@ -11,16 +11,8 @@ const FileUpload = () => {
         event.preventDefault();
 
         const formData = new FormData();
-
+        
         formData.append('file', file);
-
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-            console.log("qweqwe", pair[1])
-        }
-
-        console.log(file['name'])
-
         try {
             const response = await axios.put('http://localhost:8000/upload/' + file['name'], formData, {
                 headers: {

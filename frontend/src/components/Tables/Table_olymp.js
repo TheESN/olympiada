@@ -38,7 +38,6 @@ function JsonDataDisplay() {
         axios.get("http://localhost:8000/api/getsubdivisions"),
       ]);
       setOlymps(olympRes.data);
-      console.log(olympRes.data)
       setStudents(studentRes.data);
       setEmployees(employeeRes.data);
       setTeachers(employeeRes.data)
@@ -83,14 +82,9 @@ function JsonDataDisplay() {
 
   const fetchStudentFromOlymp = async (id) => {
     try {
-      const url = "http://localhost:8000/api/getstudentfromolymp/" + id.toString();
-      const res = await axios.get(url);
-
-      console.log("API response: ", res.data);
-
       navigate(`/participants/${id}`, {
         state: {
-          data: res.data // Передаем данные в состояние
+          data: id
         }
       });
     }
